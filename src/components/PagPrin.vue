@@ -5,6 +5,7 @@
         </div>
         <div class="col-lg-9">
             <h2>hola</h2>
+            <h3>esta si es</h3>
         </div>
     </div>
 </template>
