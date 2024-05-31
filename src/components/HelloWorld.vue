@@ -8,6 +8,8 @@
     <input class="passw" type="password">
     <br>
     <button class="btninic">Comenzar</button>
+
+    <h1>hola</h1>
   </div>
 </template>
 
