@@ -14,7 +14,9 @@
 
 
 <script>
-
+export default{
+  name: 'HelloWorld',
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -23,6 +25,13 @@
   
   text-align: center;
   padding: 1px;
+
+  background: #0F2027;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1 {
@@ -42,14 +51,14 @@ h1 {
   margin-bottom: 50px;
   margin-left: 50px;
   width: 300px;
-  color: white;
+  color: black;
 }
 
 .passw {
   height: 30px;
   margin-left: 20px;
   width: 300px;
-  color: white;
+  color: black;
 }
 
 .btninic {
