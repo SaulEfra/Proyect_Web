@@ -1,21 +1,20 @@
 <template>
   <div class="">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <PaintallaSiet></PaintallaSiet>
+    <MainView></MainView>
   </div>
   
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue';
-import PaintallaSiet from './components/PaintallaSiet.vue';
-
+import MainView from './views/MainView'
 
 export default {
   name: 'App',
   components: {
     HelloWorld,
-    PaintallaSiet
+    MainView
   }
 }
 </script>

@@ -1,8 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-lg-2">
-            <ParteLateral></ParteLateral>
-        </div>
+        
         <div class="col-lg-10 contenid">
             <div class="row">
                 <div class="col-lg-12 titul">
@@ -58,13 +56,10 @@
 </template>
 
 <script>
-import ParteLateral from './ParteLateral.vue';
 
 export default {
     name: 'PaintallaSiet',
-    components: {
-    ParteLateral
-  }
+   
 }
 </script>
 

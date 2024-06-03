@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row partLat">
                 <div class="col-12 perfiles">
                     <img src="" alt="Perfil foto">
                     <button>Negocio</button>
@@ -7,29 +7,32 @@
                 <div class="config">
                     
                     <i class="bi bi-gear-fill"></i>
-                    <a href="">Configuraciones</a>
+                    <RouterLink to="/Configuracion">Configuraciones</RouterLink>
                     <br>
                     <i class="bi bi-plus-circle-fill"></i>
-                    <a href="">agregar negocio</a>
+                    <RouterLink to="/AgregarNegocio">Agregar negocio</RouterLink>
+                    
                 </div>
                 
                 
                 <div class="produc">
                     <i class="bi bi-file-earmark-minus-fill"></i>
-                    <a href="">Movimientos</a>
+                    <RouterLink to="/Movimientos">Movimientos</RouterLink>
                     <br>
                     <i class="bi bi-box-seam-fill"></i>
-                    <a href="">Productos</a>
+                    <RouterLink to="/Productos">Productos</RouterLink>
                     <br>
                     <i class="bi bi-people-fill"></i>
-                    <a href="">Empleados</a>
+                    <RouterLink to="/Empleados">Empleados</RouterLink>
+    
                 </div>
                 
                 <div class="gest">
                     <h5>Gestiona tus contactos</h5>
-                    <a href="">Client</a>
+                    <RouterLink to="/Clientes">Clientes</RouterLink>
                     <br>
-                    <a href="">Proveedores</a>
+                    <RouterLink to="/Proveedores">Proveedores</RouterLink>
+                
                 </div>
             </div>
 </template>
@@ -41,4 +44,8 @@ export default {
 </script>
 
 <style>
+.partLat RouterLink{
+    margin-left: 10px;
+}
+
 </style>
