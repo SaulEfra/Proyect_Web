@@ -6,6 +6,7 @@ import PaintallaSiet from '../components/PaintallaSiet.vue'
 const routes = [
     { path: '/', component: PaintallaSiet },
     { path: '/Productos', component: PaintallaSiet },
+    
 ]
 
 const router = createRouter({
