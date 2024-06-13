@@ -38,6 +38,9 @@
   
   
   <script>
+  export default {
+    name: 'DatosNegocios',
+  }
   
   </script>
   

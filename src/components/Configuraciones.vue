@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-      <div class="col-3"></div>
-      <div class="col-9">
+      
+      <div class="col-lg-10">
         <nav class="navbar bg-body-tertiary">
           <div class="container-fluid mx-5">
             <span class="navbar-brand">
@@ -58,6 +58,10 @@
   </template>
   
   <script>
+export default {
+  name: 'ConfiguracionesApp',
+}
+
   </script>
   
   <style>

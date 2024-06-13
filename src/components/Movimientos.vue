@@ -1,8 +1,6 @@
 <template>
     <div class="row">
-      <div class="col-lg-2">
-        <!-- Sidebar o área de navegación puede ser añadida aquí si es necesario -->
-      </div>
+      
   
       <div class="col-lg-10">
         <div class="header">
@@ -132,6 +130,7 @@
   
   <script>
   export default {
+    name: 'MovimientosApp',
     data() {
       return {
         currentSection: 'transacciones',

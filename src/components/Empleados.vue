@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-      <div class="offset-2 col-10">
+      <div class=" col-lg-10">
         <header>
           <h1>Empleados</h1>
         </header>
@@ -31,4 +31,8 @@
       </div>
     </div>
   </template>
-  <script></script>
+  <script>
+export default {
+  name: 'EmpleadosApp',
+}
+</script>
