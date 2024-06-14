@@ -57,7 +57,7 @@
 import axios from 'axios';
 
 export default {
-    name: 'PaintallaSiet',
+    name: 'AddProductForm',
     data() {
         return {
             productName: '',

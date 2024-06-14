@@ -2,7 +2,13 @@
     <div class="row partLat">
                 <div class="col-12 perfiles">
                     <img src="" alt="Perfil foto">
-                    <button>Negocio</button>
+
+                    <select>
+                        <option value="1">Negocio 1</option>
+                        <option value="2">Negocio 2</option>
+                    </select>
+                   
+                    
                 </div>
                 <div class="config">
                     
