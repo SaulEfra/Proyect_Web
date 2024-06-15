@@ -1,9 +1,7 @@
 <template>
     <div class="row text-bg-light p-3">
-        <div class="col-lg-2">
-
-        </div>
-        <div class="col-lg-10">
+        
+        <div class="col-lg-12">
             <div>
                 <h1>Nueva venta</h1>
             </div>
@@ -115,8 +113,8 @@
 </template>
 <script>
 export default {
-/*
-    name: 'NuevaVent',*/
+
+    name: 'NuevaVenta',
 }
 
 </script>
