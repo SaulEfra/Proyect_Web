@@ -1,57 +1,58 @@
 <template>
-    <div class="row">
-        <div class="col-lg-10 contenid">
-            <div class="row">
-                <div class="col-lg-12 titul">
-                    <h1>Agregar Producto</h1>
-                </div>
-                <div class="col-lg-6 imgCarg">
-                    <label for="fileUpload">Selecciona una imagen para subir</label>
-                    <input type="file" class="form-control-file" id="fileUpload" accept="image/*"
-                        @change="onFileChange">
-                </div>
-                <div class="col-lg-6 btmcrear">
-                    <button @click="createProduct">Crear producto</button>
-                </div>
-                <div class="col-lg-12 tituldos">
-                    <p>Tipo de negocio</p>
-                </div>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="card">
+            
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="fileUpload" class="form-label">Selecciona una imagen para subir</label>
+                <input type="file" class="form-control" id="fileUpload" accept="image/*" @change="onFileChange">
+              </div>
+              <div class="row">
                 <div class="col-lg-6">
-                    <label for="NameProduct">Nombre de producto</label>
-                    <br>
+                  <div class="mb-3">
+                    <label for="NameProduct" class="form-label">Nombre de producto</label>
                     <input v-model="productName" id="NameProduct" type="text" class="form-control">
-                    <br>
-                    <label for="CostUni">Costo Unitario</label>
-                    <br>
+                  </div>
+                  <div class="mb-3">
+                    <label for="CostUni" class="form-label">Costo Unitario</label>
                     <input v-model.number="unitCost" id="CostUni" type="number" class="form-control">
-                    <br>
-                    <label for="cantidad">Cantidad:</label>
-                    <br>
-                    <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100"
-                        step="1">
+                  </div>
+                  <div class="mb-3">
+                    <label for="cantidad" class="form-label">Cantidad</label>
+                    <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100" step="1" class="form-control">
+                  </div>
                 </div>
                 <div class="col-lg-6">
-                    <label for="preci">Precio</label>
-                    <br>
+                  <div class="mb-3">
+                    <label for="preci" class="form-label">Precio</label>
                     <input v-model.number="price" id="preci" type="number" class="form-control">
-                    <br>
-                    <label for="categ">Categoria</label>
-                    <br>
+                  </div>
+                  <div class="mb-3">
+                    <label for="categ" class="form-label">Categoría</label>
                     <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-                        <option disabled selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                      <option disabled selected>Selecciona una categoría</option>
+                      <option value="1">Categoría 1</option>
+                      <option value="2">Categoría 2</option>
+                      <option value="3">Categoría 3</option>
                     </select>
-                    <br>
+                  </div>
+                  <div class="mb-3">
                     <label for="Textarea1" class="form-label">Descripción</label>
-                    <br>
                     <textarea v-model="description" class="form-control" id="Textarea1" rows="3"></textarea>
+                  </div>
                 </div>
+              </div>
+              <div class="text-center mt-4">
+                <button @click="createProduct" class="btn btn-primary">Crear producto</button>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</template>
+  </template>
 
 <script>
 import axios from 'axios';
