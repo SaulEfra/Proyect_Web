@@ -1,7 +1,11 @@
 <template>
+
+<div class="header">
+      <h4 class="mb-4 text-center">Productos</h4>
+    </div>
   <div class="shadow rounded bg-white contProduc">
-    <h1 class="mb-4 text-center">Productos</h1>
-    <div class="header mb-4 d-flex justify-content-between align-items-center">
+        
+    <div class=" mb-4 d-flex justify-content-between align-items-center">
       <input type="text" class="form-control me-2" placeholder="Buscar producto..." v-model="searchQuery">
       
       <br>
@@ -107,13 +111,16 @@ export default {
 <style scoped>
 body {
   font-family: Arial, sans-serif;
+  
 }
 
-.container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.header {
+  display: flex;
+  
+  align-items: center;
+  padding: 4px;
+  border-bottom: 1px solid #ccc;
+  
 }
 
 
@@ -198,7 +205,7 @@ select:hover {
   text-align: end;
 }
 .contProduc{
-  padding: 10px
+  padding: 80px
 }
 </style>
 

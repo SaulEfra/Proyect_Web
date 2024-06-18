@@ -1,7 +1,7 @@
 <template>
     <div class="Cont col-lg-12">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <ParteLateral></ParteLateral>
             </div>
             <div class="Contenid col-lg-9">
