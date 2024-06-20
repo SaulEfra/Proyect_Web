@@ -4,13 +4,30 @@
     <div class="header ">
       <h2>Movimientos</h2>
 
-      <button>Abrir Caja</button>
+      <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir Caja</button>
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
           Venta</button>
 
         <button>Nuevo gasto</button>
       </div>
+<!-- Modal para Abrir Caja -->
+ <!-- Modal para Abrir Caja -->
+ <div class="modal fade" id="AbrirCajaModal" tabindex="-1" aria-labelledby="AbrirCajaLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="AbrirCajaLabel">Abrir Caja</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <AbrirCaja @close="closeModal('AbrirCajaModal')" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       <!-- Modal para Nueva Venta -->
       <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -142,10 +159,12 @@
 
 <script>
 import NuevaVenta from './NuevaVenta.vue';
+import AbrirCaja from './AbrirCaja.vue';
 export default {
   name: 'MovimientosApp',
   components: {
-    NuevaVenta
+    NuevaVenta,
+    AbrirCaja
   },
   data() {
     return {
@@ -174,7 +193,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px;
+  padding: 40px;
   border-bottom: 1px solid #ccc;
   
 }

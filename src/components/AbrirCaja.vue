@@ -1,0 +1,70 @@
+<template>
+    <div>
+      
+      <form @submit.prevent="abrirCaja">
+        <div class="form-group">
+          <label for="montoInicial">Monto Inicial</label>
+          <input
+            type="number"
+            id="montoInicial"
+            v-model="montoInicial"
+            class="form-control"
+            placeholder="Ingrese el monto inicial"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="fechaHora">Fecha y Hora</label>
+          <input
+            type="datetime-local"
+            id="fechaHora"
+            v-model="fechaHora"
+            class="form-control"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Abrir Caja</button>
+      </form>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'AbrirCaja',
+    data() {
+      return {
+        montoInicial: '',
+        fechaHora: '',
+      };
+    },
+    methods: {
+      abrirCaja() {
+        // Aquí puedes manejar la lógica para abrir la caja.
+        // Por ejemplo, puedes enviar los datos a un servidor.
+        console.log('Caja abierta con monto inicial:', this.montoInicial, 'y fecha/hora:', this.fechaHora);
+        // Resetea el formulario después de abrir la caja
+        this.montoInicial = '';
+        this.fechaHora = '';
+        // Cerrar el modal (si es necesario)
+        this.$emit('close');
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  </style>
+  
