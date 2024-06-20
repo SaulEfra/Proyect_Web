@@ -12,7 +12,7 @@
     <table v-if="!empleado" class="table">
       <thead>
         <tr>
-          <th scope="col">>Nombre del empleado</th>
+          <th scope="col">Nombre del empleado</th>
           <th scope="col">Num. de Telefono</th>
           <th scope="col">Cargo</th>
           <th scope="col">Estado</th>
@@ -56,7 +56,7 @@
         </tr>
       </tbody>
     </table>
-    <input @click.prevent="empleado = false" type="button" class="btn btn-primary" value="Guardar Cambios">
+    <input @click.prevent="empleado = false" type="button" class="btn btn-primary" value="Añadir Empleado">
 
   </form>
 </template>
