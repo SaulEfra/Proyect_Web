@@ -16,7 +16,7 @@
         </div>
         <div class="Contenid col-10">
             <Empleados></Empleados>
-                <!--<InfoNeg></InfoNeg>-->
+                <InfoNeg></InfoNeg>
         </div>
     </div>
 
@@ -24,7 +24,7 @@
 </template>
 <script>
 import ParteLateral from '@/components/ParteLateral.vue';
-/*import InfoNeg from '../components/InfoNeg.vue';*/
+import InfoNeg from '../components/InfoNeg.vue';
 import Empleados from '@/components/Empleados.vue';
 
 export default {
@@ -32,7 +32,7 @@ export default {
     components: {
         ParteLateral,
         Empleados,
-        /**InfoNeg,**/
+        InfoNeg,
     }
 }
 
