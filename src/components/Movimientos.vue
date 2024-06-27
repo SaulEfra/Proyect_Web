@@ -155,6 +155,7 @@ export default {
   methods: {
     showSection(section) {
       this.currentSection = section;
+      
     },
   },
 };

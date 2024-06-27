@@ -40,9 +40,9 @@
           </div>
           <div class="modal-body">
             <label for="Nuevcategoria" class="form-label">Nombre de la categoría</label>
-            <input class="form-control mb-3" id="Nuevcategoria" type="text">
+            <input v-model="categoriaName" class="form-control mb-3" id="Nuevcategoria" type="text">
             <div class="text-end">
-              <button class="btn btn-primary btn-lg">Crear Categoría</button>
+              <button class="btn btn-primary btn-lg " @click="createCategoriaProd">Crear Categoría</button>
             </div>
           </div>
         </div>
@@ -90,21 +90,36 @@
 
 <script>
 import AddProductForm from './AddProductForm.vue';
-
+import axios from 'axios';
 
 export default {
   name: 'ProductInventory',
   components: {
     AddProductForm,
-    
   },
   data() {
     return {
       searchQuery: '',
       totalReferences: 0,
-      inventoryCost: 50
+      inventoryCost: 50,
+      categoriaName: '',
     };
-  }
+  },
+  methods: {
+    async createCategoriaProd() {
+      const formData = {
+        categoriaName: this.categoriaName,
+      };
+      try {
+            const response = await axios.post('http://localhost:3000/categorias', formData);
+            console.log('Respuesta del servidor:', response.data); 
+            alert('Producto creado con éxito');
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
+            alert('Error al crear la categoria: ' + error.message);
+        }
+    }
+  },
 };
 </script>
 
