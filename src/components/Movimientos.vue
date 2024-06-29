@@ -4,12 +4,29 @@
     <div class="header ">
       <h2>Movimientos</h2>
 
-      <button>Abrir Caja</button>
+      <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
+        Caja</button>
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
           Venta</button>
+          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+          data-bs-target="#NuevoGastoModal">Nuevo gasto</button>
 
-        <button>Nuevo gasto</button>
+        
+      </div>
+      <!-- Modal para Abrir Caja -->
+      <div class="modal fade" id="AbrirCajaModal" tabindex="-1" aria-labelledby="AbrirCajaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="AbrirCajaLabel">Abrir Caja</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <AbrirCaja @close="closeModal('AbrirCajaModal')" />
+            </div>
+          </div>
+        </div>
       </div>
       <!-- Modal para Nueva Venta -->
       <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
@@ -21,6 +38,37 @@
             </div>
             <div class="modal-body">
               <NuevaVenta />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal para Nuevo Gasto -->
+      <div class="modal fade" id="NuevoGastoModal" tabindex="-1" aria-labelledby="NuevoGastoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="NuevoGastoLabel">Nuevo Gasto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Contenido del formulario para nuevo gasto -->
+              <form>
+                <div class="mb-3">
+                  <label for="concepto" class="form-label">Concepto</label>
+                  <input type="text" class="form-control" id="concepto" placeholder="Concepto del gasto">
+                </div>
+                <div class="mb-3">
+                  <label for="monto" class="form-label">Monto</label>
+                  <input type="number" class="form-control" id="monto" placeholder="Monto del gasto">
+                </div>
+                <div class="mb-3">
+                  <label for="fecha" class="form-label">Fecha</label>
+                  <input type="date" class="form-control" id="fecha">
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </form>
             </div>
           </div>
         </div>
@@ -50,36 +98,16 @@
         </div>
 
         <!-- Tabla de Transacciones -->
-        <div class="transaction-table">
-          <div>
-            <div class="balances">
-              <div class="balance">Balance: $500</div>
-              <div class="sales">Ventas totales: $500</div>
-              <div class="expenses">Gastos totales: $0</div>
-            </div>
 
-            <table class="transactions">
-              <thead>
-                <tr>
-                  <th>Concepto</th>
-                  <th>Valor</th>
-                  <th>Medio de pago</th>
-                  <th>Fecha y hora</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Producto1</td>
-                  <td>$500</td>
-                  <td>Efectivo</td>
-                  <td>24/05/2024 | 6:16 pm</td>
-                  <td>Pagada</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+
+
+       
+      
+
+
+
+
+        
       </div>
 
       <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
@@ -92,8 +120,7 @@
               <option>Mensual</option>
             </select>
             <input type="date" />
-            <input type="text" placeholder="Buscar concepto..." />
-            <button>Buscar</button>
+            
           </div>
         </div>
         <div class="cierres-caja-table">
@@ -136,16 +163,30 @@
 
       </div>
     </div>
+
+
+    <div >
+  <div class="tab-buttons">
+        <button @click="showSection('Ingresos')">Ingresos</button>
+        <button @click="showSection('Egresos')">Egresos</button>
+        <button @click="showSection('Por Pagar')">Por Pagar</button>
+        <button @click="showSection('Por Cobrar')">Por Pagar</button>
+      </div>
+
+
+</div>
   </div>
 
 </template>
 
 <script>
 import NuevaVenta from './NuevaVenta.vue';
+import AbrirCaja from './AbrirCaja.vue';
 export default {
   name: 'MovimientosApp',
   components: {
-    NuevaVenta
+    NuevaVenta,
+    AbrirCaja
   },
   data() {
     return {
