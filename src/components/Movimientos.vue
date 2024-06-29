@@ -9,10 +9,10 @@
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
           Venta</button>
-          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
           data-bs-target="#NuevoGastoModal">Nuevo gasto</button>
 
-        
+
       </div>
       <!-- Modal para Abrir Caja -->
       <div class="modal fade" id="AbrirCajaModal" tabindex="-1" aria-labelledby="AbrirCajaLabel" aria-hidden="true">
@@ -97,17 +97,103 @@
           </div>
         </div>
 
-        <!-- Tabla de Transacciones -->
+
+<!-- Navegación por pestañas -->
+ <div class="row">
+  <div class="col-12">
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+    <li class="nav-item col-3" role="presentation">
+      <button class="nav-link active" id="section1-tab" data-bs-toggle="tab" data-bs-target="#section1" type="button" role="tab" aria-controls="section1" aria-selected="true">Ingresos</button>
+    </li>
+
+    <li class="nav-item col-3" role="presentation">
+      <button class="nav-link" id="section2-tab" data-bs-toggle="tab" data-bs-target="#section2" type="button" role="tab" aria-controls="section2" aria-selected="false">Egresos</button>
+    </li>
+
+    <li class="nav-item col-3" role="presentation">
+      <button class="nav-link" id="section3-tab" data-bs-toggle="tab" data-bs-target="#section3" type="button" role="tab" aria-controls="section3" aria-selected="false">Por Cobrar</button>
+    </li>
+
+    <li class="nav-item col-3" role="presentation">
+      <button class="nav-link" id="section4-tab" data-bs-toggle="tab" data-bs-target="#section4" type="button" role="tab" aria-controls="section4" aria-selected="false">Por Pagar</button>
+    </li>
+
+  </ul>
+
+  </div>
+  
+
+ </div>
 
 
+  <!-- Contenido de las pestañas -->
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="section1" role="tabpanel" aria-labelledby="section1-tab">
+      <div class="card card-body">
+        <table class="table">
+          <thead>
+                <tr>
+                  <th>Concepto</th>
+                  <th>Valor</th>
+                  <th>Medio de pago</th>
+                  <th>Fecha y hora</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
 
-       
-      
+          <tbody>
+            
+          </tbody>
 
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="section2" role="tabpanel" aria-labelledby="section2-tab">
+      <div class="card card-body">
+        <table class="table">
+          <thead>
+            
+           
+          </thead>
 
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="section3" role="tabpanel" aria-labelledby="section3-tab">
+      <div class="card card-body">
+        <table class="table">
+          <thead>
+            
+          </thead>
+          <tbody>
+           
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="section4" role="tabpanel" aria-labelledby="section4-tab">
+      <div class="card card-body">
+        <table class="table">
+          <thead>
+            
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
 
         
+
+
       </div>
 
       <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
@@ -120,7 +206,7 @@
               <option>Mensual</option>
             </select>
             <input type="date" />
-            
+
           </div>
         </div>
         <div class="cierres-caja-table">
@@ -165,16 +251,6 @@
     </div>
 
 
-    <div >
-  <div class="tab-buttons">
-        <button @click="showSection('Ingresos')">Ingresos</button>
-        <button @click="showSection('Egresos')">Egresos</button>
-        <button @click="showSection('Por Pagar')">Por Pagar</button>
-        <button @click="showSection('Por Cobrar')">Por Pagar</button>
-      </div>
-
-
-</div>
   </div>
 
 </template>
@@ -196,14 +272,14 @@ export default {
   methods: {
     showSection(section) {
       this.currentSection = section;
-      
+
     },
   },
 };
 </script>
 
 <style scoped>
-.container-fluid{
+.container-fluid {
   width: 100%;
   height: 100%;
 }
@@ -218,7 +294,7 @@ export default {
   align-items: center;
   padding: 4px;
   border-bottom: 1px solid #ccc;
-  
+
 }
 
 .actions {
@@ -259,6 +335,7 @@ select:hover {
 .cierres-caja-section {
   margin-top: 20px;
 }
+
 
 .tab-buttons {
   display: flex;
@@ -305,14 +382,14 @@ select:hover {
   padding: 10px;
   background-color: #e0f7fa;
   border-radius: 5px;
-  margin: 0 10px;
+  margin: 0 0px;
 }
 
 .transactions,
 .cierres {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .transactions th,
@@ -320,7 +397,7 @@ select:hover {
 .cierres th,
 .cierres td {
   border: 1px solid #ddd;
-  padding: 8px;
+  
 }
 
 .transactions th,
@@ -353,4 +430,8 @@ select:hover {
     margin-bottom: 0;
   }
 }
+
+.nav-item button {
+      width: 100%;
+    }
 </style>
