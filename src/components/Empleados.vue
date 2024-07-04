@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script>
+<script >
 export default {
   name: 'EmpleadosApp',
   data() {
