@@ -1,38 +1,142 @@
 <template>
-  <div class="row">
-    <div class=" col-lg-10">
-      <header>
-        <h1>Empleados</h1>
-      </header>
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col"><img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ8AAACUCAMAAAC6AgsRAAAAMFBMVEXk5ueutLe1u77p6+uqsbSxt7rKztDc3+Dh4+TT19jY29zHy826v8LQ09WnrrK+w8Y4co4RAAADm0lEQVR4nO2b23LjIAxADeKOMf//t8VOtk03tgPCCM8uZ6aZPp4RFggQ0zQYDAaDwWAwGAwGg8HgXwN6C5yhbQjBOt3b4w2YdIhyWRYhxPrLfdD3CSVMgUsh2AtCyDncxFDH5Zfbj6Myvd0mMJ7t2m2GUvXWs/LQ7mHYNVmMX87sNsOOITTzafCegrFXmugMu22M+6SJk1l6SZD30MuM3kOQPoI6N3qb4Ezul5MaL4KeNknAF+klwUDq58rsEqRJbHixn5jpRrh4dFcWR+Y3IfQYI8thiCg/RpUiRVNfhwAqXPjIvkBk+KgqGf2x5juEoljFZscKRYYAdnjXASbw02g9xijqrFDhR/EBYta2Pwjb3q8iPSjKQDPj9RhrPwMafPom+M39WHO/gm3bDmL4Db86vxo9Ar+6/JXt/cq3li+032Sam69vdetv+wIVsLujlYWgvio/evmB5BCmor6n2AEDvsCiOcu3+P0lzQYdnSDtZ+cN7A5EBBo/i40fiV0ClyHCU/k5VIbQXRUCR3yBlFcMqCKQ8gakvEggvgApHWGSo6sXSkeY/I41lAWQ/JofVMkkQ3Bu9Ub+MrfYHlf8+ZU00br7Rt4QC9etj+hD98tmxzt2wMDH3abwnXucrDgxFLJH4v4CJn80yIKrO3SwgVbsvYNNLDz0b197AjpyyURi+xFMcm/uELtvYNJW+Tgnolf2Rt2T3wC8/3cLIPkYrZ2zD5zTWhuAG2gmB+1UGlbOpWTPj49JKTlP42x1V0ejredrz+7R7CeWhcXgDP3HmMIWImdnc/O3pOBROVpFozg7bot9d0x/nqo9J03H835D8bnjwj1BFMFGmTGqB2HkbStBMEHiD9c2ReGblVswKV5ntxlKr9sEMRRkxDktYmgxZy4HCHbxQS/U3ervGPJLNyWFm/Esw3hVAQZZbezlgvKiEF6XF38bXnGgWnWf9YFlrt8B1FwHfqT6eYi5cFbZN6wqG5rrJSrOjkyrzHgFf7hFEb0VpCCVHvYbbDIr74PJ4po+xFLKHwBBgyX3GERnNKUe4uq16bKxQ+FCQjq6K4X3S3VNkhhKHg+g3sfUUpDDlT2mOAouOHuEryCAXcK3FgqZfrZL+LKbA6GqA7ECkVftm07hYyLrugRUJ73cB17US9sPWYtcXQNsFVmFKvb13RV+OcdGrtvw5pWBDc8LPpLzPKRferCcHiiIvB8y4/tb76y6keM3GAwG/wVf6dYvDagXDgkAAAAASUVORK5CYII="
-              alt="" style="height: 30px;">Nombre del empleado</th>
-            <th scope="col">Num. de Telefono</th>
-            <th scope="col">Cargo</th>
-            <th scope="col">Estado</th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <tr>
-            <td>Usuario Ejemplo</td>
-            <td>7777777777</td>
-            <td>Propietario</td>
-            <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-              <label class="form-check-label" for="defaultCheck1">
-                Activo
-              </label></td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="container">
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <h1>Empleados</h1>
+        </span>
+        <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir
+          Empleado</button>
+      </div>
+    </nav>
+    <div class="row mt-4">
+      <div class="col-lg-12">
+        <table v-if="!mostrarFormulario" class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del empleado</th>
+              <th scope="col">Núm. de Teléfono</th>
+              <th scope="col">Cargo</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <tr v-for="(empleado, indice) in empleados" :key="indice">
+              <td>{{ empleado.Nombre }}</td>
+              <td>{{ empleado.NumeroDeTelefono }}</td>
+              <td>{{ empleado.Rol }}</td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-secondary" title="Editar" @click="editarEmpleado(empleado)">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button class="btn btn-danger" title="Eliminar" @click="borrarEmpleado(empleado.id)">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <form v-if="mostrarFormulario" @submit.prevent="agregarEmpleado">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nombre del empleado</th>
+                <th scope="col">Núm. de Teléfono</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <tr>
+                <td><input v-model="nuevoEmpleado.Nombre" type="text" required class="form-control"></td>
+                <td>
+                  <input v-model="nuevoEmpleado.NumeroDeTelefono" type="text" required class="form-control"
+                    @input="validarTelefono" pattern="[0-9]*">
+                </td>
+                <td>
+                  <select v-model="nuevoEmpleado.Rol" required class="form-select">
+                    <option value="">Seleccione un Rol</option>
+                    <option v-for="Rol in opcionesCargo" :key="Rol" :value="Rol">
+                      {{ Rol }}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input v-model="nuevoEmpleado.activo" class="form-check-input" type="checkbox" id="empleadoActivo">
+                    <label class="form-check-label" for="empleadoActivo">
+                      Activo
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Empleado</button>
+          <button @click="cancelarEdicion" type="button" class="btn btn-secondary ml-2">Cancelar</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
-<script>
+
+<script >
 export default {
-name: 'EmpleadosApp',
+  name: 'EmpleadosApp',
+  data() {
+    return {
+      mostrarFormulario: false,
+      empleados: [],
+      nuevoEmpleado: {
+        id: null,
+        Nombre: '',
+        NumeroDeTelefono: '',
+        Rol: '',
+        activo: true
+      },
+      modoEdicion: false,
+      opcionesCargo: ['Encargado', 'Empleado']
+    }
+  },
+  methods: {
+    agregarEmpleado() {
+      if (this.modoEdicion) {
+        const index = this.empleados.findIndex(emp => emp.id === this.nuevoEmpleado.id);
+        if (index !== -1) {
+          this.empleados[index] = { ...this.nuevoEmpleado };
+        }
+      } else {
+        this.nuevoEmpleado.id = Date.now();
+        this.empleados.push({ ...this.nuevoEmpleado });
+      }
+      this.resetearFormulario();
+    },
+    editarEmpleado(empleado) {
+      this.nuevoEmpleado = { ...empleado };
+      this.modoEdicion = true;
+      this.mostrarFormulario = true;
+    },
+    borrarEmpleado(id) {
+      if (confirm('¿Está seguro de que desea eliminar este empleado?')) {
+        this.empleados = this.empleados.filter(emp => emp.id !== id);
+      }
+    },
+    resetearFormulario() {
+      this.nuevoEmpleado = {
+        id: null,
+        Nombre: '',
+        NumeroDeTelefono: '',
+        Rol: '',
+        activo: true
+      };
+      this.mostrarFormulario = false;
+      this.modoEdicion = false;
+    },
+    cancelarEdicion() {
+      this.resetearFormulario();
+    }
+  }
 }
 </script>
