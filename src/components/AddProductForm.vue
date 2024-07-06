@@ -3,6 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="card">
+          
           <div class="card-body">
             <div class="mb-3">
               <label for="fileUpload" class="form-label">Selecciona una imagen para subir</label>
@@ -20,8 +21,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="cantidad" class="form-label">Cantidad</label>
-                  <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100"
-                    step="1" class="form-control">
+                  <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100" step="1" class="form-control">
                 </div>
               </div>
               <div class="col-lg-6">
@@ -33,22 +33,10 @@
                   <label for="categ" class="form-label">Categoría</label>
                   <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
                     <option disabled selected>Selecciona una categoría</option>
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
+                    <option value="1">Categoría 1</option>
+                    <option value="2">Categoría 2</option>
+                    <option value="3">Categoría 3</option>
                   </select>
-                </div>
-                <div class="form-check">
-                  <input v-model="Factura" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="factura">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    Factura
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input v-model="NoFactura" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked value="nofactura">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    No Factura
-                  </label>
                 </div>
                 <div class="mb-3">
                   <label for="Textarea1" class="form-label">Descripción</label>
@@ -72,41 +60,38 @@ import axios from 'axios';
 export default {
   name: 'AddProductForm',
   data() {
-    return {
-      productName: '',
-      unitCost: null,
-      quantity: 1,
-      price: null,
-      category: '',
-      description: '',
-      selectedFile: null,
-      Factura: '',
-      NoFactura: ''
-    };
+      return {
+          productName: '',
+          unitCost: null,
+          quantity: 1,
+          price: null,
+          category: '',
+          description: '',
+          selectedFile: null
+      };
   },
   methods: {
-    async createProduct() {
+  async createProduct() {
       const formData = {
-        productName: this.productName,
-        unitCost: this.unitCost,
-        quantity: this.quantity,
-        price: this.price,
-        category: this.category,
-        description: this.description,
-        Factura: this.Factura,
-        NoFactura: this.NoFactura
+          productName: this.productName,
+          unitCost: this.unitCost,
+          quantity: this.quantity,
+          price: this.price,
+          category: this.category,
+          description: this.description
       };
 
       try {
-        const response = await axios.post('http://localhost:3000/items', formData);
-        console.log('Respuesta del servidor:', response.data); // Usar la respuesta
-        alert('Producto creado con éxito');
+          const response = await axios.post('http://localhost:3000/items', formData);
+          console.log('Respuesta del servidor:', response.data); // Usar la respuesta
+          alert('Producto creado con éxito');
+          // Puedes agregar lógica adicional aquí, como limpiar el formulario
       } catch (error) {
-        console.error('Error al crear el producto:', error);
-        alert('Error al crear el producto: ' + error.message);
+          console.error('Error al crear el producto:', error);
+          alert('Error al crear el producto: ' + error.message);
       }
-    }
   }
+}
 
 }
 </script>

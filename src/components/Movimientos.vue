@@ -1,20 +1,76 @@
 <template>
   <div class="container-fluid">
-
-    <div class="header ">
+    <div class="header">
       <h2>Movimientos</h2>
-
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
         Caja</button>
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
           Venta</button>
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
-          data-bs-target="#NuevoGastoModal">Nuevo gasto</button>
 
 
+
+        <button class="btn btn-primary " type="button" data-bs-toggle="offcanvas" data-bs-target="#NuevoGastoOffcanvas"
+          aria-controls="NuevoGastoOffcanvas">
+          Nuevo Gasto
+        </button>
+
+
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="NuevoGastoOffcanvas" aria-labelledby="NuevoGastoLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="NuevoGastoLabel">Nuevo Gasto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+            <form>
+
+              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="btnradio1">Pagada</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btnradio2">En Deuda</label>
+
+
+              </div>
+              <div class="mb-3">
+                <label for="concepto" class="form-label">Fecha</label>
+                <input type="date" class="form-control" id="fechaGasto" placeholder="Concepto del gasto">
+              </div>
+              <div class="mb-3">
+                <label for="cateGasto" class="form-label">Categoría del gasto</label>
+                  <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
+                    <option disabled selected>Selecciona una categoría</option>
+                    <option value="1">Categoría 1</option>
+                    <option value="2">Categoría 2</option>
+                    <option value="3">Categoría 3</option>
+                  </select>
+              </div>
+              <div class="mb-3">
+                <label for="valorGasto" class="form-label">Valor</label>
+                <input type="number" class="form-control" id="valorGasto">
+              </div>
+              <div class="mb-3">
+                <label for="descGasto" class="form-label">¿Quieres darle un nombre a este gasto?</label>
+                <input type="text" placeholder="Escríbelo aquí" class="form-control" id="descGasto">
+              </div>
+
+              <div class="mb-3">
+                <label for="proovGasto" class="form-label">Agrega un proveedor al gasto</label>
+                <input type="text" placeholder="Buscar..." class="form-control" id="descGasto">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <!-- Modal para Abrir Caja -->
+
+
+
+
       <div class="modal fade" id="AbrirCajaModal" tabindex="-1" aria-labelledby="AbrirCajaLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -28,7 +84,7 @@
           </div>
         </div>
       </div>
-      <!-- Modal para Nueva Venta -->
+
       <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -42,38 +98,6 @@
           </div>
         </div>
       </div>
-
-
-      <!-- Modal para Nuevo Gasto -->
-      <div class="modal fade" id="NuevoGastoModal" tabindex="-1" aria-labelledby="NuevoGastoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="NuevoGastoLabel">Nuevo Gasto</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <!-- Contenido del formulario para nuevo gasto -->
-              <form>
-                <div class="mb-3">
-                  <label for="concepto" class="form-label">Concepto</label>
-                  <input type="text" class="form-control" id="concepto" placeholder="Concepto del gasto">
-                </div>
-                <div class="mb-3">
-                  <label for="monto" class="form-label">Monto</label>
-                  <input type="number" class="form-control" id="monto" placeholder="Monto del gasto">
-                </div>
-                <div class="mb-3">
-                  <label for="fecha" class="form-label">Fecha</label>
-                  <input type="date" class="form-control" id="fecha">
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <div class="movements">
@@ -93,111 +117,119 @@
             <input type="date" />
             <input type="text" placeholder="Buscar concepto..." />
             <button>Buscar</button>
-
           </div>
         </div>
 
-
-<!-- Navegación por pestañas -->
- <div class="row">
-  <div class="col-12">
-
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-    <li class="nav-item col-3" role="presentation">
-      <button class="nav-link active" id="section1-tab" data-bs-toggle="tab" data-bs-target="#section1" type="button" role="tab" aria-controls="section1" aria-selected="true">Ingresos</button>
-    </li>
-
-    <li class="nav-item col-3" role="presentation">
-      <button class="nav-link" id="section2-tab" data-bs-toggle="tab" data-bs-target="#section2" type="button" role="tab" aria-controls="section2" aria-selected="false">Egresos</button>
-    </li>
-
-    <li class="nav-item col-3" role="presentation">
-      <button class="nav-link" id="section3-tab" data-bs-toggle="tab" data-bs-target="#section3" type="button" role="tab" aria-controls="section3" aria-selected="false">Por Cobrar</button>
-    </li>
-
-    <li class="nav-item col-3" role="presentation">
-      <button class="nav-link" id="section4-tab" data-bs-toggle="tab" data-bs-target="#section4" type="button" role="tab" aria-controls="section4" aria-selected="false">Por Pagar</button>
-    </li>
-
-  </ul>
-
-  </div>
-  
-
- </div>
+        <div class="row">
 
 
-  <!-- Contenido de las pestañas -->
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="section1" role="tabpanel" aria-labelledby="section1-tab">
-      <div class="card card-body">
-        <table class="table">
-          <thead>
-                <tr>
-                  <th>Concepto</th>
-                  <th>Valor</th>
-                  <th>Medio de pago</th>
-                  <th>Fecha y hora</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-
-          <tbody>
-            
-          </tbody>
-
-        </table>
-      </div>
-    </div>
-    <div class="tab-pane fade" id="section2" role="tabpanel" aria-labelledby="section2-tab">
-      <div class="card card-body">
-        <table class="table">
-          <thead>
-            
-           
-          </thead>
-
-          <tbody>
-            
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="tab-pane fade" id="section3" role="tabpanel" aria-labelledby="section3-tab">
-      <div class="card card-body">
-        <table class="table">
-          <thead>
-            
-          </thead>
-          <tbody>
-           
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="tab-pane fade" id="section4" role="tabpanel" aria-labelledby="section4-tab">
-      <div class="card card-body">
-        <table class="table">
-          <thead>
-            
-          </thead>
-          <tbody>
-            
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+          <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción del balance">
+            <h3>Balance</h3>
+            <p>{{ balanceTotal }}</p>
+          </button>
 
 
-        
+
+          <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de las ventas totales">
+            <h3>Ventas Totales</h3>
+            <p>{{ ventasTotales }}</p>
+          </button>
 
 
+
+          <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de los gastos totales">
+            <h3>Gastos Totales</h3>
+            <p>{{ gastosTotales }}</p>
+          </button>
+
+
+        </div>
+
+
+
+
+        <div class="row">
+          <div class="col-12">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item col-3" role="presentation">
+                <button class="nav-link active" id="section1-tab" data-bs-toggle="tab" data-bs-target="#section1"
+                  type="button" role="tab" aria-controls="section1" aria-selected="true">Ingresos</button>
+              </li>
+              <li class="nav-item col-3" role="presentation">
+                <button class="nav-link" id="section2-tab" data-bs-toggle="tab" data-bs-target="#section2" type="button"
+                  role="tab" aria-controls="section2" aria-selected="false">Egresos</button>
+              </li>
+              <li class="nav-item col-3" role="presentation">
+                <button class="nav-link" id="section3-tab" data-bs-toggle="tab" data-bs-target="#section3" type="button"
+                  role="tab" aria-controls="section3" aria-selected="false">Por Cobrar</button>
+              </li>
+              <li class="nav-item col-3" role="presentation">
+                <button class="nav-link" id="section4-tab" data-bs-toggle="tab" data-bs-target="#section4" type="button"
+                  role="tab" aria-controls="section4" aria-selected="false">Por Pagar</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="section1" role="tabpanel" aria-labelledby="section1-tab">
+            <div class="card card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Concepto</th>
+                    <th>Valor</th>
+                    <th>Medio de pago</th>
+                    <th>Fecha y hora</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Contenido de ingresos -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="section2" role="tabpanel" aria-labelledby="section2-tab">
+            <div class="card card-body">
+              <table class="table">
+                <thead>
+                  <!-- Encabezados de egresos -->
+                </thead>
+                <tbody>
+                  <!-- Contenido de egresos -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="section3" role="tabpanel" aria-labelledby="section3-tab">
+            <div class="card card-body">
+              <table class="table">
+                <thead>
+                  <!-- Encabezados de por cobrar -->
+                </thead>
+                <tbody>
+                  <!-- Contenido de por cobrar -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="section4" role="tabpanel" aria-labelledby="section4-tab">
+            <div class="card card-body">
+              <table class="table">
+                <thead>
+                  <!-- Encabezados de por pagar -->
+                </thead>
+                <tbody>
+                  <!-- Contenido de por pagar -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
-        <!-- Sin contenido para Cierres de caja aún -->
         <div>
           <div class="filters">
             <select>
@@ -206,7 +238,6 @@
               <option>Mensual</option>
             </select>
             <input type="date" />
-
           </div>
         </div>
         <div class="cierres-caja-table">
@@ -224,35 +255,36 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>24/05/2024</td>
-                  <td>8:00 am</td>
-                  <td>6:00 pm</td>
-                  <td>$1500</td>
-                  <td>$500</td>
-                  <td>$1000</td>
+                  <td>28/03/2023</td>
+                  <td>9:00 AM</td>
+                  <td>9:00 PM</td>
+                  <td>$2,000.00</td>
+                  <td>$500.00</td>
+                  <td>$1,500.00</td>
                 </tr>
                 <tr>
-                  <td>25/05/2024</td>
-                  <td>8:00 am</td>
-                  <td>6:00 pm</td>
-                  <td>$2000</td>
-                  <td>$300</td>
-                  <td>$1700</td>
+                  <td>27/03/2023</td>
+                  <td>9:00 AM</td>
+                  <td>9:00 PM</td>
+                  <td>$3,000.00</td>
+                  <td>$800.00</td>
+                  <td>$2,200.00</td>
+                </tr>
+                <tr>
+                  <td>26/03/2023</td>
+                  <td>9:00 AM</td>
+                  <td>9:00 PM</td>
+                  <td>$2,500.00</td>
+                  <td>$600.00</td>
+                  <td>$1,900.00</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
-
-
-
       </div>
     </div>
-
-
   </div>
-
 </template>
 
 <script>
@@ -267,14 +299,20 @@ export default {
   data() {
     return {
       currentSection: 'transacciones',
+      ventasTotales: 0,
+      gastosTotales: 0,
+      balanceTotal: 0,
     };
+
   },
+
   methods: {
     showSection(section) {
       this.currentSection = section;
 
     },
   },
+
 };
 </script>
 
@@ -294,6 +332,7 @@ export default {
   align-items: center;
   padding: 4px;
   border-bottom: 1px solid #ccc;
+  font-family: 'Bodoni Moda SC';
 
 }
 
@@ -310,11 +349,13 @@ select {
   border-radius: 5px;
   background-color: rgba(210, 231, 243, 0.7);
   cursor: pointer;
+  color: #030303;
+  font-family: 'Bodoni Moda SC';
 }
 
 button:hover,
 select:hover {
-  background-color: rgba(110, 183, 226, 0.7);
+  background-color: rgba(243, 243, 243, 0.7);
   color: black;
 }
 
@@ -368,22 +409,9 @@ select:hover {
   border-radius: 5px;
 }
 
-.balances {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
 
-.balance,
-.sales,
-.expenses {
-  flex: 1;
-  text-align: center;
-  padding: 10px;
-  background-color: #e0f7fa;
-  border-radius: 5px;
-  margin: 0 0px;
-}
+
+
 
 .transactions,
 .cierres {
@@ -397,7 +425,7 @@ select:hover {
 .cierres th,
 .cierres td {
   border: 1px solid #ddd;
-  
+
 }
 
 .transactions th,
@@ -432,6 +460,77 @@ select:hover {
 }
 
 .nav-item button {
-      width: 100%;
-    }
+  width: 100%;
+}
+
+.btn-tooltip {
+  width: calc(33.33% - 5px);
+  /* Calcula el ancho para que sean 3 botones en una fila */
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 10px;
+  border-radius: 10px;
+  background-color: #eef2f6ad;
+  color: rgb(13, 13, 13);
+  cursor: pointer;
+
+}
+
+.btn-tooltip:hover {
+  background-color: #afdbf962;
+}
+
+.btn-tooltip h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.btn-tooltip p {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+
+  .tab-buttons,
+  .filters {
+    flex-direction: column;
+  }
+
+  .tab-buttons button,
+  .filters select,
+  .filters input[type="date"],
+  .filters input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .filters input[type="text"] {
+    margin-bottom: 0;
+  }
+
+  .btn-tooltip {
+    width: 100%;
+    /* En dispositivos móviles, ocupa todo el ancho */
+  }
+}
+
+.balances {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.btn-group{
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 10px;
+  border-radius: 10px;
+  background-color: #eef2f6ad;
+  color: rgb(13, 13, 13);
+  cursor: pointer;
+  width: 100%;
+
+}
 </style>
