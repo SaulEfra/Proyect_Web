@@ -19,6 +19,7 @@ const routes = [
     {path:'/Productos', component: ProductInventory},
     {path:'/NuevaVenta', component: NuevaVenta},
     
+    
 ]
 
 const router = createRouter({

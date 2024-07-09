@@ -4,8 +4,11 @@
       <h2>Movimientos</h2>
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
         Caja</button>
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#CerrarCajaModal">Cerrar
-          Caja</button>
+        <button @click="showModal = true">Cerrar Caja</button>
+    <CierreCaja
+      :isVisible="showModal"
+      @close="showModal = false"
+    />
 
 
 
@@ -41,12 +44,12 @@
               </div>
               <div class="mb-3">
                 <label for="cateGasto" class="form-label">Categoría del gasto</label>
-                  <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-                    <option disabled selected>Selecciona una categoría</option>
-                    <option value="1">Categoría 1</option>
-                    <option value="2">Categoría 2</option>
-                    <option value="3">Categoría 3</option>
-                  </select>
+                <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
+                  <option disabled selected>Selecciona una categoría</option>
+                  <option value="1">Categoría 1</option>
+                  <option value="2">Categoría 2</option>
+                  <option value="3">Categoría 3</option>
+                </select>
               </div>
               <div class="mb-3">
                 <label for="valorGasto" class="form-label">Valor</label>
@@ -81,24 +84,6 @@
           </div>
         </div>
       </div>
-
-
-
-      <div class="modal fade" id="CerrarCajaModal" tabindex="-1" aria-labelledby="CerrarCajaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="CerarCajaLabel">Cierre de Caja</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <AbrirCaja />
-            </div>
-          </div>
-        </div>
-      </div>
-
-
 
 
 
@@ -271,7 +256,7 @@
                 </tr>
               </thead>
               <tbody>
-                
+
               </tbody>
 
             </table>
@@ -285,13 +270,14 @@
 <script>
 import NuevaVenta from './NuevaVenta.vue';
 import AbrirCaja from './AbrirCaja.vue';
-
+import CierreCaja from './CierreCaja.vue'
 export default {
   name: 'MovimientosApp',
   components: {
     NuevaVenta,
     AbrirCaja,
-    
+    CierreCaja,
+
   },
   data() {
     return {
@@ -299,6 +285,7 @@ export default {
       ventasTotales: 0,
       gastosTotales: 0,
       balanceTotal: 0,
+      showModal: false,
     };
 
   },
@@ -366,17 +353,18 @@ select:hover {
   margin: 0 auto;
   margin-top: 20px;
   /* Centra el contenido si es necesario */
-  
-  
+
+
 }
 
-.transaction-section{
+.transaction-section {
   margin-top: 20px;
   width: 100%;
   padding: 45px;
   background-color: #fff;
   border-radius: 5px;
 }
+
 .cierres-caja-section {
   margin-top: 20px;
   width: 100%;
@@ -530,7 +518,8 @@ select:hover {
   justify-content: space-around;
   margin-bottom: 20px;
 }
-.btn-group{
+
+.btn-group {
   text-align: center;
   padding: 10px;
   margin-bottom: 10px;
