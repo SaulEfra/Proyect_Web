@@ -4,18 +4,21 @@
       <h2>Movimientos</h2>
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
         Caja</button>
+        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#CerrarCajaModal">Cerrar
+          Caja</button>
+
+
+
+
+
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
           Venta</button>
-
-
 
         <button class="btn btn-primary " type="button" data-bs-toggle="offcanvas" data-bs-target="#NuevoGastoOffcanvas"
           aria-controls="NuevoGastoOffcanvas">
           Nuevo Gasto
         </button>
-
-
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="NuevoGastoOffcanvas" aria-labelledby="NuevoGastoLabel">
           <div class="offcanvas-header">
@@ -25,15 +28,12 @@
           <div class="offcanvas-body">
 
             <form>
-
               <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="btnradio1">Pagada</label>
 
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
                 <label class="btn btn-outline-primary" for="btnradio2">En Deuda</label>
-
-
               </div>
               <div class="mb-3">
                 <label for="concepto" class="form-label">Fecha</label>
@@ -68,9 +68,6 @@
         </div>
       </div>
 
-
-
-
       <div class="modal fade" id="AbrirCajaModal" tabindex="-1" aria-labelledby="AbrirCajaLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -79,11 +76,31 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <AbrirCaja @close="closeModal('AbrirCajaModal')" />
+              <AbrirCaja />
             </div>
           </div>
         </div>
       </div>
+
+
+
+      <div class="modal fade" id="CerrarCajaModal" tabindex="-1" aria-labelledby="CerrarCajaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="CerarCajaLabel">Cierre de Caja</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <AbrirCaja />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
 
       <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -254,31 +271,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>28/03/2023</td>
-                  <td>9:00 AM</td>
-                  <td>9:00 PM</td>
-                  <td>$2,000.00</td>
-                  <td>$500.00</td>
-                  <td>$1,500.00</td>
-                </tr>
-                <tr>
-                  <td>27/03/2023</td>
-                  <td>9:00 AM</td>
-                  <td>9:00 PM</td>
-                  <td>$3,000.00</td>
-                  <td>$800.00</td>
-                  <td>$2,200.00</td>
-                </tr>
-                <tr>
-                  <td>26/03/2023</td>
-                  <td>9:00 AM</td>
-                  <td>9:00 PM</td>
-                  <td>$2,500.00</td>
-                  <td>$600.00</td>
-                  <td>$1,900.00</td>
-                </tr>
+                
               </tbody>
+
             </table>
           </div>
         </div>
@@ -290,11 +285,13 @@
 <script>
 import NuevaVenta from './NuevaVenta.vue';
 import AbrirCaja from './AbrirCaja.vue';
+
 export default {
   name: 'MovimientosApp',
   components: {
     NuevaVenta,
-    AbrirCaja
+    AbrirCaja,
+    
   },
   data() {
     return {
@@ -367,14 +364,26 @@ select:hover {
   width: 100%;
   /* Asegura que el contenedor ocupe todo el ancho */
   margin: 0 auto;
+  margin-top: 20px;
   /* Centra el contenido si es necesario */
-  max-width: 1200px;
-  /* Establece un ancho máximo opcional */
+  
+  
 }
 
-.transaction-section,
+.transaction-section{
+  margin-top: 20px;
+  width: 100%;
+  padding: 45px;
+  background-color: #fff;
+  border-radius: 5px;
+}
 .cierres-caja-section {
   margin-top: 20px;
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+
 }
 
 
