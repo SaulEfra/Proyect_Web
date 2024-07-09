@@ -1,18 +1,19 @@
 <template>
 
-<div class="header">
+  <div class="header">
       <h4 class="mb-4 text-center">Productos</h4>
-    </div>
-  <div class="shadow rounded bg-white contProduc">
+  </div>
+  <div class="shadow rounded contProduc">
         
-    <div class=" mb-4 d-flex justify-content-between align-items-center">
-      <input type="text" class="form-control me-2" placeholder="Buscar producto..." v-model="searchQuery">
-      
-      <br>
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar Producto</button>
+    <div class="header-btn">
+      <div class="row">
+        <div class="col-lg-6 "><input type="text" class="form-control inp-btn" placeholder="Buscar producto..." v-model="searchQuery"></div>
+        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar Producto</button>     </div>
+        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear Categoría</button>      </div>
+        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#crearcantidad">Crear cantidad</button> </div>
+      </div>
         
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear Categoría</button>
-      
+                 
     </div>
 
     <!-- Modal para Agregar Producto -->
@@ -49,53 +50,57 @@
       </div>
     </div>
 
-    <div class="movements mt-4">
-      <div class="balances d-flex justify-content-between mb-4">
-        <div class="balance p-3 bg-light rounded shadow-sm">Total de Productos: {{ totalReferences }}</div>
-        <div class="inventory-cost p-3 bg-light rounded shadow-sm">Costo del Inventario: {{ inventoryCost }}</div>
+
+    <!-- Modal para Crear Cantidad -->
+    <div class="modal fade" id="crearcantidad" tabindex="-1" aria-labelledby="crearcantidadlabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="crearcategoriaLabel">Crear Cantidad para los productos</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <label for="Nuevcategoria" class="form-label">Nombre de la cantidad</label>
+            <input v-model="CantidadProduc" class="form-control mb-3" id="Nuevcategoria" type="text">
+            <div class="text-end">
+              <button class="btn btn-primary btn-lg " @click="createCantidadProduct">Crear Cantidad</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="text-center no-products" v-if="totalReferences === 0">
+    </div>
+
+    <div class="movements ">
+      <div class="row">
+        <div class="data-pro col-lg-6" v-for="dtsprodcoun in datosprodcount" :key="dtsprodcoun" >Total de Productos: {{ datosprodcount }}</div>
+        <div class="data-pro col-lg-6">Costo del Inventario: {{ inventoryCost }}</div>
+      </div>
+        <!--<div class="text-center no-products" v-if="totalReferences === 0">
         <p>No tienes productos en tu inventario</p>
-      </div>
-      <div class="product-table" v-else>
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Nombre del Producto</th>
-              <th>Precio</th>
-              <th>Categoría</th>
-              <th>Cantidad</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Aquí se agregarían las filas de productos dinámicamente -->
-            <tr>
-              <td>Producto 1</td>
-              <td>$10.00</td>
-              <td>Categoría 1</td>
-              <td>5</td>
-              <td>
-                <button class="btn btn-warning btn-sm">Editar</button>
-                <button class="btn btn-danger btn-sm">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      </div>-->
     </div>
     
   </div>
+  <div class="karproducto">
+    <CardProduct v-for="prod in datosprod" :key="prod.Nombre" :title="prod.Nombre" :Cantidadprod="prod.CantidadExistencia" 
+    :descrip="prod.Descripcion" :presioventa="prod.PrecioVenta" :presioprod="prod.PrecioProduc" @elimin="eliminarproducto" :idprod="prod.IDProducto"/>
+  </div>
+  
+  
 </template>
 
 <script>
+import CardProduct from './CardProduct.vue'
 import AddProductForm from './AddProductForm.vue';
 import axios from 'axios';
+
 
 export default {
   name: 'ProductInventory',
   components: {
     AddProductForm,
+    CardProduct
+    
   },
   data() {
     return {
@@ -103,124 +108,155 @@ export default {
       totalReferences: 0,
       inventoryCost: 50,
       categoriaName: '',
+      CantidadProduc: '',
+      datosprod:[],
+      datosprodcount:0,
+      datoselim:[],
+
+
     };
   },
+  mounted() {
+    this.Productos();
+    this.Productoscount();
+  },
   methods: {
+    async Productos() {
+      try {
+        const response = await axios.get('http://localhost:3000/Producto');
+        this.datosprod = response.data.results;
+        console.log(this.datosprod)
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        alert('Error al obtener los productos');
+      }
+    },
     async createCategoriaProd() {
       const formData = {
-        categoriaName: this.categoriaName,
+        categoriaName: this.categoriaName
       };
       try {
             const response = await axios.post('http://localhost:3000/categorias', formData);
             console.log('Respuesta del servidor:', response.data); 
-            alert('Producto creado con éxito');
+            alert('Categoria creada con éxito');
+            this.categoriaName = ""
         } catch (error) {
             console.error('Error al crear el producto:', error);
             alert('Error al crear la categoria: ' + error.message);
         }
+    },
+    async createCantidadProduct() {
+      const formData = {
+        CantidadProduc: this.CantidadProduc
+      };
+      try {
+            const response = await axios.post('http://localhost:3000/cantidadproduc', formData);
+            console.log('Respuesta del servidor:', response.data); 
+            alert('Cantidad creada con éxito');
+            this.CantidadProduc = ""
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
+            alert('Error al crear la cantidad: ' + error.message);
+        }     
+    },
+    async Productoscount() {
+      try {
+        const response = await axios.get('http://localhost:3000/Productocont');
+        this.datosprodcount = response.data.results; 
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        alert('Error al obtener los productos');
+      }
+    },
+
+    async eliminarproducto(prop) {
+      console.log(prop)
+      
+      try{
+        const response = await axios.delete('http://localhost:3000/productoselim/:idProducto');
+        this.datoselim = response.data.results;  
+      }
+      catch (error){
+        console.error('Error al borrar los productos:', error);
+        alert('Error al borrar los productos');
+      }
+    },
     }
-  },
-};
+  }
+
 </script>
 
 <style scoped>
-body {
-  font-family: Arial, sans-serif;
-  
-}
+
 
 .header {
   display: flex;
-  
   align-items: center;
-  padding: 4px;
+  padding: 10px;
   border-bottom: 1px solid #ccc;
+  margin-top: 20px;
+  
+}
+.movements{
+  padding-bottom: 80px;
+
+}
+.data-pro{
+  text-align: center;
+  height: 50px;
+  width: 500px;
+  background-color: #D5E4FF;
+  flex-direction: row;
+  margin-left: 60px;
+  padding: 10px;
+  border-radius: 10px;
   
 }
 
-
-
-button,
-select {
-  padding: 10px 10px;
+.btn{
+  padding: 10px;
   font-size: 14px;
-  border: 1px solid black;
+  border: 1px solid rgb(137, 149, 226);
   border-radius: 5px;
-  background-color: rgba(166, 210, 235, 0.7);
+  background-color: #eff5ff;
   cursor: pointer;
-  height: 40px;
-  width: 200px;
+  height: 50px;
+  width: 150px;
   color: black;
+  margin-left: 20px;
 }
 
 
-button:hover,
-select:hover {
-  background-color: rgba(110, 183, 226, 0.7);
-  color: black;
+.btn:hover{
+  background-color: #bdd6ff;
+  color: white;
+  border: 1px solid rgb(120, 134, 223);
 }
 
 
-.balances {
+/* aca empiezan mis estilos */ 
+.btn-close{
+  height: 50px;
+  width: 50px;
+}
+.card{
+  margin-top: 20px;
+  margin-left: 50px;
+}
+.karproducto{
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-direction: row;
+  margin-top: 20px
+}
+.header-btn{
+  padding: 20px;
+  padding-top: 40px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
-
-.balance,
-.inventory-cost {
-  flex: 1;
-  text-align: center;
-  padding: 10px;
-  background-color: #e0f7fa;
-  border-radius: 5px;
-  margin: 0 10px;
-}
-
-
-
-.product-table table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.product-table th,
-.product-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.product-table th {
-  background-color: #f2f2f2;
-}
-
-.product-table tbody tr:hover {
-  background-color: #f1f1f1;
-}
-
-@media (max-width: 768px) {
-  .header,
-  .balances {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header input,
-  .header button,
-  .balances .balance,
-  .balances .inventory-cost {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-}
-
-.text-end {
-  text-align: end;
-}
-.contProduc{
-  padding: 80px
+.inp-btn{
+  height: 50px;
 }
 </style>
 
