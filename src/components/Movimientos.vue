@@ -2,8 +2,7 @@
   <div class="container-fluid">
 
     <div class="header ">
-      <h2>Movimientos</h2>
-
+      <h2 >Movimientos</h2>
       <button>Abrir Caja</button>
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
@@ -137,6 +136,7 @@
       </div>
     </div>
   </div>
+  <div></div>
 
 </template>
 
@@ -312,4 +312,5 @@ select:hover {
     margin-bottom: 0;
   }
 }
+
 </style>

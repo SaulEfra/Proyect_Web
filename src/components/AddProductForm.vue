@@ -6,7 +6,7 @@
           <div class="card-body">
             <div class="mb-3">
               <label for="fileUpload" class="form-label">Selecciona una imagen para subir</label>
-              <input type="file" class="form-control" id="fileUpload" accept="image/*" @change="onFileChange">
+              <input  type="file" class="form-control" id="fileUpload" accept="image/*" @change="onFileChange">
             </div>
             <div class="row">
               <div class="col-lg-6">
@@ -15,39 +15,36 @@
                   <input v-model="productName" id="NameProduct" type="text" class="form-control">
                 </div>
                 <div class="mb-3">
-                  <label for="CostUni" class="form-label">Costo Unitario</label>
-                  <input v-model.number="unitCost" id="CostUni" type="number" class="form-control">
+                  <label for="categ" class="form-label">Cantidad de venta</label>
+                  <select v-model="cantVent" id="categ" class="form-select" aria-label="Default select example">
+                    <option v-for="cant in datoscant" :key="cant.IDCantidad">{{ cant.NombreCantidad }}</option>
+                  </select>
                 </div>
                 <div class="mb-3">
-                  <label for="cantidad" class="form-label">Cantidad</label>
-                  <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100"
-                    step="1" class="form-control">
+                  <label for="CostUni" class="form-label">Costo Unitario</label>
+                  <input v-model.number="Costunit" id="CostUni" type="number" class="form-control">
                 </div>
-              </div>
-              <div class="col-lg-6">
                 <div class="mb-3">
                   <label for="preci" class="form-label">Precio</label>
                   <input v-model.number="price" id="preci" type="number" class="form-control">
                 </div>
+                
+              </div>
+              <div class="col-lg-6">
+                <div class="mb-3">
+                  <label for="cantidad" class="form-label">Cantidad</label>
+                  <input v-model.number="cantid" type="number" id="cantidad" name="cantidad" min="1" max="100" step="1" class="form-control">
+                </div>
                 <div class="mb-3">
                   <label for="categ" class="form-label">Categoría</label>
                   <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-                    <option disabled selected>Selecciona una categoría</option>
-                    <option value="1"></option>
-                    <option value="2"></option>
-                    <option value="3"></option>
+                    <option v-for="cat in datoscat" :key="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
                   </select>
                 </div>
                 <div class="form-check">
-                  <input v-model="Factura" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="factura">
-                  <label class="form-check-label" for="flexRadioDefault1">
+                  <input class="form-check-input" v-model="Facturas" type="radio" name="exampleRadios" id="exampleRadios2" value="Factura">
+                  <label class="form-check-label" for="exampleRadios2">
                     Factura
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input v-model="NoFactura" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked value="nofactura">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    No Factura
                   </label>
                 </div>
                 <div class="mb-3">
@@ -67,6 +64,8 @@
 </template>
 
 <script>
+
+//se esta utilisando option api 
 import axios from 'axios';
 
 export default {
@@ -74,44 +73,85 @@ export default {
   data() {
     return {
       productName: '',
-      unitCost: null,
-      quantity: 1,
-      price: null,
+      cantVent:'',
+      Costunit: 0,
+      cantid: 0,
+      price: 0,
       category: '',
       description: '',
       selectedFile: null,
-      Factura: '',
-      NoFactura: ''
+      Facturas: '',
+      datoscant: [],
+      datoscat: [],
+      idNeg: 1,
+      idimg: 1
     };
   },
+  mounted() {
+    this.Cantidades();
+    this.Categorias();
+  },
   methods: {
+    async Cantidades() {
+      try {
+        const response = await axios.get('http://localhost:3000/cantidadproducDos');
+        this.datoscant = response.data.results; 
+      } catch (error) {
+        console.error('Error al obtener las cantidades:', error);
+        alert('Error al obtener las cantidades');
+      }
+    },
+
+    async Categorias() {
+      try {
+        const response = await axios.get('http://localhost:3000/categoriaproducto');
+        this.datoscat = response.data.results; 
+      } catch (error) {
+        console.error('Error al obtener las categorias:', error);
+        alert('Error al obtener las categorias');
+      }
+    },
+
+    onFileChange(event) {
+      this.selectedFile = event.target.files[0];
+    },
     async createProduct() {
       const formData = {
-        productName: this.productName,
-        unitCost: this.unitCost,
-        quantity: this.quantity,
-        price: this.price,
-        category: this.category,
-        description: this.description,
-        Factura: this.Factura,
-        NoFactura: this.NoFactura
-      };
+        selectedFile:this.selectedFile,
+        productName:this.productName,
+        //cantVent :this.cantVent,
+        Costunit:this.Costunit,
+        price:this.price,
+        cantid:this.cantid,
+        //category:this.category,
+        Facturas:this.Facturas,
+        description:this.description,
+        idneg: this.idNeg,
+        idimg: this.idimg
 
+      };
       try {
-        const response = await axios.post('http://localhost:3000/items', formData);
-        console.log('Respuesta del servidor:', response.data); // Usar la respuesta
-        alert('Producto creado con éxito');
-      } catch (error) {
-        console.error('Error al crear el producto:', error);
-        alert('Error al crear el producto: ' + error.message);
-      }
+            const response = await axios.post('http://localhost:3000/productos', formData);
+            console.log('Respuesta del servidor:', response.data); 
+            alert('producto creado con éxito');
+            // como borrar los datos this.CantidadProduc = ""
+            this.productName = "",
+            this.Costunit = 0,
+            this.unitCost = 0,
+            this.price = 0,
+            this.cantid = 0,
+            this.Factura = "",
+            this.description = ""
+            
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
+            alert('Error al crear el producto: ' + error.message);
+        }  
     }
   }
-
 }
 </script>
-
-<style>
+<style scoped>
 .contenid {
   padding-left: 40px;
   padding-right: 60px;
