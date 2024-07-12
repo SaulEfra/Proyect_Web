@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form >
+    <form @submit.prevent="montoInicialCaja">
       <div class="form-group">
         <label for="montoInicial">Monto Inicial</label>
         <input
@@ -13,36 +13,46 @@
         />
       </div>
     
-      <button type="submit" class="btn btn-primary mt-3">Abrir Caja</button>
+      <button type="submit" class="btn btn-primary mt-3" >Abrir Caja</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'AbrirCaja',
   data() {
     return {
       montoInicial: '',
-      fechaHora: '', // No necesitamos inicializar fechaHora aquí
+      fechaHora: '',
     };
   },
   mounted() {
-    // Generar la fecha y hora actual
-    this.fechaHora = new Date().toISOString().slice(0, 16); // Formato "YYYY-MM-DDTHH:mm"
+    this.fechaHora = new Date().toISOString().slice(0, 16);
   },
   methods: {
-    abrirCaja() {
-      // Aquí puedes manejar la lógica para abrir la caja.
-      // Por ejemplo, puedes enviar los datos a un servidor.
-      console.log('Caja abierta con monto inicial:', this.montoInicial, 'y fecha/hora:', this.fechaHora);
-      // Resetea el formulario después de abrir la caja
-      this.montoInicial = '';
-      // No es necesario resetear fechaHora, ya que se actualizará automáticamente al montar el componente nuevamente
-      // this.fechaHora = '';
-      // Cerrar el modal (si es necesario)
-      this.$emit('close');
+    async montoInicialCaja(){
+      const formData = {
+        montoInicial: this.montoInicial,
+        fechaHora: this.fechaHora,
+      };
+      try {
+            const response = await axios.post('http://localhost:3000/AbrirCaja', formData);
+            console.log('Respuesta del servidor:', response.data); 
+            alert('Se Abrió Caja Correctamente');
+            this.limpiarDatos(); // Limpiar datos
+            //this.cerrarModal(); // Cerrar modal
+
+        } catch (error) {
+            console.error('Error al Abrir caja:', error);
+            alert('Error al abrir caja: ' + error.message);
+        }
     },
+    limpiarDatos() {
+      this.montoInicial = '';
+    },
+    
   },
 };
 </script>
@@ -55,6 +65,7 @@ export default {
 .btn-primary {
   background-color: #007bff;
   border-color: #007bff;
+  text-align: end;
 }
 
 .btn-primary:hover {

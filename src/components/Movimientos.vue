@@ -4,10 +4,12 @@
       <h2>Movimientos</h2>
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
         Caja</button>
-        <button @click="showModal = true">Cerrar Caja</button>
+        <button @click="showCerrarCajaModal = true">Cerrar Caja</button>
     <CierreCaja
-      :isVisible="showModal"
-      @close="showModal = false"
+    :isVisible="showCerrarCajaModal"
+      :dineroBase="cajaData.montoInicial"
+      :fechaHora="cajaData.fechaHora"
+      @close="showCerrarCajaModal = false"
     />
 
 
@@ -79,7 +81,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <AbrirCaja />
+              <AbrirCaja @caja-abierta="handleCajaAbierta" @close="showAbrirCajaModal = false" v-if="showAbrirCajaModal" />
             </div>
           </div>
         </div>
@@ -285,7 +287,12 @@ export default {
       ventasTotales: 0,
       gastosTotales: 0,
       balanceTotal: 0,
-      showModal: false,
+      showAbrirCajaModal: true,
+      showCerrarCajaModal: false,
+      cajaData: {
+        montoInicial: 0,
+        fechaHora: ''
+      }
     };
 
   },
@@ -295,6 +302,11 @@ export default {
       this.currentSection = section;
 
     },
+    handleCajaAbierta(data) {
+      this.cajaData.montoInicial = data.montoInicial;
+      this.cajaData.fechaHora = data.fechaHora;
+      this.showAbrirCajaModal = false;
+    }
   },
 
 };
