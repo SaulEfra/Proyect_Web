@@ -1,9 +1,9 @@
 <template>
     <div>
       
-      <p v-if="datosCajaAbierta">ID: {{ datosCajaAbierta.idAbrirCaja }}</p>
-      <p v-if="datosCajaAbierta">Fecha: {{ datosCajaAbierta.Fecha }}</p>
-      <p v-if="datosCajaAbierta">Monto Inicial: {{ datosCajaAbierta.MontoInicial }}</p>
+      <p v-if="datosCajaAbierta">ID Caja: {{ datosCajaAbierta.IDAbrirCaja }}</p>
+      <p v-if="datosCajaAbierta">Fecha y Hora: {{ datosCajaAbierta.Fecha }}</p>
+      <p v-if="datosCajaAbierta">Monto Inicial: $ {{ datosCajaAbierta.MontoInicial }}</p>
     </div>
   </template>
   

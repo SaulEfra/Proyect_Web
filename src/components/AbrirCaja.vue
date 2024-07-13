@@ -47,7 +47,8 @@ export default {
         const dataResponse = await axios.get('http://localhost:3000/AbrirCaja');
         const datos = dataResponse.data;
         alert(`Última Caja Abierta:
-          ID: ${datos.idAbrirCaja}
+          ID Encargado: ${datos.IDUser}
+          ID Caja: ${datos.IDAbrirCaja}
           Fecha: ${datos.Fecha}
           Monto Inicial: ${datos.MontoInicial}`);
 

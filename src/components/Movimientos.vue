@@ -24,43 +24,7 @@
           </div>
           <div class="offcanvas-body">
 
-            <form>
-              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                <label class="btn btn-outline-primary" for="btnradio1">Pagada</label>
-
-                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                <label class="btn btn-outline-primary" for="btnradio2">En Deuda</label>
-              </div>
-              <div class="mb-3">
-                <label for="concepto" class="form-label">Fecha</label>
-                <input type="date" class="form-control" id="fechaGasto" placeholder="Concepto del gasto">
-              </div>
-              <div class="mb-3">
-                <label for="cateGasto" class="form-label">Categoría del gasto</label>
-                <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-                  <option disabled selected>Selecciona una categoría</option>
-                  <option value="1">Categoría 1</option>
-                  <option value="2">Categoría 2</option>
-                  <option value="3">Categoría 3</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="valorGasto" class="form-label">Valor</label>
-                <input type="number" class="form-control" id="valorGasto">
-              </div>
-              <div class="mb-3">
-                <label for="descGasto" class="form-label">¿Quieres darle un nombre a este gasto?</label>
-                <input type="text" placeholder="Escríbelo aquí" class="form-control" id="descGasto">
-              </div>
-
-              <div class="mb-3">
-                <label for="proovGasto" class="form-label">Agrega un proveedor al gasto</label>
-                <input type="text" placeholder="Buscar..." class="form-control" id="descGasto">
-              </div>
-
-              <button type="submit" class="btn btn-primary">Guardar</button>
-            </form>
+            <NuevoGasto/>
           </div>
         </div>
       </div>
@@ -278,6 +242,7 @@
 import NuevaVenta from './NuevaVenta.vue';
 import AbrirCaja from './AbrirCaja.vue';
 import CerrarCaja from './CerrarCaja.vue'
+import NuevoGasto from './NuevoGasto.vue'
 
 export default {
   name: 'MovimientosApp',
@@ -285,7 +250,7 @@ export default {
     NuevaVenta,
     AbrirCaja,
     CerrarCaja,
-    
+    NuevoGasto,
 
   },
   data() {
