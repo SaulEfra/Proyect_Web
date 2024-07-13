@@ -13,13 +13,14 @@
         />
       </div>
     
-      <button type="submit" class="btn btn-primary mt-3" >Abrir Caja</button>
+      <button type="submit" class="btn btn-primary mt-3">Abrir Caja</button>
     </form>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
 export default {
   name: 'AbrirCaja',
   data() {
@@ -32,27 +33,37 @@ export default {
     this.fechaHora = new Date().toISOString().slice(0, 16);
   },
   methods: {
-    async montoInicialCaja(){
+    async montoInicialCaja() {
       const formData = {
         montoInicial: this.montoInicial,
         fechaHora: this.fechaHora,
       };
       try {
-            const response = await axios.post('http://localhost:3000/AbrirCaja', formData);
-            console.log('Respuesta del servidor:', response.data); 
-            alert('Se Abrió Caja Correctamente');
-            this.limpiarDatos(); // Limpiar datos
-            //this.cerrarModal(); // Cerrar modal
+        const response = await axios.post('http://localhost:3000/AbrirCaja', formData);
+        console.log('Respuesta del servidor:', response.data); 
+        alert('Se Abrió Caja Correctamente');
 
-        } catch (error) {
-            console.error('Error al Abrir caja:', error);
-            alert('Error al abrir caja: ' + error.message);
-        }
+        // Obtener los datos del último registro
+        const dataResponse = await axios.get('http://localhost:3000/AbrirCaja');
+        const datos = dataResponse.data;
+        alert(`Última Caja Abierta:
+          ID: ${datos.idAbrirCaja}
+          Fecha: ${datos.Fecha}
+          Monto Inicial: ${datos.MontoInicial}`);
+
+        this.limpiarDatos(); // Limpiar datos
+        
+        // Emitir un evento con los datos obtenidos
+        this.$emit('caja-abierta', datos);
+
+      } catch (error) {
+        console.error('Error al Abrir caja:', error);
+        alert('Error al abrir caja: ' + error.message);
+      }
     },
     limpiarDatos() {
       this.montoInicial = '';
     },
-    
   },
 };
 </script>
@@ -73,3 +84,7 @@ export default {
   border-color: #0056b3;
 }
 </style>
+
+
+
+

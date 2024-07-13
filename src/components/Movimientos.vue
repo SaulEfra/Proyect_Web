@@ -2,19 +2,11 @@
   <div class="container-fluid">
     <div class="header">
       <h2>Movimientos</h2>
+
       <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir
-        Caja</button>
-        <button @click="showCerrarCajaModal = true">Cerrar Caja</button>
-    <CierreCaja
-    :isVisible="showCerrarCajaModal"
-      :dineroBase="cajaData.montoInicial"
-      :fechaHora="cajaData.fechaHora"
-      @close="showCerrarCajaModal = false"
-    />
-
-
-
-
+        Caja</button> 
+        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#CerrarCajaModal">Cerrar
+          Caja</button>
 
       <div class="actions">
         <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
@@ -81,7 +73,20 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <AbrirCaja @caja-abierta="handleCajaAbierta" @close="showAbrirCajaModal = false" v-if="showAbrirCajaModal" />
+              <AbrirCaja @caja-abierta="manejarCajaAbierta" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="CerrarCajaModal" tabindex="-1" aria-labelledby="CerrarCajaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="CerrarCajaLabel">Cierre de Caja</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <CerrarCaja v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" />
             </div>
           </div>
         </div>
@@ -129,21 +134,21 @@
 
           <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción del balance">
             <h3>Balance</h3>
-            <p>{{ balanceTotal }}</p>
+            <p></p>
           </button>
 
 
 
           <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de las ventas totales">
             <h3>Ventas Totales</h3>
-            <p>{{ ventasTotales }}</p>
+            <p></p>
           </button>
 
 
 
           <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de los gastos totales">
             <h3>Gastos Totales</h3>
-            <p>{{ gastosTotales }}</p>
+            <p></p>
           </button>
 
 
@@ -272,27 +277,21 @@
 <script>
 import NuevaVenta from './NuevaVenta.vue';
 import AbrirCaja from './AbrirCaja.vue';
-import CierreCaja from './CierreCaja.vue'
+import CerrarCaja from './CerrarCaja.vue'
+
 export default {
   name: 'MovimientosApp',
   components: {
     NuevaVenta,
     AbrirCaja,
-    CierreCaja,
+    CerrarCaja,
+    
 
   },
   data() {
     return {
       currentSection: 'transacciones',
-      ventasTotales: 0,
-      gastosTotales: 0,
-      balanceTotal: 0,
-      showAbrirCajaModal: true,
-      showCerrarCajaModal: false,
-      cajaData: {
-        montoInicial: 0,
-        fechaHora: ''
-      }
+      datosCajaAbierta: null
     };
 
   },
@@ -302,11 +301,10 @@ export default {
       this.currentSection = section;
 
     },
-    handleCajaAbierta(data) {
-      this.cajaData.montoInicial = data.montoInicial;
-      this.cajaData.fechaHora = data.fechaHora;
-      this.showAbrirCajaModal = false;
-    }
+    manejarCajaAbierta(datos) {
+      this.datosCajaAbierta = datos;
+    }, 
+    
   },
 
 };

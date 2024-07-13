@@ -103,12 +103,14 @@ export default {
       totalReferences: 0,
       inventoryCost: 50,
       categoriaName: '',
+
     };
   },
   methods: {
     async createCategoriaProd() {
       const formData = {
         categoriaName: this.categoriaName,
+        
       };
       try {
             const response = await axios.post('http://localhost:3000/categorias', formData);
