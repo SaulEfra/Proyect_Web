@@ -8,6 +8,7 @@ import MovimientosApp from '../components/Movimientos.vue';
 import EmpleadosApp from '../components/Empleados.vue';
 import ProductInventory from '../components/Productos.vue';
 import NuevaVenta from '@/components/NuevaVenta.vue';
+import LoginAdm from '@/components/LoginAdmin.vue'; 
 
 const routes = [
     { path: '/', component: MovimientosApp },
@@ -18,6 +19,8 @@ const routes = [
     { path: '/Empleados', component: EmpleadosApp},
     {path:'/Productos', component: ProductInventory},
     {path:'/NuevaVenta', component: NuevaVenta},
+    { path: '/LoginAdm', component: LoginAdm },
+
     
 ]
 

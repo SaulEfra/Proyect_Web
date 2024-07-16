@@ -29,6 +29,7 @@
                                         <button class="btn btn-primary" type="button" id="agregar">Agregar Producto</button>
                                     </div>
                                 </div>
+                                <!-- Repita las tarjetas según sea necesario -->
                             </div>
                         </div>
                     </div>
@@ -95,7 +96,7 @@
                                             <!-- Sin contenido para Cierres de caja aún -->
                                             <div>
                                                 <div>
-                                                    <label for="text">Fecha de venta</label>
+                                                    <label for="text">Fecha de la venta</label>
                                                     <input type="date" />
                                                 </div>
                                                 <div>
@@ -190,20 +191,19 @@ export default {
 }
 
 .tab-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .tab-buttons button {
-  flex: 1;
-  margin-right: 10px;
+    flex: 1;
+    margin-right: 10px;
 }
 
 .tab-buttons button:last-child {
-  margin-right: 0;
+    margin-right: 0;
 }
-
 
 .tab-buttons button.active {
     font-weight: bold;
@@ -255,9 +255,16 @@ export default {
 }
 
 .card1 {
-    background-color: aquamarine;
-    width: 200px;
-    height: 150px;
+    margin: 10px;
+    flex: 0 0 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+}
+
+@media (max-width: 767.98px) {
+    .card1 {
+        flex: 0 0 calc(100% - 20px);
+        max-width: calc(100% - 20px);
+    }
 }
 
 .canast {
