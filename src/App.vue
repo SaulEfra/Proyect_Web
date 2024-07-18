@@ -1,20 +1,17 @@
 <template>
   <div class="">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <MainView></MainView>
+    <LoginAdmin msg="Welcome to Your Vue.js App"/>
+
   </div>
   
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-import MainView from './views/MainView'
-
+import LoginAdmin  from './components/LoginAdmin.vue';
 export default {
   name: 'App',
   components: {
-    HelloWorld,
-    MainView
+    LoginAdmin,
   }
 }
 </script>
