@@ -2,6 +2,7 @@
   <div>
     <form @submit.prevent="montoInicialCaja">
       <div class="form-group">
+        
         <label for="montoInicial">Monto Inicial</label>
         <input
           type="number"
@@ -27,10 +28,12 @@ export default {
     return {
       montoInicial: '',
       fechaHora: '',
+      
     };
   },
   mounted() {
     this.fechaHora = new Date().toISOString().slice(0, 16);
+    
   },
   methods: {
     async montoInicialCaja() {
@@ -38,6 +41,7 @@ export default {
         montoInicial: this.montoInicial,
         fechaHora: this.fechaHora,
       };
+     
       try {
         const response = await axios.post('http://localhost:3000/AbrirCaja', formData);
         console.log('Respuesta del servidor:', response.data); 
@@ -51,6 +55,11 @@ export default {
           ID Caja: ${datos.IDAbrirCaja}
           Fecha: ${datos.Fecha}
           Monto Inicial: ${datos.MontoInicial}`);
+
+          
+
+        
+
 
         this.limpiarDatos(); // Limpiar datos
         
