@@ -37,7 +37,7 @@
       <div class="gest-item"><h5>Gestiona tus contactos</h5></div>
       
       <div class="gest-item">
-        <RouterLink to="/Clientes">Clientes</RouterLink>
+        <RouterLink to="/ClientesTreinta">Clientes</RouterLink>
       </div>
       <div class="gest-item">
         <RouterLink to="/Proveedores">Proveedores</RouterLink>

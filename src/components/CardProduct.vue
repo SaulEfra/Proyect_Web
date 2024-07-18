@@ -1,61 +1,51 @@
 <template>
-    <div class="card" style="width: 18rem;">
-      <img src="" class="card-img-top" alt="">
-      <div class="card-body">
-        <p class="card-text d-none">{{ idprod }}</p>
-        <h5 class="card-title">{{ title }}</h5>
-        <p class="card-text">Precio: {{ presioventa }} $</p>
-        <p class="card-text">Cantidad: {{ Cantidadprod }}</p>
-        <p class="card-text">Descripcion: {{ descrip }}</p>
-        <div>
-            <button class="btn-card-elim" @click="usarprop">Eliminar</button>
-            <button class="btn-card" >Actualizar</button>
-            
-        </div>
-        
+  <div class="card" style="width: 18rem;">
+    
+    <div class="card-body">
+      <img :src="imageUrl" class="card-img-top" alt="Product Image">
+      <p class="card-text d-none">{{ idprod }}</p>
+      <h5 class="card-title">{{ title }}</h5>
+      <p class="card-text">Precio: {{ presioventa }} $</p>
+      <p class="card-text">Cantidad: {{ Cantidadprod }}</p>
+      <p class="card-text">Descripcion: {{ descrip }}</p>
+      <div>
+          <button class="btn-card-elim" @click="usarprop">Eliminar</button>
+          <button type="button" class="btn-card " data-bs-toggle="modal" data-bs-target="#actualizarproducto" @click="usarpropdos">Actualizar Producto</button> 
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-//import { data } from 'jquery';
-
-//import { type } from 'jquery';
-//import ModalProducactinfo from './ModalProducactinfo.vue';
-
-//import axios from 'axios';
-
 export default {
-    name:'CardProduct',
-    components: {
-       // ModalProducactinfo
-    },
-    props:{
-        title:String,
-        Cantidadprod:Number,
-        descrip:String,
-        presioventa:Number,
-        presioprod:Number,
-        idprod: Number
-    },
-    //emits:[elimin],
-    data(props, ) {
-      return {
-        props
-        };
-    },
-    
-    methods:{
-      async eliminarproducto (prop){
-        this.$emit('elimin',this.idprod)
-        console.log("el prop es :" , prop)
-      },
-      async usarprop(){
-        this.eliminarproducto(this.idprod)
+  name: 'CardProduct',
+  props: {
+      title: String,
+      Cantidadprod: Number,
+      descrip: String,
+      presioventa: Number,
+      presioprod: Number,
+      idprod: Number,
+      imagen: String 
+  },
+  emits: ["elimin", "actu"],
+  computed: {
+      imageUrl() {
+          return `data:image/jpeg;base64,${this.imagen}`; 
       }
+  },
+  methods: {
+    async usarprop() {
+      this.$emit("elimin", this.idprod);
+    },
+    async usarpropdos() {
+      this.$emit("actu", this.idprod);
     }
-    }
+  }
+}
 </script>
+
+
 
 <style scoped>
     .btn-card{
