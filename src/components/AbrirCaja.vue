@@ -2,7 +2,6 @@
   <div>
     <form @submit.prevent="montoInicialCaja">
       <div class="form-group">
-        
         <label for="montoInicial">Monto Inicial</label>
         <input
           type="number"
@@ -13,7 +12,6 @@
           required
         />
       </div>
-    
       <button type="submit" class="btn btn-primary mt-3">Abrir Caja</button>
     </form>
   </div>
@@ -28,46 +26,36 @@ export default {
     return {
       montoInicial: '',
       fechaHora: '',
-      
     };
   },
   mounted() {
     this.fechaHora = new Date().toISOString().slice(0, 16);
-    
   },
   methods: {
     async montoInicialCaja() {
       const formData = {
-        montoInicial: this.montoInicial,
         fechaHora: this.fechaHora,
+        montoInicial: this.montoInicial,
       };
-     
-      try {
-        const response = await axios.post('http://localhost:3000/AbrirCaja', formData);
-        console.log('Respuesta del servidor:', response.data); 
-        alert('Se Abrió Caja Correctamente');
 
-        // Obtener los datos del último registro
-        const dataResponse = await axios.get('http://localhost:3000/AbrirCaja');
+      try {
+        const response = await axios.post('http://localhost:3000/AbrirCaja', formData, { withCredentials: true });
+        console.log('Respuesta del servidor:', response.data);
+        alert('Se abrió caja correctamente');
+
+        const dataResponse = await axios.get('http://localhost:3000/AbrirCaja', { withCredentials: true });
         const datos = dataResponse.data;
         alert(`Última Caja Abierta:
-          ID Encargado: ${datos.IDUser}
+          Nombre del Encargado: ${datos.NombreUsuario}
           ID Caja: ${datos.IDAbrirCaja}
           Fecha: ${datos.Fecha}
           Monto Inicial: ${datos.MontoInicial}`);
 
-          
+        this.limpiarDatos();
 
-        
-
-
-        this.limpiarDatos(); // Limpiar datos
-        
-        // Emitir un evento con los datos obtenidos
         this.$emit('caja-abierta', datos);
-
       } catch (error) {
-        console.error('Error al Abrir caja:', error);
+        console.error('Error al abrir caja:', error);
         alert('Error al abrir caja: ' + error.message);
       }
     },
@@ -94,7 +82,3 @@ export default {
   border-color: #0056b3;
 }
 </style>
-
-
-
-

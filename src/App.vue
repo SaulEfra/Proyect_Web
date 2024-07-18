@@ -1,20 +1,20 @@
 <template>
   <div class="">
-  <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
-    <MainView></MainView>
+<HelloWorld msg="Welcome to Your Vue.js App"/>
+    
   </div>
   
 </template>
 
 <script>
-//import HelloWorld from './components/InicioSesion.vue';
-import MainView from './views/MainView'
+import HelloWorld from './components/InicioSesion.vue';
+
 
 export default {
   name: 'App',
   components: {
-   // HelloWorld,
-    MainView
+   HelloWorld,
+    
   }
 }
 </script>

@@ -1,49 +1,78 @@
 <template>
-  <div class="">
+  <div class="login">
     <div class="hello col-lg-6 offset-lg-3">
       <h1>Inicio de sesión</h1>
-      <label for="user" class="texto form-label"> Usuario</label>
-      <input class="user form-control" id="user" type="text">
+      <label for="user" class="texto form-label">Usuario</label>
+      <input class="user form-control" id="user" v-model="email" type="text">
       <br>
-      <label for="Pass" class="texto form-label">Password</label>
-      <input class="passw form-control" type="password">
+      <label for="pass" class="texto form-label">Contraseña</label>
+      <input class="passw form-control" id="pass" v-model="password" type="password">
       <br>
-      <button class="btninic">Comenzar</button>
+      <button class="btninic" @click="login">Comenzar</button>
     </div>
-
-
   </div>
 </template>
 
-
 <script>
+import axios from 'axios';
+
 export default {
   name: 'HelloWorld',
-}
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:3000/login', {
+          email: this.email,
+          password: this.password,
+        }, { withCredentials: true });
+
+        if (response.status === 200) {
+          alert('Inicio de sesión exitoso');
+          // Aquí puedes redirigir al usuario a otra página si el inicio de sesión fue exitoso
+        }
+      } catch (error) {
+        if (error.response) {
+          // El servidor respondió con un estado fuera del rango 2xx
+          alert('Error al iniciar sesión: ' + error.response.data);
+        } else if (error.request) {
+          // La solicitud se hizo pero no hubo respuesta
+          alert('Error al iniciar sesión: No hay respuesta del servidor');
+        } else {
+          // Algo pasó al configurar la solicitud
+          alert('Error al iniciar sesión: ' + error.message);
+        }
+      }
+    }
+
+
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .hello {
   background: #0F2027;
-  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
-  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   padding: 70px;
   border-radius: 30px;
   color: white;
   text-align: center;
-  
-}
-h1{
-  margin-bottom: 60px;
-}
-label{
-  font-size: 30px;
 }
 
+h1 {
+  margin-bottom: 60px;
+}
+
+label {
+  font-size: 30px;
+}
 
 .btninic {
   margin-top: 60px;
