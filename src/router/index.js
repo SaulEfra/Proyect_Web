@@ -17,8 +17,8 @@ const routes = [
     { path: '/AgregarNegocio', component: DatosNegocios},
     { path: '/Movimientos', component: MovimientosApp},
     { path: '/Empleados', component: EmpleadosApp},
-    {path:'/Productos', component: ProductInventory},
-    {path:'/NuevaVenta', component: NuevaVenta},
+    { path:'/Productos', component: ProductInventory},
+    { path:'/NuevaVenta', component: NuevaVenta},
     { path: '/ClientesTreinta', component: ClientesTreinta },
     
 ]
