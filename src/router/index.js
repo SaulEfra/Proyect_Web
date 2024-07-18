@@ -8,6 +8,7 @@ import EmpleadosApp from '../components/Empleados.vue';
 import ProductInventory from '../components/Productos.vue';
 import NuevaVenta from '@/components/NuevaVenta.vue';
 import ClientesTreinta from '@/components/ClientesTreinta.vue';
+import LoginAdm from '@/components/LoginAdmin.vue'; 
 
 const routes = [
     { path: '/InfoNeg', component: InfoNeg },
@@ -19,7 +20,7 @@ const routes = [
     { path: '/Productos', component: ProductInventory },
     { path: '/NuevaVenta', component: NuevaVenta },
     { path: '/ClientesTreinta', component: ClientesTreinta },
-
+    { path: '/LoginAdm', component: LoginAdm },
 ]
 
 const router = createRouter({

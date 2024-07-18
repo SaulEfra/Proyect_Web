@@ -7,7 +7,6 @@
 
 <script>
 import MainView from './views/MainView'
-
 export default {
   name: 'App',
   components: {
