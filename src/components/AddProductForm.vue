@@ -79,10 +79,12 @@ export default {
       price: 0,
       category: '',
       description: '',
-      selectedFile: null,
+      selectfile: null,
       Facturas: '',
+
       datoscant: [],
       datoscat: [],
+
       idNeg: 1,
       idimg: 1
     };
@@ -90,7 +92,7 @@ export default {
   mounted() {
     this.Cantidades();
     this.Categorias();
-  },
+  },  
   methods: {
     async Cantidades() {
       try {
@@ -113,11 +115,12 @@ export default {
     },
 
     onFileChange(event) {
-      this.selectedFile = event.target.files[0];
+      this.selectfile = event.target.files[0];
     },
+    /*
     async createProduct() {
       const formData = {
-        selectedFile:this.selectedFile,
+        selectfile:this.selectfile,
         productName:this.productName,
         //cantVent :this.cantVent,
         Costunit:this.Costunit,
@@ -131,7 +134,7 @@ export default {
 
       };
       try {
-            const response = await axios.post('http://localhost:3000/productos', formData);
+            const response = await axios.post('http://localhost:3000/imagenes/single', formData);
             console.log('Respuesta del servidor:', response.data); 
             alert('producto creado con éxito');
             // como borrar los datos this.CantidadProduc = ""
@@ -147,7 +150,40 @@ export default {
             console.error('Error al crear el producto:', error);
             alert('Error al crear el producto: ' + error.message);
         }  
+    }*/
+    async createProduct() {
+    const formData = new FormData();
+    formData.append('Datos', this.selectfile);
+    formData.append('productName', this.productName);
+    formData.append('Costunit', this.Costunit);
+    formData.append('price', this.price);
+    formData.append('cantid', this.cantid);
+    formData.append('Facturas', this.Facturas);
+    formData.append('description', this.description);
+    formData.append('idneg', this.idNeg);
+
+    try {
+        const response = await axios.post('http://localhost:3000/productosadd', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log('Respuesta del servidor:', response.data);
+        alert('Producto creado con éxito');
+
+        this.productName = "";
+        this.Costunit = 0;
+        this.price = 0;
+        this.cantid = 0;
+        this.Facturas = "";
+        this.description = "";
+        this.selectfile = null;
+    } catch (error) {
+        console.error('Error al crear el producto:', error);
+        alert('Error al crear el producto: ' + error.message);
     }
+}
+
   }
 }
 </script>
