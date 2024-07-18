@@ -1,54 +1,70 @@
 <template>
-  <div class="row partLat">
-    <div class="col-12 perfiles">
-      <select class="form-select">
-        <option value="1">Negocio 1</option>
-        <option value="2">Negocio 2</option>
-      </select>
-    </div>
+  <div>
+    <button @click="toggleSidebar" class="btn btn-primary sidebar-toggle d-md-none">
+      <i :class="['bi', isOpen ? 'bi-x' : 'bi-list']"></i>
+    </button>
 
-    <div class="col-12 config">
-      <div class="config-item">
-        <i class="bi bi-gear-fill"></i>
-        <RouterLink to="/InfoNeg">Configuraciones</RouterLink>
+    <nav :class="['sidebar', isOpen || isMdAndUp ? 'sidebar-open' : '', 'd-md-block']">
+      <div class="container-fluid">
+        <button @click="closeSidebar" class="btn btn-close d-md-none" aria-label="Close">
+          <i class="bi bi-x"></i>
+        </button>
+        <div class="col-12 perfiles">
+          <select class="form-select">
+            <option value="1">Negocio 1</option>
+            <option value="2">Negocio 2</option>
+          </select>
+        </div>
+        <div class="config">
+          <div class="config-item">
+            <i class="bi bi-gear-fill"></i>
+            <RouterLink to="/InfoNeg" @click="closeSidebar">Configuraciones</RouterLink>
+          </div>
+          <div class="config-item">
+            <i class="bi bi-plus-circle-fill"></i>
+            <RouterLink to="/AgregarNegocio" @click="closeSidebar">Agregar negocio</RouterLink>
+          </div>
+        </div>
+        <div class="produc">
+          <div class="produc-item">
+            <i class="bi bi-file-earmark-minus-fill"></i>
+            <RouterLink to="/Movimientos" @click="closeSidebar">Movimientos</RouterLink>
+          </div>
+          <div class="produc-item">
+            <i class="bi bi-box-seam-fill"></i>
+            <RouterLink to="/Productos" @click="closeSidebar">Productos</RouterLink>
+          </div>
+          <div class="produc-item">
+            <i class="bi bi-people-fill"></i>
+            <RouterLink to="/Empleados" @click="closeSidebar">Empleados</RouterLink>
+          </div>
+        </div>
+        <div class="gest">
+          <h5>Gestiona tus contactos</h5>
+          <RouterLink to="/ClientesTreinta" @click="closeSidebar">Clientes</RouterLink>
+          <br>
+          <RouterLink to="/Proveedores" @click="closeSidebar">Proveedores</RouterLink>
+        </div>
       </div>
-      <div class="config-item">
-        <i class="bi bi-plus-circle-fill"></i>
-        <RouterLink to="/AgregarNegocio">Agregar negocio</RouterLink>
-      </div>
-    </div>
-
-    <div class="col-12 produc">
-      <div class="produc-item">
-        <i class="bi bi-file-earmark-minus-fill"></i>
-        <RouterLink to="/Movimientos">Movimientos</RouterLink>
-      </div>
-      <div class="produc-item">
-        <i class="bi bi-box-seam-fill"></i>
-        <RouterLink to="/Productos">Productos</RouterLink>
-      </div>
-      <div class="produc-item">
-        <i class="bi bi-people-fill"></i>
-        <RouterLink to="/Empleados">Empleados</RouterLink>
-      </div>
-    </div>
-
-    <div class="col-12 gest">
-      <h6>Gestiona tus contactos</h6>
-      <RouterLink to="/Clientes">Clientes</RouterLink>
-      <br>
-      <RouterLink to="/Proveedores">Proveedores</RouterLink>
-    </div>
+    </nav>
   </div>
 </template>
 
-<script scoped>
+<script>
 export default {
   name: 'ParteLateral',
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      isMdAndUp: window.innerWidth >= 768
     }
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     toggleSidebar() {
@@ -56,55 +72,90 @@ export default {
     },
     closeSidebar() {
       this.isOpen = false;
+    },
+    handleResize() {
+      this.isMdAndUp = window.innerWidth >= 768;
     }
   }
 }
 </script>
 
 <style scoped>
-.partLat {
+.sidebar-toggle {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar {
+  background-color: #f8f9fa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow-y: auto;
   padding: 20px;
-  background-color: #f8f9fa; /* Color de fondo para el contenedor principal */
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  border-right: 1px solid #ddd;
+  width: 250px;
+  transform: translateX(-100%);
+  opacity: 0;
 }
 
-.perfiles {
-  margin-bottom: 20px; /* Espacio entre el selector de perfiles y el siguiente bloque */
+.sidebar-open {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-.config,
-.produc,
-.gest {
-  margin-bottom: 20px; /* Espacio entre los bloques */
+.container-fluid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .config-item,
 .produc-item {
   display: flex;
   align-items: center;
-  margin-bottom: 10px; /* Espacio entre ícono y texto */
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
-.config-item i,
-.produc-item i {
-  margin-right: 10px; /* Espacio entre el ícono y el texto */
+.config-item:hover,
+.produc-item:hover {
+  background-color: #e9ecef;
 }
 
-.gest h6 {
-  font-size: 16px; /* Tamaño de fuente para el título */
-  margin-bottom: 10px; /* Espacio entre el título y los enlaces */
+.gest h5 {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #495057;
 }
 
 .gest RouterLink {
   display: block;
-  margin-bottom: 5px; /* Espacio entre los enlaces */
-  text-decoration: none; /* Quitar subrayado de los enlaces */
-  color: #000; /* Color de texto para los enlaces */
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #007bff;
 }
 
 .gest RouterLink:hover {
-  text-decoration: underline; /* Subrayado al pasar el mouse sobre los enlaces */
+  text-decoration: underline;
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    transform: none;
+    opacity: 1;
+    position: static;
+    border-right: none;
+    width: 100%;
+  }
+}
 </style>

@@ -1,14 +1,14 @@
 <template>
-    <div class="Cont col-lg-12">
-        <div class="row">
-            <div class="col-lg-2">
-                <ParteLateral></ParteLateral>
-            </div>
-            <div class="Contenid col-lg-9">
-                <RouterView></RouterView>
-            </div>
+    <div class="row">
+        <div class="col-md-3 col-lg-2">
+            <ParteLateral></ParteLateral>
         </div>
+        <div class="Contenid col-md-3 col-lg-9">
+            <RouterView></RouterView>
+        </div>
+        
     </div>
+
 </template>
 <script>
 import ParteLateral from '@/components/ParteLateral.vue';
