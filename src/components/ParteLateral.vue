@@ -1,5 +1,5 @@
 <template>
-  <div class="row partLat">
+  <div class="row partLat ">
     <div class="col-12 perfiles">
       <select class="form-select">
         <option value="1">Negocio 1</option>
@@ -34,21 +34,29 @@
     </div>
 
     <div class="col-12 gest">
-      <h6>Gestiona tus contactos</h6>
-      <RouterLink to="/Clientes">Clientes</RouterLink>
-      <br>
-      <RouterLink to="/Proveedores">Proveedores</RouterLink>
+      <div class="gest-item"><h5>Gestiona tus contactos</h5></div>
+      
+      <div class="gest-item">
+        <RouterLink to="/ClientesTreinta">Clientes</RouterLink>
+      </div>
+      <div class="gest-item">
+        <RouterLink to="/Proveedores">Proveedores</RouterLink>
+      </div>
+      
+      
+      
     </div>
   </div>
 </template>
 
-<script>
+<script scoped>
 export default {
   name: 'ParteLateral'
 };
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 .partLat {
   padding: 20px;
 }
@@ -58,4 +66,46 @@ export default {
 .config-item, .produc-item {
   margin-bottom: 10px;
 }
+=======
+
+.partLat{
+  margin: 15px;
+  
+}
+.partLat a{
+  text-decoration: none;
+  color: black;
+  margin-left: 5px;
+  font-size: 17px;
+}
+.perfiles{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.config{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.product{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.gest{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.config-item{
+  margin-bottom: 10px;
+}
+.produc-item{
+  margin-bottom: 10px;
+}
+
+.gest-item{
+  margin-bottom: 10px;
+}
+
+>>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 </style>
