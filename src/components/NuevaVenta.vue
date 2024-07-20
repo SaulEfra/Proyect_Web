@@ -1,311 +1,168 @@
 <template>
     <div class="container-fluid text-bg-light p-3">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-8 col-md-12 mb-4">
-                        <div class="row nav">
-                            <div class="col-lg-12">
-                                <nav class="navbar navbar-expand-lg bg-body-tertiary nav2">
-                                    <div class="container-fluid">
-                                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                            <ul class="navbar-nav me-auto mb-2 col-lg-12">
-                                                <form class="d-flex" role="search">
-                                                    <input class="form-control me-2" type="search" placeholder="Buscar Producto" aria-label="Buscar">
-                                                    <button class="btn btn-outline-success" type="submit" style="color: blue; border-color: blue;">Buscar</button>
-                                                </form>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
-                            <div class="col-lg-12 mt-3">
-                                <div class="card card1" style="width: 100%;">
-                                    <img src="" class="card-img-top" alt="">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Título de la tarjeta</h5>
-                                        <h5>Producto</h5>
-                                        <h5>Precio</h5>
-                                        <button class="btn btn-primary" type="button" id="agregar">Agregar Producto</button>
-                                    </div>
-                                </div>
-                                <!-- Repita las tarjetas según sea necesario -->
-                            </div>
-                        </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- Navbar para búsqueda -->
+            <div class="col-lg-8 col-md-12 mb-4">
+              <div class="row nav">
+                <div class="col-lg-12">
+                  <nav class="navbar navbar-expand-lg bg-body-tertiary nav2">
+                    <div class="container-fluid">
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 col-lg-12">
+                          <form class="d-flex" @submit.prevent="searchProduct">
+                            <input class="form-control me-2" v-model="searchQuery" type="search" placeholder="Buscar Producto" aria-label="Buscar">
+                            <button class="btn btn-outline-success" type="submit" style="color: blue; border-color: blue;">Buscar</button>
+                          </form>
+                        </ul>
+                      </div>
                     </div>
-                    <div class="col-lg-4 col-md-12 canast">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="row canasta">
-                                    <div class="col-8">
-                                        <h3>Canasta</h3>
-                                    </div>
-                                    <div class="col-2">
-                                        <button class="btn btn-primary btn-circle icon" type="button" id="Agregar">Vaciar</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 mt-3">
-                                <div class="row cant">
-                                    <div class="col-3">
-                                    </div>
-                                    <div class="col-9">
-                                        <input type="text" class="form-control mb-2 text-center" placeholder="Producto">
-                                        <input type="number" class="form-control mb-2 text-center" placeholder="Cantidad">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-10 mt-4 mar">
-                            <label for="total" class="texto">Total</label>
-                            <input class="form-control mb-3 text-center" id="total" type="text">
-                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Confirmar Producto</button>
-                            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                                <div class="offcanvas-header">
-                                    <h5 class="offcanvas-title" id="offcanvasRightLabel">Confirmacion de la venta</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <div class="movements">
-                                        <div class="tab-buttons">
-                                            <button @click="showSection('transacciones')" :class="{active: currentSection === 'transacciones'}">Pagada</button>
-                                            <button @click="showSection('cierresCaja')" :class="{active: currentSection === 'cierresCaja'}">A credito</button>
-                                        </div>
-                                        <div class="transaction-section" v-if="currentSection === 'transacciones'">
-                                            <div>
-                                                <label for="text">Fecha de la venta</label>
-                                                <input type="date" />
-                                            </div>
-                                            <div class="transaction-table">
-                                                <div class="opciones">
-                                                    <button type="button" class="btn btn-outline-secondary">Efectivo<i class="bi bi-cash"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary">Tarjeta<i class="bi bi-credit-card"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary">Transferencia bancaria<i class="bi bi-bank2"></i></button>
-                                                    <button type="button" class="btn btn-outline-secondary">Otro<i class="bi bi-columns-gap"></i></button>
-                                                </div>
-                                                <div>
-                                                    <label for="buscar">Agrega un cliente a la venta (opcional)</label>
-                                                    <input type="text">
-                                                </div>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary">Confirmar venta</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
-                                            <!-- Sin contenido para Cierres de caja aún -->
-                                            <div>
-                                                <div>
-                                                    <label for="text">Fecha de la venta</label>
-                                                    <input type="date" />
-                                                </div>
-                                                <div>
-                                                    <label for="buscar">Agrega un cliente a la venta (opcional)</label>
-                                                    <input type="text">
-                                                </div>
-                                                <div>
-                                                    <button type="submit" class="btn btn-primary">Confirmar venta</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  </nav>
                 </div>
+                <!-- Tarjetas de productos -->
+                <div class="col-lg-12 mt-3">
+                  <div class="card card1" v-for="product in filteredProducts" :key="product.IDProducto" style="width: 100%;">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ product.Nombre }}</h5>
+                      <h5>Producto</h5>
+                      <h5>{{ product.PrecioVenta }}</h5>
+                      <button class="btn btn-primary" type="button" @click="addProductToCart(product)">Agregar Producto</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+  
+            <!-- Sección de Canasta -->
+            <div class="col-lg-4 col-md-12">
+              <div class="card canasta-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">Canasta</h5>
+                  <button class="btn btn-secondary btn-sm" @click="clearCart">Vaciar</button>
+                </div>
+                <div class="card-body">
+                  <div v-for="item in cart" :key="item.IDProducto" class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6>{{ item.Nombre }}</h6>
+                        <small>{{ item.Cantidad }} x {{ item.PrecioVenta }}</small>
+                      </div>
+                      <button class="btn btn-danger btn-sm" @click="removeFromCart(item)">Eliminar</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="total">Total</label>
+                    <input type="text" class="form-control" id="total" :value="totalPrice" readonly>
+                  </div>
+                  <button class="btn btn-primary mt-3" data-bs-toggle="offcanvas" href="#offcanvasRight" role="button" aria-controls="offcanvasRight">Confirmar Producto</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+  
+      <!-- Offcanvas -->
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 id="offcanvasRightLabel">Confirmar Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <h6>Productos en la canasta:</h6>
+          <div v-for="item in cart" :key="item.IDProducto">
+            <p>{{ item.Nombre }} - {{ item.Cantidad }} x {{ item.PrecioVenta }}</p>
+          </div>
+          <p>Total: {{ totalPrice }}</p>
+          <button class="btn btn-success" @click="confirmProduct">Confirmar</button>
+        </div>
+      </div>
     </div>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  
+  export default {
     name: 'NuevaVenta',
     data() {
-        return {
-            currentSection: 'transacciones' // Define la sección inicial
-        };
+      return {
+        products: [], // Array para almacenar los productos
+        searchQuery: '', // Variable para almacenar la consulta de búsqueda
+        cart: [] // Array para almacenar los productos en el carrito
+      };
+    },
+    computed: {
+      filteredProducts() {
+        if (this.searchQuery.trim() === '') {
+          return this.products;
+        }
+        return this.products.filter(product =>
+          product.Nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      },
+      totalPrice() {
+        return this.cart.reduce((total, item) => total + (item.PrecioVenta * item.Cantidad), 0).toFixed(2);
+      }
     },
     methods: {
-        printReceipt() {
-            console.log('Imprimiendo comprobante...');
-        },
-        downloadReceipt() {
-            console.log('Descargando comprobante...');
-        },
-        showSection(section) {
-            this.currentSection = section;
+      async fetchProducts() {
+        try {
+          const response = await axios.get('http://localhost:3000/Producto'); // URL del endpoint
+          this.products = response.data.results;
+        } catch (error) {
+          console.error('Error al obtener productos:', error);
         }
+      },
+      async searchProduct() {
+        // La búsqueda ya se maneja a través de la propiedad computada
+      },
+      addProductToCart(product) {
+        const cartItem = this.cart.find(item => item.IDProducto === product.IDProducto);
+        if (cartItem) {
+          cartItem.Cantidad++;
+        } else {
+          this.cart.push({ ...product, Cantidad: 1 });
+        }
+      },
+      removeFromCart(product) {
+        this.cart = this.cart.filter(item => item.IDProducto !== product.IDProducto);
+      },
+      clearCart() {
+        this.cart = [];
+      },
+      confirmProduct() {
+        try {
+          // Aquí se llama al endpoint para confirmar la venta
+          axios.post('http://localhost:3000/confirmarVenta', this.cart)
+            .then(response => {
+              console.log('Venta confirmada:', response.data);
+              this.clearCart(); // Vaciar el carrito después de confirmar la venta
+            })
+            .catch(error => {
+              console.error('Error al confirmar la venta:', error);
+            });
+        } catch (error) {
+          console.error('Error al confirmar la venta:', error);
+        }
+      }
+    },
+    created() {
+      this.fetchProducts(); // Obtener productos cuando el componente se crea
     }
-}
-</script>
-
-<style>
-/* Updated CSS for the 'Pagada' section */
-.offcanvas-title {
-    font-size: 20px;
-    font-weight: bold;
+  }
+  </script>
+  
+  <style scoped>
+  .nav2 {
     margin-bottom: 20px;
-}
-
-.offcanvas-body label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.offcanvas-body input[type="date"],
-.offcanvas-body .btn-outline-secondary,
-.offcanvas-body input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.offcanvas-body .opciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.offcanvas-body .opciones button {
-    flex: 1 1 calc(50% - 10px);
-}
-
-.offcanvas-body .btn-primary {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-.tab-buttons button {
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.tab-buttons {
-    display: flex;
-    justify-content: space-between;
+  }
+  .card1 {
     margin-bottom: 20px;
-}
-
-.tab-buttons button {
-    flex: 1;
-    margin-right: 10px;
-}
-
-.tab-buttons button:last-child {
-    margin-right: 0;
-}
-
-.tab-buttons button.active {
-    font-weight: bold;
-    border-bottom: 2px solid #000;
-}
-
-/* Existing Styles */
-.mar {
-    margin-top: 50px;
-}
-
-.icon {
-    font-size: 20px;
-}
-
-.icon2 {
-    font-size: 20px;
-    background-color: aqua;
-}
-
-.d-flex {
-    display: flex;
-}
-
-.align-items-center {
-    align-items: center;
-}
-
-.me-2 {
-    margin-right: 0.5rem;
-}
-
-.me-3 {
-    margin-right: 1rem;
-}
-
-.btn-circle {
-    width: 70px;
-    height: 40px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(106, 82, 173);
-}
-
-.btn-circle i {
-    font-size: 16px;
-}
-
-.card1 {
-    margin: 10px;
-    flex: 0 0 calc(50% - 20px);
-    max-width: calc(50% - 20px);
-}
-
-@media (max-width: 767.98px) {
-    .card1 {
-        flex: 0 0 calc(100% - 20px);
-        max-width: calc(100% - 20px);
-    }
-}
-
-.canast {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
-}
-
-.canasta {
-    border-bottom: 1px solid black;
-}
-
-.cant {
-    border-bottom: 1px solid black;
-}
-
-.nav {
-    border-top: 1px solid black;
-}
-
-.nav2 {
-    border-bottom: 1px solid black;
-}
-
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-    .icon {
-        font-size: 18px;
-    }
-    .icon2 {
-        font-size: 18px;
-    }
-    .btn-circle {
-        width: 60px;
-        height: 35px;
-    }
-    .btn-circle i {
-        font-size: 14px;
-    }
-    .card1 {
-        width: 180px;
-        height: 130px;
-    }
-}
-</style>
+  }
+  .canasta-card {
+    width: 100%;
+  }
+  </style>
+  
