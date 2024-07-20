@@ -5,7 +5,7 @@
           <ParteLateral></ParteLateral>
         </div>
         <div class="col-lg-10">
-          <RouterView></RouterView>
+          
         </div>
       </div>
     </div>

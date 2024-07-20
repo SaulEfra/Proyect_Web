@@ -17,7 +17,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'HelloWorld',
+  name: 'InicioSesion',
   data() {
     return {
       email: '',
@@ -34,7 +34,7 @@ export default {
 
         if (response.status === 200) {
           alert('Inicio de sesión exitoso');
-          // Aquí puedes redirigir al usuario a otra página si el inicio de sesión fue exitoso
+          this.$router.push('/Movimientos'); // Redirige al componente Movimientos
         }
       } catch (error) {
         if (error.response) {
@@ -49,8 +49,6 @@ export default {
         }
       }
     }
-
-
   },
 };
 </script>
