@@ -22,13 +22,8 @@
                   </select>
                 </div>
                 <div class="mb-3">
-<<<<<<< HEAD
-                  <label for="cantidad" class="form-label">Cantidad</label>
-                  <input v-model.number="quantity" type="number" id="cantidad" name="cantidad" min="1" max="100" step="1" class="form-control">
-=======
                   <label for="CostUni" class="form-label">Costo Unitario</label>
                   <input v-model.number="Costunit" id="CostUni" type="number" class="form-control">
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
                 </div>
                 <div class="mb-3">
                   <label for="preci" class="form-label">Precio</label>
@@ -44,14 +39,6 @@
                 <div class="mb-3">
                   <label for="categ" class="form-label">Categoría</label>
                   <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-<<<<<<< HEAD
-                    <option disabled selected>Selecciona una categoría</option>
-                    <option value="1">Categoría 1</option>
-                    <option value="2">Categoría 2</option>
-                    <option value="3">Categoría 3</option>
-                  </select>
-                </div>
-=======
                     <option v-for="cat in datoscat" :key="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
                   </select>
                 </div>
@@ -61,7 +48,6 @@
                     Factura
                   </label>
                 </div>
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
                 <div class="mb-3">
                   <label for="Textarea1" class="form-label">Descripción</label>
                   <textarea v-model="description" class="form-control" id="Textarea1" rows="3"></textarea>
@@ -86,17 +72,6 @@ import axios from 'axios';
 export default {
   name: 'AddProductForm',
   data() {
-<<<<<<< HEAD
-      return {
-          productName: '',
-          unitCost: null,
-          quantity: 1,
-          price: null,
-          category: '',
-          description: '',
-          selectedFile: null
-      };
-=======
     return {
       productName: '',
       cantVent:'',
@@ -114,24 +89,12 @@ export default {
       idNeg: 1,
       idimg: 1
     };
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
   },
   mounted() {
     this.Cantidades();
     this.Categorias();
   },  
   methods: {
-<<<<<<< HEAD
-  async createProduct() {
-      const formData = {
-          productName: this.productName,
-          unitCost: this.unitCost,
-          quantity: this.quantity,
-          price: this.price,
-          category: this.category,
-          description: this.description
-      };
-=======
     async Cantidades() {
       try {
         const response = await axios.get('http://localhost:3000/cantidadproducDos');
@@ -169,21 +132,9 @@ export default {
         description:this.description,
         idneg: this.idNeg,
         idimg: this.idimg
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 
       };
       try {
-<<<<<<< HEAD
-          const response = await axios.post('http://localhost:3000/items', formData);
-          console.log('Respuesta del servidor:', response.data); // Usar la respuesta
-          alert('Producto creado con éxito');
-          // Puedes agregar lógica adicional aquí, como limpiar el formulario
-      } catch (error) {
-          console.error('Error al crear el producto:', error);
-          alert('Error al crear el producto: ' + error.message);
-      }
-  }
-=======
             const response = await axios.post('http://localhost:3000/imagenes/single', formData);
             console.log('Respuesta del servidor:', response.data); 
             alert('producto creado con éxito');
@@ -232,7 +183,6 @@ export default {
         console.error('Error al crear el producto:', error);
         alert('Error al crear el producto: ' + error.message);
     }
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 }
 
   }

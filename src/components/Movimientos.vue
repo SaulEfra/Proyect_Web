@@ -1,21 +1,10 @@
 <template>
   <div class="container-fluid">
-<<<<<<< HEAD
     <div class="row">
       <!-- Columna para ParteLateral -->
       <div class="col-lg-2 col-md-3 col-sm-12">
         <ParteLateral />
-=======
 
-    <div class="header ">
-      <h2 >Movimientos</h2>
-      <button>Abrir Caja</button>
-      <div class="actions">
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva
-          Venta</button>
-
-        <button>Nuevo gasto</button>
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
       </div>
 
       <!-- Columna para el contenido principal -->
@@ -233,11 +222,6 @@
       </div>
     </div>
   </div>
-<<<<<<< HEAD
-=======
-  <div></div>
-
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 </template>
 
 
@@ -419,7 +403,6 @@ select:hover {
   }
 }
 
-<<<<<<< HEAD
 .nav-item button {
   width: 100%;
 }
@@ -493,6 +476,4 @@ select:hover {
   width: 100%;
 }
 
-=======
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 </style>

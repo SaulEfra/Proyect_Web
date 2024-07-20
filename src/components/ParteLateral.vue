@@ -56,7 +56,6 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 .partLat {
   padding: 20px;
 }
@@ -66,46 +65,4 @@ export default {
 .config-item, .produc-item {
   margin-bottom: 10px;
 }
-=======
-
-.partLat{
-  margin: 15px;
-  
-}
-.partLat a{
-  text-decoration: none;
-  color: black;
-  margin-left: 5px;
-  font-size: 17px;
-}
-.perfiles{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.config{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-.product{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-.gest{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.config-item{
-  margin-bottom: 10px;
-}
-.produc-item{
-  margin-bottom: 10px;
-}
-
-.gest-item{
-  margin-bottom: 10px;
-}
-
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
 </style>

@@ -133,15 +133,11 @@ export default {
       totalReferences: 0,
       inventoryCost: 50,
       categoriaName: '',
-<<<<<<< HEAD
-
-=======
       CantidadProduc: '',
       datosprod: [],
       datosprodcount: 0,
       datoselim: [],
       idparaact: 0,
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
     };
   },
   mounted() {
@@ -161,12 +157,7 @@ export default {
     },
     async createCategoriaProd() {
       const formData = {
-<<<<<<< HEAD
-        categoriaName: this.categoriaName,
-        
-=======
         categoriaName: this.categoriaName
->>>>>>> 026a7b3ca303f01ad591891f2d47a8cbbf252d25
       };
       try {
         const response = await axios.post('http://localhost:3000/categorias', formData);
