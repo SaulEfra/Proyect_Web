@@ -1,19 +1,23 @@
 <template>
-
   <div class="header">
-      <h4 class="mb-4 text-center">Productos</h4>
+    <h4 class="mb-4 text-center">Productos</h4>
   </div>
   <div class="shadow rounded contProduc">
-        
     <div class="header-btn">
       <div class="row">
-        <div class="col-lg-6 "><input type="text" class="form-control inp-btn" placeholder="Buscar producto..." v-model="searchQuery"></div>
-        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar Producto</button>     </div>
-        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear Categoría</button>      </div>
-        <div class="col-lg-2"><button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#crearcantidad">Crear cantidad</button> </div>
+        <div class="col-lg-6">
+          <input type="text" class="form-control inp-btn" placeholder="Buscar producto..." v-model="searchQuery">
+        </div>
+        <div class="col-lg-2">
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar Producto</button>
+        </div>
+        <div class="col-lg-2">
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear Categoría</button>
+        </div>
+        <div class="col-lg-2">
+          <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcantidad">Crear cantidad</button>
+        </div>
       </div>
-        
-                 
     </div>
 
     <!-- Modal para Agregar Producto -->
@@ -26,6 +30,21 @@
           </div>
           <div class="modal-body">
             <AddProductForm />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para actualizar Producto -->
+    <div class="modal fade" id="actualizarproducto" tabindex="-1" aria-labelledby="actualizarproductoLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="agregarproductoLabel">Actualizar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ActProd :idparactuproduc="idparaact" />
           </div>
         </div>
       </div>
@@ -69,38 +88,44 @@
         </div>
       </div>
     </div>
-
-    <div class="movements ">
+    <div class="movements">
       <div class="row">
-        <div class="data-pro col-lg-6" v-for="dtsprodcoun in datosprodcount" :key="dtsprodcoun" >Total de Productos: {{ datosprodcount }}</div>
+        <div class="data-pro col-lg-6" v-for="dtsprodcoun in datosprodcount" :key="dtsprodcoun">
+          Total de Productos: {{ datosprodcount }}
+        </div>
         <div class="data-pro col-lg-6">Costo del Inventario: {{ inventoryCost }}</div>
       </div>
-        <!--<div class="text-center no-products" v-if="totalReferences === 0">
-        <p>No tienes productos en tu inventario</p>
-      </div>-->
     </div>
-    
   </div>
   <div class="karproducto">
-    <CardProduct v-for="prod in datosprod" :key="prod.Nombre" :title="prod.Nombre" :Cantidadprod="prod.CantidadExistencia" 
-    :descrip="prod.Descripcion" :presioventa="prod.PrecioVenta" :presioprod="prod.PrecioProduc" @elimin="eliminarproducto" :idprod="prod.IDProducto"/>
+    <CardProduct
+      v-for="prod in datosprod"
+      :key="prod.IDProducto"
+      :title="prod.Nombre"
+      :Cantidadprod="prod.CantidadExistencia"
+      :descrip="prod.Descripcion"
+      :imagen="prod.Datos"
+      :presioventa="prod.PrecioVenta"
+      :presioprod="prod.PrecioProduc"
+      @elimin="eliminarProducto"
+      :idprod="prod.IDProducto"
+      @actu="actualiProductprueb"
+    />
   </div>
-  
-  
 </template>
 
 <script>
-import CardProduct from './CardProduct.vue'
+import CardProduct from './CardProduct.vue';
 import AddProductForm from './AddProductForm.vue';
 import axios from 'axios';
-
+import ActProd from './ActProducto.vue';
 
 export default {
   name: 'ProductInventory',
   components: {
     AddProductForm,
-    CardProduct
-    
+    CardProduct,
+    ActProd
   },
   data() {
     return {
@@ -109,11 +134,10 @@ export default {
       inventoryCost: 50,
       categoriaName: '',
       CantidadProduc: '',
-      datosprod:[],
-      datosprodcount:0,
-      datoselim:[],
-
-
+      datosprod: [],
+      datosprodcount: 0,
+      datoselim: [],
+      idparaact: 0,
     };
   },
   mounted() {
@@ -125,7 +149,7 @@ export default {
       try {
         const response = await axios.get('http://localhost:3000/Producto');
         this.datosprod = response.data.results;
-        console.log(this.datosprod)
+        console.log(this.datosprod);
       } catch (error) {
         console.error('Error al obtener los productos:', error);
         alert('Error al obtener los productos');
@@ -136,28 +160,30 @@ export default {
         categoriaName: this.categoriaName
       };
       try {
-            const response = await axios.post('http://localhost:3000/categorias', formData);
-            console.log('Respuesta del servidor:', response.data); 
-            alert('Categoria creada con éxito');
-            this.categoriaName = ""
-        } catch (error) {
-            console.error('Error al crear el producto:', error);
-            alert('Error al crear la categoria: ' + error.message);
-        }
+        const response = await axios.post('http://localhost:3000/categorias', formData);
+        console.log('Respuesta del servidor:', response.data); 
+        alert('Categoría creada con éxito');
+        this.categoriaName = "";
+        this.Categorias();
+      } catch (error) {
+        console.error('Error al crear el producto:', error);
+        alert('Error al crear la categoría: ' + error.message);
+      }
     },
     async createCantidadProduct() {
       const formData = {
         CantidadProduc: this.CantidadProduc
       };
       try {
-            const response = await axios.post('http://localhost:3000/cantidadproduc', formData);
-            console.log('Respuesta del servidor:', response.data); 
-            alert('Cantidad creada con éxito');
-            this.CantidadProduc = ""
-        } catch (error) {
-            console.error('Error al crear el producto:', error);
-            alert('Error al crear la cantidad: ' + error.message);
-        }     
+        const response = await axios.post('http://localhost:3000/cantidadproduc', formData);
+        console.log('Respuesta del servidor:', response.data); 
+        alert('Cantidad creada con éxito');
+        this.CantidadProduc = "";
+        this.Cantidades();
+      } catch (error) {
+        console.error('Error al crear el producto:', error);
+        alert('Error al crear la cantidad: ' + error.message);
+      }     
     },
     async Productoscount() {
       try {
@@ -168,22 +194,27 @@ export default {
         alert('Error al obtener los productos');
       }
     },
-
-    async eliminarproducto(prop) {
-      console.log(prop)
-      
-      try{
-        const response = await axios.delete('http://localhost:3000/productoselim/:idProducto');
-        this.datoselim = response.data.results;  
-      }
-      catch (error){
-        console.error('Error al borrar los productos:', error);
-        alert('Error al borrar los productos');
+    async eliminarProducto(prop) {
+      console.log(prop);
+      try {
+        axios.delete(`http://localhost:3000/productoselim/${prop}`)
+          .then(response => {
+            console.log(response.data);
+            this.Productos();
+          });
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        alert('Error al obtener los productos');
       }
     },
+    async actualiProductprueb(prop) {
+      console.log(prop);
+      let idprod = prop;
+      this.idparaact = idprod;
+      alert(idprod);
     }
   }
-
+}
 </script>
 
 <style scoped>

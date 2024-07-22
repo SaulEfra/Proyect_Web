@@ -1,20 +1,29 @@
 <template>
   <div>
+    <!-- Botón para mostrar/ocultar la barra lateral en pantallas pequeñas -->
     <button @click="toggleSidebar" class="btn btn-primary sidebar-toggle d-md-none">
       <i :class="['bi', isOpen ? 'bi-x' : 'bi-list']"></i>
     </button>
 
+    <!-- Barra lateral -->
     <nav :class="['sidebar', isOpen || isMdAndUp ? 'sidebar-open' : '', 'd-md-block']">
       <div class="container-fluid">
+        <!-- Botón de cerrar la barra lateral en pantallas pequeñas -->
         <button @click="closeSidebar" class="btn btn-close d-md-none" aria-label="Close">
           <i class="bi bi-x"></i>
         </button>
+
+        <!-- Selección de negocios -->
         <div class="col-12 perfiles">
-          <select class="form-select">
-            <option value="1">Negocio 1</option>
-            <option value="2">Negocio 2</option>
+          <select v-model="selectedNegocio" class="form-select" @change="cambiarNegocio">
+            <option value="" disabled>Selecciona un negocio</option>
+            <option v-for="negocio in negocios" :key="negocio.id" :value="negocio.id">
+              {{ negocio.nameneg || negocio.nombre }}
+            </option>
           </select>
         </div>
+
+        <!-- Configuración y gestión de productos -->
         <div class="config">
           <div class="config-item">
             <i class="bi bi-gear-fill"></i>
@@ -39,6 +48,8 @@
             <RouterLink to="/Empleados" @click="closeSidebar">Empleados</RouterLink>
           </div>
         </div>
+
+        <!-- Gestión de contactos -->
         <div class="gest">
           <h5>Gestiona tus contactos</h5>
           <RouterLink to="/ClientesTreinta" @click="closeSidebar">Clientes</RouterLink>
@@ -51,33 +62,70 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'ParteLateral',
   data() {
     return {
       isOpen: false,
-      isMdAndUp: window.innerWidth >= 768
-    }
+      isMdAndUp: window.innerWidth >= 768,
+      negocios: [],
+      selectedNegocio: null
+    };
   },
   mounted() {
     window.addEventListener('resize', this.handleResize);
-    this.handleResize();
+    this.handleResize(); // Ajustar el estado de la barra lateral al cargar
+    this.cargarNegocios(); // Cargar la lista de negocios al montar el componente
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    // Mostrar/ocultar la barra lateral
     toggleSidebar() {
       this.isOpen = !this.isOpen;
     },
+    // Cerrar la barra lateral
     closeSidebar() {
       this.isOpen = false;
     },
+    // Ajustar el estado de la barra lateral según el tamaño de la ventana
     handleResize() {
       this.isMdAndUp = window.innerWidth >= 768;
+    },
+    // Cargar la lista de negocios desde el servidor
+    async cargarNegocios() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/getnegocios');
+        this.negocios = response.data;
+        if (this.negocios.length > 0 && !this.selectedNegocio) {
+          this.selectedNegocio = this.negocios[0].id;
+          this.cambiarNegocio();
+        }
+      } catch (error) {
+        console.error('Error al cargar negocios:', error.response ? error.response.data : error.message);
+        alert('Error al cargar los negocios. Por favor, intenta de nuevo.');
+      }
+    },
+
+    // Cambiar el negocio seleccionado
+    async cambiarNegocio() {
+      if (!this.selectedNegocio) return;
+
+      try {
+        const response = await axios.get(`http://localhost:3000/Neg/getNegocio/${this.selectedNegocio}`);
+        // Emitir el evento de cambio de negocio y redirigir al dashboard del negocio
+        this.$emit('negocio-cambiado', response.data);
+        this.$router.push({ name: 'DashboardNegocio', params: { id: this.selectedNegocio } });
+      } catch (error) {
+        console.error('Error al cargar los datos del negocio:', error.response ? error.response.data : error.message);
+        alert('Error al cargar los datos del negocio. Por favor, intenta de nuevo.');
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -138,14 +186,14 @@ export default {
   color: #495057;
 }
 
-.gest RouterLink {
+.gest a {
   display: block;
   margin-bottom: 5px;
   text-decoration: none;
   color: #007bff;
 }
 
-.gest RouterLink:hover {
+.gest a:hover {
   text-decoration: underline;
 }
 

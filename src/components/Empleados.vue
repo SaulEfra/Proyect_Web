@@ -82,12 +82,15 @@
   </div>
 </template>
 
-<script >
+<script>
+import axios from 'axios';
+
 export default {
   name: 'EmpleadosApp',
   data() {
     return {
       mostrarFormulario: false,
+      datosempl: [] ,
       empleados: [],
       nuevoEmpleado: {
         id: null,
@@ -100,27 +103,48 @@ export default {
       opcionesCargo: ['Encargado', 'Empleado']
     }
   },
+  mounted() {
+    this.obtenerEmpleados();
+  },
   methods: {
-    agregarEmpleado() {
-      if (this.modoEdicion) {
-        const index = this.empleados.findIndex(emp => emp.id === this.nuevoEmpleado.id);
-        if (index !== -1) {
-          this.empleados[index] = { ...this.nuevoEmpleado };
+    async agregarEmpleado() {
+      try {
+        if (this.modoEdicion) {
+          const index = this.empleados.findIndex(emp => emp.id === this.nuevoEmpleado.id);
+          if (index !== -1) {
+            this.empleados[index] = { ...this.nuevoEmpleado };
+          }
+          await axios.put(`https://tu-api.com/empleados/${this.nuevoEmpleado.id}`, this.nuevoEmpleado);
+        } else {
+          this.nuevoEmpleado.id = Date.now();
+          await axios.post('http://localhost:3000/Neg/empleados', {
+            id: this.nuevoEmpleado.id,
+            Nombre: this.nuevoEmpleado.Nombre,
+            NumeroDeTelefono: this.nuevoEmpleado.NumeroDeTelefono,
+            Rol: this.nuevoEmpleado.Rol,
+            activo: this.nuevoEmpleado.activo
+          });
+          this.empleados.push({ ...this.nuevoEmpleado });
         }
-      } else {
-        this.nuevoEmpleado.id = Date.now();
-        this.empleados.push({ ...this.nuevoEmpleado });
+        this.resetearFormulario();
+      } catch (error) {
+        console.error("Error al enviar los datos del empleado:", error);
       }
-      this.resetearFormulario();
     },
     editarEmpleado(empleado) {
       this.nuevoEmpleado = { ...empleado };
       this.modoEdicion = true;
       this.mostrarFormulario = true;
     },
-    borrarEmpleado(id) {
+    async borrarEmpleado(id) {
       if (confirm('¿Está seguro de que desea eliminar este empleado?')) {
-        this.empleados = this.empleados.filter(emp => emp.id !== id);
+        try {
+          this.empleados = this.empleados.filter(emp => emp.id !== id);
+          // Enviar solicitud DELETE al servidor
+          await axios.delete(`https://tu-api.com/empleados/${id}`);
+        } catch (error) {
+          console.error("Error al eliminar el empleado:", error);
+        }
       }
     },
     resetearFormulario() {
@@ -136,7 +160,28 @@ export default {
     },
     cancelarEdicion() {
       this.resetearFormulario();
+    },
+    async obtenerEmpleados(){
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/empleadosget');
+        this.datosempl = response.data.results;
+        console.log(this.datosprod);
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        alert('Error al obtener los productos');
+      }
     }
   }
 }
 </script>
+
+
+
+<style>
+.movements {
+  padding: 80px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>
