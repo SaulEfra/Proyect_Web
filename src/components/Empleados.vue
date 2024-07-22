@@ -5,8 +5,7 @@
         <span class="navbar-brand">
           <h1>Empleados</h1>
         </span>
-        <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir
-          Empleado</button>
+        <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir Empleado</button>
       </div>
     </nav>
     <div class="row mt-4">
@@ -22,16 +21,17 @@
           </thead>
           <tbody class="table-group-divider">
             <tr v-for="(empleado, indice) in datosempl" :key="indice">
+              <td class="d-none">{{ empleado.IDEmpleado }}</td>
               <td>{{ empleado.Nombre }}</td>
               <td>{{ empleado.NumeroDeTelefono }}</td>
               <td>{{ empleado.Cargo }}</td>
               <td>
                 <div class="btn-group" role="group">
                   <button class="btn btn-secondary" title="Editar" @click="editarEmpleado(empleado)">
-                    <i class="fas fa-pencil-alt"></i>
+                    <i class="bi bi-pencil-square"></i> Editar
                   </button>
-                  <button class="btn btn-danger" title="Eliminar" @click="borrarEmpleado(empleado.id)">
-                    <i class="fas fa-trash-alt"></i>
+                  <button class="btn btn-danger" title="Eliminar" @click="borrarEmpleado(empleado.IDEmpleado)">
+                    <i class="bi bi-trash"></i> Eliminar
                   </button>
                 </div>
               </td>
@@ -52,14 +52,13 @@
               <tr>
                 <td><input v-model="nuevoEmpleado.Nombre" type="text" required class="form-control"></td>
                 <td>
-                  <input v-model="nuevoEmpleado.NumeroDeTelefono" type="text" required class="form-control"
-                    @input="validarTelefono" pattern="[0-9]*">
+                  <input v-model="nuevoEmpleado.NumeroDeTelefono" type="text" required class="form-control" @input="validarTelefono"  pattern="\d{10}">
                 </td>
                 <td>
                   <select v-model="nuevoEmpleado.Rol" required class="form-select">
                     <option value="">Seleccione un Rol</option>
-                    <option v-for="Rol in opcionesCargo" :key="Rol" :value="Rol">
-                      {{ Rol }}
+                    <option v-for="Rol in opcionesCargo" :key="Rol" :value="Rol" >
+                      {{ Rol}}
                     </option>
                   </select>
                 </td>
@@ -90,10 +89,9 @@ export default {
   data() {
     return {
       mostrarFormulario: false,
-      datosempl: [] ,
-      empleados: [],
+      datosempl: [],
       nuevoEmpleado: {
-        id: null,
+        IDEmpleado: null, 
         Nombre: '',
         NumeroDeTelefono: '',
         Rol: '',
@@ -110,21 +108,29 @@ export default {
     async agregarEmpleado() {
       try {
         if (this.modoEdicion) {
-          const index = this.empleados.findIndex(emp => emp.id === this.nuevoEmpleado.id);
-          if (index !== -1) {
-            this.empleados[index] = { ...this.nuevoEmpleado };
-          }
-          await axios.put(`https://tu-api.com/empleados/${this.nuevoEmpleado.id}`, this.nuevoEmpleado);
-        } else {
-          this.nuevoEmpleado.id = Date.now();
-          await axios.post('http://localhost:3000/Neg/empleados', {
-            id: this.nuevoEmpleado.id,
+          await axios.put('http://localhost:3000/Neg/empleadosAct', {
+            IDEmpleado: this.nuevoEmpleado.IDEmpleado,
             Nombre: this.nuevoEmpleado.Nombre,
             NumeroDeTelefono: this.nuevoEmpleado.NumeroDeTelefono,
             Rol: this.nuevoEmpleado.Rol,
             activo: this.nuevoEmpleado.activo
           });
-          this.empleados.push({ ...this.nuevoEmpleado });
+          const index = this.datosempl.findIndex(emp => emp.IDEmpleado === this.nuevoEmpleado.IDEmpleado);
+          if (index !== -1) {
+            this.datosempl[index] = { ...this.nuevoEmpleado };
+          }
+          alert("datos enviados");
+          this.obtenerEmpleados();
+        } else {
+          this.nuevoEmpleado.IDEmpleado = Date.now();
+          await axios.post('http://localhost:3000/Neg/empleados', {
+            IDEmpleado: this.nuevoEmpleado.IDEmpleado, 
+            Nombre: this.nuevoEmpleado.Nombre,
+            NumeroDeTelefono: this.nuevoEmpleado.NumeroDeTelefono,
+            Rol: this.nuevoEmpleado.Rol,
+            activo: this.nuevoEmpleado.activo
+          });
+          this.datosempl.push({ ...this.nuevoEmpleado });
         }
         this.resetearFormulario();
       } catch (error) {
@@ -136,12 +142,11 @@ export default {
       this.modoEdicion = true;
       this.mostrarFormulario = true;
     },
-    async borrarEmpleado(id) {
+    async borrarEmpleado(IDEmpleado) {
       if (confirm('¿Está seguro de que desea eliminar este empleado?')) {
         try {
-          this.empleados = this.empleados.filter(emp => emp.id !== id);
-          // Enviar solicitud DELETE al servidor
-          await axios.delete(`https://tu-api.com/empleados/${id}`);
+          this.datosempl = this.datosempl.filter(emp => emp.IDEmpleado !== IDEmpleado);
+          await axios.delete(`http://localhost:3000/Neg/empleados/${IDEmpleado}`);
         } catch (error) {
           console.error("Error al eliminar el empleado:", error);
         }
@@ -149,7 +154,7 @@ export default {
     },
     resetearFormulario() {
       this.nuevoEmpleado = {
-        id: null,
+        IDEmpleado: null,
         Nombre: '',
         NumeroDeTelefono: '',
         Rol: '',
@@ -161,20 +166,24 @@ export default {
     cancelarEdicion() {
       this.resetearFormulario();
     },
-    async obtenerEmpleados(){
+    async obtenerEmpleados() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/empleadosget');
         this.datosempl = response.data.results;
-        console.log(this.datosprod);
       } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        alert('Error al obtener los productos');
+        console.error('Error al obtener los empleados:', error);
+        alert('Error al obtener los empleados');
+      }
+    },
+    validarTelefono(event) {
+      const input = event.target;
+      if (!/^\d*$/.test(input.value)) {
+        input.value = input.value.replace(/[^\d]/g, '');
       }
     }
   }
 }
 </script>
-
 
 
 <style scoped>
