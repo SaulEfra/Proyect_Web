@@ -29,7 +29,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <AddProductForm />
+            <AddProductForm @actuprod="Productos" />
           </div>
         </div>
       </div>
@@ -59,11 +59,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <label for="Nuevcategoria" class="form-label">Nombre de la categoría</label>
-            <input v-model="categoriaName" class="form-control mb-3" id="Nuevcategoria" type="text">
-            <div class="text-end">
-              <button class="btn btn-primary btn-lg " @click="createCategoriaProd">Crear Categoría</button>
-            </div>
+            <form @submit.prevent="createCategoriaProd">
+              <label for="Nuevcategoria" class="form-label">Nombre de la categoría</label>
+              <input v-model="categoriaName" class="form-control mb-3" id="Nuevcategoria" type="text" placeholder="ejemplo: Artículos de escritura" required>
+              <div class="text-end">
+                <button class="btn btn-primary btn-lg " type="submit">Crear Categoría</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -79,11 +81,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <label for="Nuevcategoria" class="form-label">Nombre de la cantidad</label>
-            <input v-model="CantidadProduc" class="form-control mb-3" id="Nuevcategoria" type="text">
-            <div class="text-end">
-              <button class="btn btn-primary btn-lg " @click="createCantidadProduct">Crear Cantidad</button>
-            </div>
+            <form @submit.prevent="createCantidadProduct">
+              <label for="Nuevcategoria" class="form-label">Nombre de la cantidad</label>
+              <input v-model="CantidadProduc" class="form-control mb-3" id="Nuevcategoria" type="text" placeholder="ejemplo: Kilos" required>
+              <div class="text-end">
+                <button class="btn btn-primary btn-lg " type="submit">Crear Cantidad</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -91,7 +95,7 @@
     <div class="movements">
       <div class="row">
         <div class="data-pro col-lg-6" v-for="dtsprodcoun in datosprodcount" :key="dtsprodcoun">
-          Total de Productos: {{ datosprodcount }}
+          Total de Productos: {{ dtsprodcoun.cantidadproduct }}
         </div>
         <div class="data-pro col-lg-6">Costo del Inventario: {{ inventoryCost }}</div>
       </div>
@@ -135,15 +139,18 @@ export default {
       categoriaName: '',
       CantidadProduc: '',
       datosprod: [],
-      datosprodcount: 0,
+      datosprodcount: [],
       datoselim: [],
-      idparaact: 0,
+      idparaact: [],
+      categoriacreada: false
     };
   },
   mounted() {
     this.Productos();
     this.Productoscount();
+    
   },
+  
   methods: {
     async Productos() {
       try {
@@ -164,10 +171,10 @@ export default {
         console.log('Respuesta del servidor:', response.data); 
         alert('Categoría creada con éxito');
         this.categoriaName = "";
-        this.Categorias();
+        this.categoriacreada = true;
       } catch (error) {
         console.error('Error al crear el producto:', error);
-        alert('Error al crear la categoría: ' + error.message);
+        //alert('Error al crear la categoría: ' + error.message);
       }
     },
     async createCantidadProduct() {
@@ -182,7 +189,7 @@ export default {
         this.Cantidades();
       } catch (error) {
         console.error('Error al crear el producto:', error);
-        alert('Error al crear la cantidad: ' + error.message);
+        //alert('Error al crear la cantidad: ' + error.message);
       }     
     },
     async Productoscount() {
@@ -209,10 +216,11 @@ export default {
     },
     async actualiProductprueb(prop) {
       console.log(prop);
-      let idprod = prop;
-      this.idparaact = idprod;
-      alert(idprod);
-    }
+      let datosprod = prop;
+      this.idparaact = datosprod;
+      alert(datosprod);
+    },
+   
   }
 }
 </script>
