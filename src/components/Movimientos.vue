@@ -4,7 +4,6 @@
       <!-- Columna para ParteLateral -->
       <div class="col-lg-2 col-md-3 col-sm-12">
         <ParteLateral />
-
       </div>
 
       <!-- Columna para el contenido principal -->
