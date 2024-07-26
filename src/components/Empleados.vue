@@ -115,12 +115,13 @@ export default {
             Rol: this.nuevoEmpleado.Rol,
             activo: this.nuevoEmpleado.activo
           });
+          
+          alert("datos enviados");
+          this.obtenerEmpleados();
           const index = this.datosempl.findIndex(emp => emp.IDEmpleado === this.nuevoEmpleado.IDEmpleado);
           if (index !== -1) {
             this.datosempl[index] = { ...this.nuevoEmpleado };
           }
-          alert("datos enviados");
-          this.obtenerEmpleados();
         } else {
           this.nuevoEmpleado.IDEmpleado = Date.now();
           await axios.post('http://localhost:3000/Neg/empleados', {
@@ -131,6 +132,8 @@ export default {
             activo: this.nuevoEmpleado.activo
           });
           this.datosempl.push({ ...this.nuevoEmpleado });
+          alert("datos enviados");
+          this.obtenerEmpleados();
         }
         this.resetearFormulario();
       } catch (error) {
