@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="row">
     <!-- Botón para mostrar/ocultar la barra lateral en pantallas pequeñas -->
     <button @click="toggleSidebar" class="btn btn-primary sidebar-toggle d-md-none">
       <i :class="['bi', isOpen ? 'bi-x' : 'bi-list']"></i>
     </button>
 
     <!-- Barra lateral -->
-    <nav :class="['sidebar', isOpen || isMdAndUp ? 'sidebar-open' : '', 'd-md-block']">
+    <nav :class="['col-md-3 col-lg-2 partlt', 'sidebar', isOpen || isMdAndUp ? 'sidebar-open' : '', 'd-md-block']">
       <div class="container-fluid">
         <!-- Botón de cerrar la barra lateral en pantallas pequeñas -->
         <button @click="closeSidebar" class="btn btn-close d-md-none" aria-label="Close">
@@ -58,20 +58,29 @@
         </div>
       </div>
     </nav>
+    <div class="Contenid col-md-9 col-lg-10">
+      <RouterView @negocio-creado="actualizarNegocios"></RouterView>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { RouterLink, RouterView } from 'vue-router';
 
 export default {
   name: 'ParteLateral',
+  components: {
+    RouterLink,
+    RouterView,
+  },
   data() {
     return {
       isOpen: false,
       isMdAndUp: window.innerWidth >= 768,
       negocios: [],
-      selectedNegocio: null
+      selectedNegocio: null,
+      defaultNegocio: null,
     };
   },
   mounted() {
@@ -100,8 +109,11 @@ export default {
       try {
         const response = await axios.get('http://localhost:3000/Neg/getnegocios');
         this.negocios = response.data;
-        if (this.negocios.length > 0 && !this.selectedNegocio) {
-          this.selectedNegocio = this.negocios[0].id;
+        if (this.negocios.length > 0) {
+          if (!this.defaultNegocioId) {
+            this.defaultNegocioId = this.negocios[0].id;
+          }
+          this.selectedNegocio = this.defaultNegocioId;
           this.cambiarNegocio();
         }
       } catch (error) {
@@ -109,7 +121,14 @@ export default {
         alert('Error al cargar los negocios. Por favor, intenta de nuevo.');
       }
     },
-
+    agregarNuevoNegocio(nuevoNegocio) {
+      this.negocios.push(nuevoNegocio);
+      if (!this.defaultNegocioId) {
+        this.defaultNegocioId = nuevoNegocio.id;
+        this.selectedNegocio = nuevoNegocio.id;
+        this.cambiarNegocio();
+      }
+    },
     // Cambiar el negocio seleccionado
     async cambiarNegocio() {
       if (!this.selectedNegocio) return;
@@ -118,17 +137,33 @@ export default {
         const response = await axios.get(`http://localhost:3000/Neg/getNegocio/${this.selectedNegocio}`);
         // Emitir el evento de cambio de negocio y redirigir al dashboard del negocio
         this.$emit('negocio-cambiado', response.data);
-        this.$router.push({ name: 'DashboardNegocio', params: { id: this.selectedNegocio } });
       } catch (error) {
         console.error('Error al cargar los datos del negocio:', error.response ? error.response.data : error.message);
         alert('Error al cargar los datos del negocio. Por favor, intenta de nuevo.');
       }
+    },
+    actualizarNegocios() {
+      this.cargarNegocios();
     }
   }
 };
 </script>
 
 <style scoped>
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Contenid {
+  flex: 1;
+  padding: 20px;
+}
+
+.partlt {
+  border-right: 2px solid #f2f2f2;
+}
+
 .sidebar-toggle {
   margin-bottom: 20px;
   display: flex;

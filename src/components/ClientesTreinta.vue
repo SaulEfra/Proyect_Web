@@ -1,296 +1,266 @@
 <template>
-      <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-          <span class="navbar-brand">
-            <h1>Clientes</h1>
-          </span>
-          <form class="d-flex" @submit.prevent="buscarCliente">
-            <input class="form-control me-2" type="search" v-model="busqueda" placeholder="Buscar cliente" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
-          <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir Cliente</button>
+  <nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <span class="navbar-brand">
+        <h1>Clientes</h1>
+      </span>
+      <form class="d-flex" @submit.prevent="buscarCliente">
+        <input class="form-control me-2" type="search" v-model="busqueda" placeholder="Buscar cliente"
+          aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
+      <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir
+        Cliente</button>
+    </div>
+  </nav>
+  <div class="row mt-4">
+    <div>
+      <table v-if="!mostrarFormulario" class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Nombre del cliente</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Adeudos</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr v-for="(cliente, indice) in clientesFiltrados" :key="indice">
+            <td>{{ cliente.Nombre }}</td>
+            <td>{{ cliente.Telefono }}</td>
+            <td>{{ cliente.Adeudos }}</td>
+            <td>
+              <div class="btn-group" role="group">
+                <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
+                  <i class="bi bi-pencil-square"></i> Editar
+                </button>
+                <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.id)">
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+                <button class="btn btn-info" title="Añadir Adeudo" @click="mostrarModalAdeudo(cliente)">
+                  <i class="bi bi-plus-circle"></i> Adeudo
+                </button>
+                <button class="btn btn-success" title="Añadir Abono" @click="mostrarModalAbono(cliente)">
+                  <i class="bi bi-dash-circle"></i> Abono
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form v-if="mostrarFormulario" @submit.prevent="agregarCliente">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del cliente</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Adeudos</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <tr>
+              <td><input v-model="nuevoCliente.Nombre" type="text" required class="form-control"></td>
+              <td>
+                <input v-model="nuevoCliente.Telefono" type="text" required class="form-control"
+                  @input="validarTelefono" pattern="[0-9]*">
+              </td>
+              <td>
+                <input v-model.number="nuevoCliente.Adeudos" type="number" required class="form-control" step="0.01">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Cliente</button>
+        <button @click="cancelarEdicion" type="button" class="btn btn-secondary ml-2">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para Adeudos y Abonos -->
+  <div v-if="mostrarModal" class="modal-backdrop fade show"></div>
+  <div v-if="mostrarModal" class="modal fade show" tabindex="-1" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitulo }}</h5>
+          <button type="button" class="btn-close" @click="cerrarModal"></button>
         </div>
-      </nav>
-      <div class="row mt-4">
-        <div>
-          <table v-if="!mostrarFormulario" class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">Nombre del cliente</th>
-                <th scope="col">Teléfono</th>
-                <th scope="col">Adeudos</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              <tr v-for="(cliente, indice) in clientesFiltrados" :key="indice">
-                <td>{{ cliente.Nombre }}</td>
-                <td>{{ cliente.Telefono }}</td>
-                <td>{{ cliente.Adeudos }}</td>
-                <td>
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
-                      <i class="bi bi-pencil-square"></i> Editar
-                    </button>
-                    <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.id)">
-                      <i class="bi bi-trash"></i> Eliminar
-                    </button>
-                    <button class="btn btn-info" title="Añadir Adeudo" @click="mostrarModalAdeudo(cliente)">
-                      <i class="bi bi-plus-circle"></i> Adeudo
-                    </button>
-                    <button class="btn btn-success" title="Añadir Abono" @click="mostrarModalAbono(cliente)">
-                      <i class="bi bi-dash-circle"></i> Abono
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <form v-if="mostrarFormulario" @submit.prevent="agregarCliente">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Nombre del cliente</th>
-                  <th scope="col">Teléfono</th>
-                  <th scope="col">Adeudos</th>
-                </tr>
-              </thead>
-              <tbody class="table-group-divider">
-                <tr>
-                  <td><input v-model="nuevoCliente.Nombre" type="text" required class="form-control"></td>
-                  <td>
-                    <input v-model="nuevoCliente.Telefono" type="text" required class="form-control" @input="validarTelefono" pattern="[0-9]*">
-                  </td>
-                  <td>
-                    <input v-model.number="nuevoCliente.Adeudos" type="number" required class="form-control" step="0.01">
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Cliente</button>
-            <button @click="cancelarEdicion" type="button" class="btn btn-secondary ml-2">Cancelar</button>
+        <div class="modal-body">
+          <form @submit.prevent="procesarAdeudoAbono">
+            <div class="mb-3">
+              <label for="cantidad" class="form-label">Cantidad</label>
+              <input type="number" class="form-control" id="cantidad" v-model.number="cantidadAdeudoAbono" step="0.01"
+                required>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
           </form>
         </div>
       </div>
-  
-      <!-- Modal para Adeudos y Abonos -->
-      <div v-if="mostrarModal" class="modal-backdrop fade show"></div>
-      <div v-if="mostrarModal" class="modal fade show" tabindex="-1" style="display: block;">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">{{ modalTitulo }}</h5>
-              <button type="button" class="btn-close" @click="cerrarModal"></button>
-            </div>
-            <div class="modal-body">
-              <form @submit.prevent="procesarAdeudoAbono">
-                <div class="mb-3">
-                  <label for="cantidad" class="form-label">Cantidad</label>
-                  <input type="number" class="form-control" id="cantidad" v-model.number="cantidadAdeudoAbono" step="0.01" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Confirmar</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-  </template>
-  
-  <script>
-  import { ref, computed } from 'vue'
-  import Swal from 'sweetalert2'
-  
-  export default {
-    name: 'ClientesApp',
-    setup() {
-      const mostrarFormulario = ref(false)
-      const clientes = ref([])
-      const nuevoCliente = ref({
+    </div>
+  </div>
+</template>
+
+<script>
+import Swal from 'sweetalert2'
+
+export default {
+  name: 'ClientesApp',
+  data() {
+    return {
+      mostrarFormulario: false,
+      clientes: [],
+      nuevoCliente: {
         Nombre: '',
         Telefono: '',
         Adeudos: 0
-      })
-      const modoEdicion = ref(false)
-      const busqueda = ref('')
-      const clienteSeleccionado = ref(null)
-      const modalTitulo = ref('')
-      const cantidadAdeudoAbono = ref(0)
-      const esAdeudo = ref(true)
-      const mostrarModal = ref(false)
-  
-      const swalWithBootstrapButtons = Swal.mixin({
+      },
+      modoEdicion: false,
+      busqueda: '',
+      clienteSeleccionado: null,
+      modalTitulo: '',
+      cantidadAdeudoAbono: 0,
+      esAdeudo: true,
+      mostrarModal: false,
+      swalWithBootstrapButtons: Swal.mixin({
         customClass: {
           confirmButton: "btn btn-success",
           cancelButton: "btn btn-danger"
         },
         buttonsStyling: false
-      });
-  
-      const clientesFiltrados = computed(() => {
-        if (busqueda.value) {
-          return clientes.value.filter(cliente => cliente.Nombre.toLowerCase().includes(busqueda.value.toLowerCase()))
-        }
-        return clientes.value
       })
-  
-      function agregarCliente() {
-        if (modoEdicion.value) {
-          swalWithBootstrapButtons.fire({
-            title: "¿Actualizar cliente?",
-            text: "¿Está seguro de que desea actualizar este cliente?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Sí, actualizar",
-            cancelButtonText: "Cancelar",
-            reverseButtons: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-              const index = clientes.value.findIndex(cli => cli.id === nuevoCliente.value.id)
-              if (index !== -1) {
-                clientes.value[index] = { ...nuevoCliente.value }
-              }
-              resetearFormulario()
-              Swal.fire({
-                title: "Cliente actualizado",
-                icon: "success",
-              });
-            }
-          });
-        } else {
-          const nuevoId = Date.now().toString()
-          clientes.value.push({ ...nuevoCliente.value, id: nuevoId })
-          resetearFormulario()
-          Swal.fire({
-            title: "Cliente añadido",
-            icon: "success",
-          });
-        }
+    }
+  },
+  computed: {
+    clientesFiltrados() {
+      if (this.busqueda) {
+        return this.clientes.filter(cliente => cliente.Nombre.toLowerCase().includes(this.busqueda.toLowerCase()))
       }
-  
-      function editarCliente(cliente) {
-        nuevoCliente.value = { ...cliente }
-        modoEdicion.value = true
-        mostrarFormulario.value = true
-      }
-  
-      function borrarCliente(id) {
-        swalWithBootstrapButtons.fire({
-          title: "¿Está seguro?",
-          text: "No podrá revertir esta acción!",
-          icon: "warning",
+      return this.clientes
+    }
+  },
+  methods: {
+    agregarCliente() {
+      if (this.modoEdicion) {
+        this.swalWithBootstrapButtons.fire({
+          title: "¿Actualizar cliente?",
+          text: "¿Está seguro de que desea actualizar este cliente?",
+          icon: "question",
           showCancelButton: true,
-          confirmButtonText: "Sí, eliminar!",
-          cancelButtonText: "No, cancelar!",
+          confirmButtonText: "Sí, actualizar",
+          cancelButtonText: "Cancelar",
           reverseButtons: true
         }).then((result) => {
           if (result.isConfirmed) {
-            clientes.value = clientes.value.filter(cli => cli.id !== id)
-            swalWithBootstrapButtons.fire({
-              title: "Eliminado!",
-              text: "El cliente ha sido eliminado.",
-              icon: "success"
+            const index = this.clientes.findIndex(cli => cli.id === this.nuevoCliente.id)
+            if (index !== -1) {
+              this.clientes[index] = { ...this.nuevoCliente }
+            }
+            this.resetearFormulario()
+            Swal.fire({
+              title: "Cliente actualizado",
+              icon: "success",
             });
           }
         });
+      } else {
+        const nuevoId = Date.now().toString()
+        this.clientes.push({ ...this.nuevoCliente, id: nuevoId })
+        this.resetearFormulario()
+        Swal.fire({
+          title: "Cliente añadido",
+          icon: "success",
+        });
       }
-  
-      function resetearFormulario() {
-        nuevoCliente.value = {
-          Nombre: '',
-          Telefono: '',
-          Adeudos: 0
-        }
-        mostrarFormulario.value = false
-        modoEdicion.value = false
-      }
-  
-      function cancelarEdicion() {
-        resetearFormulario()
-      }
-  
-      function validarTelefono(event) {
-        nuevoCliente.value.Telefono = event.target.value.replace(/[^0-9]/g, '')
-      }
-  
-      function buscarCliente() {
-        // La búsqueda se realiza automáticamente gracias al computed property
-      }
-  
-      function mostrarModalAdeudo(cliente) {
-        clienteSeleccionado.value = cliente
-        modalTitulo.value = 'Añadir Adeudo'
-        esAdeudo.value = true
-        cantidadAdeudoAbono.value = 0
-        mostrarModal.value = true
-      }
-  
-      function mostrarModalAbono(cliente) {
-        clienteSeleccionado.value = cliente
-        modalTitulo.value = 'Añadir Abono'
-        esAdeudo.value = false
-        cantidadAdeudoAbono.value = 0
-        mostrarModal.value = true
-      }
-  
-      function procesarAdeudoAbono() {
-        if (clienteSeleccionado.value) {
-          if (esAdeudo.value) {
-            clienteSeleccionado.value.Adeudos += cantidadAdeudoAbono.value
-          } else {
-            if (cantidadAdeudoAbono.value > clienteSeleccionado.value.Adeudos) {
-              Swal.fire({
-                title: "Error",
-                text: "El abono no puede ser mayor que el adeudo actual.",
-                icon: "error",
-              });
-              return
-            }
-            clienteSeleccionado.value.Adeudos -= cantidadAdeudoAbono.value
-          }
-          actualizarCliente(clienteSeleccionado.value)
-          cerrarModal()
-          Swal.fire({
-            title: esAdeudo.value ? "Adeudo añadido" : "Abono realizado",
-            icon: "success",
+    },
+    editarCliente(cliente) {
+      this.nuevoCliente = { ...cliente }
+      this.modoEdicion = true
+      this.mostrarFormulario = true
+    },
+    borrarCliente(id) {
+      this.swalWithBootstrapButtons.fire({
+        title: "¿Está seguro?",
+        text: "No podrá revertir esta acción!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.clientes = this.clientes.filter(cli => cli.id !== id)
+          this.swalWithBootstrapButtons.fire({
+            title: "Eliminado!",
+            text: "El cliente ha sido eliminado.",
+            icon: "success"
           });
         }
+      });
+    },
+    resetearFormulario() {
+      this.nuevoCliente = {
+        Nombre: '',
+        Telefono: '',
+        Adeudos: 0
       }
-  
-      function actualizarCliente(cliente) {
-        const index = clientes.value.findIndex(c => c.id === cliente.id)
-        if (index !== -1) {
-          clientes.value[index] = { ...cliente }
+      this.mostrarFormulario = false
+      this.modoEdicion = false
+    },
+    cancelarEdicion() {
+      this.resetearFormulario()
+    },
+    validarTelefono(event) {
+      this.nuevoCliente.Telefono = event.target.value.replace(/[^0-9]/g, '')
+    },
+    buscarCliente() {
+      // La búsqueda se realiza automáticamente gracias a la propiedad computada
+    },
+    mostrarModalAdeudo(cliente) {
+      this.clienteSeleccionado = cliente
+      this.modalTitulo = 'Añadir Adeudo'
+      this.esAdeudo = true
+      this.cantidadAdeudoAbono = 0
+      this.mostrarModal = true
+    },
+    mostrarModalAbono(cliente) {
+      this.clienteSeleccionado = cliente
+      this.modalTitulo = 'Añadir Abono'
+      this.esAdeudo = false
+      this.cantidadAdeudoAbono = 0
+      this.mostrarModal = true
+    },
+    procesarAdeudoAbono() {
+      if (this.clienteSeleccionado) {
+        if (this.esAdeudo) {
+          this.clienteSeleccionado.Adeudos += this.cantidadAdeudoAbono
+        } else {
+          if (this.cantidadAdeudoAbono > this.clienteSeleccionado.Adeudos) {
+            Swal.fire({
+              title: "Error",
+              text: "El abono no puede ser mayor que el adeudo actual.",
+              icon: "error",
+            });
+            return
+          }
+          this.clienteSeleccionado.Adeudos -= this.cantidadAdeudoAbono
         }
+        this.actualizarCliente(this.clienteSeleccionado)
+        this.cerrarModal()
+        Swal.fire({
+          title: this.esAdeudo ? "Adeudo añadido" : "Abono realizado",
+          icon: "success",
+        });
       }
-  
-      function cerrarModal() {
-        mostrarModal.value = false
+    },
+    actualizarCliente(cliente) {
+      const index = this.clientes.findIndex(c => c.id === cliente.id)
+      if (index !== -1) {
+        this.clientes[index] = { ...cliente }
       }
-  
-      return {
-        mostrarFormulario,
-        clientes,
-        nuevoCliente,
-        modoEdicion,
-        busqueda,
-        clienteSeleccionado,
-        modalTitulo,
-        cantidadAdeudoAbono,
-        esAdeudo,
-        mostrarModal,
-        clientesFiltrados,
-        agregarCliente,
-        editarCliente,
-        borrarCliente,
-        resetearFormulario,
-        cancelarEdicion,
-        validarTelefono,
-        buscarCliente,
-        mostrarModalAdeudo,
-        mostrarModalAbono,
-        procesarAdeudoAbono,
-        cerrarModal
-      }
+    },
+    cerrarModal() {
+      this.mostrarModal = false
     }
   }
-  </script>
+}
+</script>

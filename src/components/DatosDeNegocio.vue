@@ -47,15 +47,15 @@ export default {
       };
       try {
         const response = await axios.post('http://localhost:3000/Neg/createnegocios', formData);
-        console.log('Respuesta del servidor:', response.data); 
-        alert('Negocio creado con éxito');
-        this.direccc = "";
-        this.nameneg = "";
-        this.tiponeg = "";
+    console.log('Respuesta del servidor:', response.data); 
+    alert('Negocio creado con éxito');
+    this.direccc = "";
+    this.nameneg = "";
+    this.tiponeg = "";
         
         // Emitir evento para notificar la creación del nuevo negocio
-        this.$emit('negocio-creado');
-      } catch (error) {
+        this.$emit('negocio-creado', response.data);
+  } catch (error) {
         console.error('Error al crear Negocio:', error);
         alert('Error al crear Negocio: ' + error.message);
       }     
