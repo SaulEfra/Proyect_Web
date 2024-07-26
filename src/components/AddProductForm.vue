@@ -117,40 +117,7 @@ export default {
     onFileChange(event) {
       this.selectfile = event.target.files[0];
     },
-    /*
-    async createProduct() {
-      const formData = {
-        selectfile:this.selectfile,
-        productName:this.productName,
-        //cantVent :this.cantVent,
-        Costunit:this.Costunit,
-        price:this.price,
-        cantid:this.cantid,
-        //category:this.category,
-        Facturas:this.Facturas,
-        description:this.description,
-        idneg: this.idNeg,
-        idimg: this.idimg
-
-      };
-      try {
-            const response = await axios.post('http://localhost:3000/imagenes/single', formData);
-            console.log('Respuesta del servidor:', response.data); 
-            alert('producto creado con éxito');
-            // como borrar los datos this.CantidadProduc = ""
-            this.productName = "",
-            this.Costunit = 0,
-            this.unitCost = 0,
-            this.price = 0,
-            this.cantid = 0,
-            this.Factura = "",
-            this.description = ""
-            
-        } catch (error) {
-            console.error('Error al crear el producto:', error);
-            alert('Error al crear el producto: ' + error.message);
-        }  
-    }*/
+   
     async createProduct() {
     const formData = new FormData();
     formData.append('Datos', this.selectfile);
