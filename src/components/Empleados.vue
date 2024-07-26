@@ -1,11 +1,21 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Columna para ParteLateral -->
+      <div class="col-lg-2 col-md-3 col-sm-12 parte-lateral">
+        <ParteLateral />
+      </div>
+
+      <!-- Columna para el contenido principal -->
+      <div class="col-lg-10 col-md-9 col-sm-12 main-content">
+        <div class="container">
     <nav class="navbar bg-body-tertiary">
       <div class="container-fluid">
         <span class="navbar-brand">
           <h1>Empleados</h1>
         </span>
-        <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir Empleado</button>
+        <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir
+          Empleado</button>
       </div>
     </nav>
     <div class="row mt-4">
@@ -52,13 +62,14 @@
               <tr>
                 <td><input v-model="nuevoEmpleado.Nombre" type="text" required class="form-control"></td>
                 <td>
-                  <input v-model="nuevoEmpleado.NumeroDeTelefono" type="text" required class="form-control" @input="validarTelefono"  pattern="\d{10}">
+                  <input v-model="nuevoEmpleado.NumeroDeTelefono" type="text" required class="form-control"
+                    @input="validarTelefono" pattern="\d{10}">
                 </td>
                 <td>
                   <select v-model="nuevoEmpleado.Rol" required class="form-select">
                     <option value="">Seleccione un Rol</option>
-                    <option v-for="Rol in opcionesCargo" :key="Rol" :value="Rol" >
-                      {{ Rol}}
+                    <option v-for="Rol in opcionesCargo" :key="Rol" :value="Rol">
+                      {{ Rol }}
                     </option>
                   </select>
                 </td>
@@ -79,19 +90,29 @@
       </div>
     </div>
   </div>
+
+      </div>
+    </div>
+  </div>
+  
 </template>
 
 <script>
 import axios from 'axios';
+import ParteLateral from './ParteLateral.vue';
 
 export default {
   name: 'EmpleadosApp',
+  components:{
+    ParteLateral
+  },
+
   data() {
     return {
       mostrarFormulario: false,
       datosempl: [],
       nuevoEmpleado: {
-        IDEmpleado: null, 
+        IDEmpleado: null,
         Nombre: '',
         NumeroDeTelefono: '',
         Rol: '',
@@ -124,7 +145,7 @@ export default {
         } else {
           this.nuevoEmpleado.IDEmpleado = Date.now();
           await axios.post('http://localhost:3000/Neg/empleados', {
-            IDEmpleado: this.nuevoEmpleado.IDEmpleado, 
+            IDEmpleado: this.nuevoEmpleado.IDEmpleado,
             Nombre: this.nuevoEmpleado.Nombre,
             NumeroDeTelefono: this.nuevoEmpleado.NumeroDeTelefono,
             Rol: this.nuevoEmpleado.Rol,
@@ -208,7 +229,8 @@ export default {
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Asegura que el contenido no desborde */
+  overflow: hidden;
+  /* Asegura que el contenido no desborde */
 }
 
 .table {

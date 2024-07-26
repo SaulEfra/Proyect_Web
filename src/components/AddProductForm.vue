@@ -3,7 +3,6 @@
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="card">
-          
           <div class="card-body">
             <form @submit.prevent="createProduct">
               <div class="mb-3">

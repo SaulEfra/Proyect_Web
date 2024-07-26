@@ -51,18 +51,49 @@
 
 <script scoped>
 export default {
-  name: 'ParteLateral'
-};
+  name: 'ParteLateral',
+}
 </script>
 
 <style scoped>
-.partLat {
-  padding: 20px;
+
+.partLat{
+  margin: 15px;
+  
 }
-.perfiles, .config, .produc, .gest {
-  margin-bottom: 20px;
+.partLat a{
+  text-decoration: none;
+  color: black;
+  margin-left: 5px;
+  font-size: 17px;
 }
-.config-item, .produc-item {
+.perfiles{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.config{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.product{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.gest{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.config-item{
   margin-bottom: 10px;
 }
+.produc-item{
+  margin-bottom: 10px;
+}
+
+.gest-item{
+  margin-bottom: 10px;
+}
+
 </style>

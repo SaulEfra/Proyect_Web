@@ -1,5 +1,14 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
+    <div class="row">
+      <!-- Columna para ParteLateral -->
+      <div class="col-lg-2 col-md-3 col-sm-12 parte-lateral">
+        <ParteLateral />
+      </div>
+
+      <!-- Columna para el contenido principal -->
+      <div class="col-lg-10 col-md-9 col-sm-12 main-content">
+        <div class="container">
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
                 <span class="navbar-brand">
@@ -102,11 +111,20 @@
             </div>
         </div>
     </div>
+      </div>
+    </div>
+    </div>
+    
 </template>
 
 <script>
+import ParteLateral from './ParteLateral.vue';
+
 export default {
     name: 'ClientesApp',
+    components:{
+        ParteLateral
+    },
     data() {
         return {
             mostrarFormulario: false,
