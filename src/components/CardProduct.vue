@@ -2,12 +2,14 @@
   <div class="card" style="width: 18rem;">
     
     <div class="card-body">
-      <img :src="imageUrl" class="card-img-top" alt="Product Image">
+      <img :src="imageUrl" class="card-img-top" alt="Product Image" height="200px" width="100px" style="border-radius: 10px;">
+      
       <p class="card-text d-none">{{ idprod }}</p>
       <h5 class="card-title">{{ title }}</h5>
       <p class="card-text">Precio: {{ presioventa }} $</p>
       <p class="card-text">Cantidad: {{ Cantidadprod }}</p>
       <p class="card-text">Descripcion: {{ descrip }}</p>
+      
       <div>
           <button class="btn-card-elim" @click="usarprop">Eliminar</button>
           <button type="button" class="btn-card " data-bs-toggle="modal" data-bs-target="#actualizarproducto" @click="usarpropdos">Actualizar Producto</button> 
@@ -34,12 +36,13 @@ export default {
           return `data:image/jpeg;base64,${this.imagen}`; 
       }
   },
+
   methods: {
     async usarprop() {
       this.$emit("elimin", this.idprod);
     },
     async usarpropdos() {
-      this.$emit("actu", this.idprod);
+      this.$emit("actu",{id: this.idprod, nombre: this.title, cantid : this.Cantidadprod, Desc : this.descrip, Presiovent : this.presioventa, presioprod :  this.presioprod, imagen: this.imagen}  );
     }
   }
 }
