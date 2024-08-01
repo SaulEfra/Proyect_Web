@@ -1,20 +1,18 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+ // Asegúrate de que tu archivo de store esté correctamente exportado
+
+const app = createApp(App);
+
+// Se pueden crear directivas aquí
+app.directive('font-size', {
+  beforeMount: (el) => {
+    el.style.fontSize = '70px';
+  },
+});
 
 
+app.use(router); // Usar el router para la navegación
 
-/* createApp(App).mount('#app') */
-
-const app = createApp(App)
-
-/* se pueden crear las directivas aqui */
-
-app.directive('font-size',{
-    beforeMount : (el) => {
-        el.style.fontSize = "70px"
-    }
-})
-
-app.use(router)
-app.mount('#app')
+app.mount('#app');
