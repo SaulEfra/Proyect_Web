@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-7">
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="card">
@@ -24,18 +24,21 @@
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="CostUni" class="form-label">Costo Unitario</label>
-                  <input v-model.number="props.idparactuproduc.presioprod" id="CostUni" type="number" class="form-control">
+                  <label for="CostUni" class="form-label">Costo por unidad</label>
+                  <input v-model.number="props.idparactuproduc.presioprod" id="CostUni" type="number" min="0"
+                    max="50000" step="any" class="form-control">
                 </div>
                 <div class="mb-3">
-                  <label for="preci" class="form-label">Precio</label>
-                  <input v-model.number="props.idparactuproduc.Presiovent" id="preci" type="number" class="form-control">
+                  <label for="preci" class="form-label">Precio original</label>
+                  <input v-model.number="props.idparactuproduc.Presiovent" id="preci" type="number" min="0" max="50000"
+                    step="any" class="form-control">
                 </div>
               </div>
               <div class="col-lg-6">
                 <div class="mb-3">
-                  <label for="cantidad" class="form-label">Cantidad</label>
-                  <input v-model.number="props.idparactuproduc.cantid" type="number" id="cantidad" name="cantidad" min="1" max="100" step="1" class="form-control">
+                  <label for="cantidad" class="form-label">Cantidad disponible</label>
+                  <input v-model.number="props.idparactuproduc.cantid" type="number" id="cantidad" name="cantidad"
+                    min="1" max="100000" step="1" class="form-control">
                 </div>
                 <div class="mb-3">
                   <label for="categ" class="form-label">Categoría</label>
@@ -43,15 +46,26 @@
                     <option v-for="cat in datoscat" :key="cat.IDCatProd" :value="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
                   </select>
                 </div>
+                
                 <div class="form-check">
-                  <input class="form-check-input" v-model="Factura" type="radio" name="exampleRadios" id="exampleRadios2" value="Factura">
-                  <label class="form-check-label" for="exampleRadios2">
-                    Factura
-                  </label>
-                </div>
+                    <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio" name="exampleRadios"
+                      id="exampleRadios1" :value="true">
+                    <label class="form-check-label" for="exampleRadios1">
+                      Factura
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio" name="exampleRadios"
+                      id="exampleRadios2" :value="false">
+                    <label class="form-check-label" for="exampleRadios2">
+                      No Factura
+                    </label>
+                  </div>
+                
                 <div class="mb-3">
                   <label for="Textarea1" class="form-label">Descripción</label>
-                  <textarea v-model="props.idparactuproduc.Desc" class="form-control" id="Textarea1" rows="3"></textarea>
+                  <textarea v-model="props.idparactuproduc.Desc" class="form-control" id="Textarea1"
+                    rows="3"></textarea>
                 </div>
               </div>
             </div>
@@ -77,7 +91,7 @@ export default {
       Costunit: 0,
       pric: 0,
       canti: 0,
-      Factura: '',
+      Facturas: false,
       descriptio: '',
       datoscant: [],
       datoscat: [],
@@ -97,7 +111,7 @@ export default {
     async Cantidades() {
       try {
         const response = await axios.get('http://localhost:3000/cantidadproducDos');
-        this.datoscant = response.data.results; 
+        this.datoscant = response.data.results;
       } catch (error) {
         console.error('Error al obtener las cantidades:', error);
         alert('Error al obtener las cantidades');
@@ -106,7 +120,7 @@ export default {
     async Categorias() {
       try {
         const response = await axios.get('http://localhost:3000/categoriaproducto');
-        this.datoscat = response.data.results; 
+        this.datoscat = response.data.results;
       } catch (error) {
         console.error('Error al obtener las categorias:', error);
         alert('Error al obtener las categorias');
@@ -122,7 +136,7 @@ export default {
       formData.append('Costunit', this.props.idparactuproduc.presioprod);
       formData.append('price', this.props.idparactuproduc.Presiovent);
       formData.append('cantid', this.props.idparactuproduc.cantid);
-      formData.append('Factura', this.Factura);
+      formData.append('Factura', this.props.idparactuproduc.Facturas);
       formData.append('description', this.props.idparactuproduc.Desc);
       formData.append('idneg', this.idNeg);
       formData.append('idimg', this.props.idparactuproduc.id);  // Suponiendo que el id de la imagen es el id del producto
@@ -133,9 +147,9 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         });
-        console.log('Respuesta del servidor:', response.data); 
+        console.log('Respuesta del servidor:', response.data);
         alert('Producto actualizado con éxito');
-        this.resetForm();
+        this.$emit("mostrarprod")
       } catch (error) {
         console.error('Error al actualizar el producto:', error);
         alert('Error al actualizar el producto: ' + error.message);
@@ -156,5 +170,17 @@ export default {
 
 
 <style scoped>
-  
+
+input{
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
+select{
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
+option{
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
+textarea{
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <div class="container-fluid">
-
+  <div class="row">
+    <div class="col-lg-2 partlt shadow">
+    <ParteLateral></ParteLateral>
+  </div>
+  <div class="container-fluid col-lg-9">
     <div class="header ">
       <h2 >Movimientos</h2>
       <button>Abrir Caja</button>
@@ -136,16 +139,20 @@
       </div>
     </div>
   </div>
-  <div></div>
 
+  </div>
+  
 </template>
 
 <script>
 import NuevaVenta from './NuevaVenta.vue';
+
+import ParteLateral from '../components/ParteLateral.vue';
 export default {
   name: 'MovimientosApp',
   components: {
-    NuevaVenta
+    NuevaVenta,
+    ParteLateral
   },
   data() {
     return {
@@ -162,10 +169,7 @@ export default {
 </script>
 
 <style scoped>
-.container-fluid{
-  width: 100%;
-  height: 100%;
-}
+
 
 .modal {
   width: 100%;

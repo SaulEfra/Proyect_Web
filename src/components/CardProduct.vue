@@ -28,7 +28,10 @@ export default {
       presioventa: Number,
       presioprod: Number,
       idprod: Number,
-      imagen: String 
+      imagen: String,
+      factu: String,
+      cantidtipo: String,
+      categoriatipo:String
   },
   emits: ["elimin", "actu"],
   computed: {
@@ -42,7 +45,7 @@ export default {
       this.$emit("elimin", this.idprod);
     },
     async usarpropdos() {
-      this.$emit("actu",{id: this.idprod, nombre: this.title, cantid : this.Cantidadprod, Desc : this.descrip, Presiovent : this.presioventa, presioprod :  this.presioprod, imagen: this.imagen}  );
+      this.$emit("actu",{id: this.idprod, Categoria:this.categoriatipo, CantidadVenta: this.cantidtipo, Facturas : this.factu , nombre: this.title, cantid : this.Cantidadprod, Desc : this.descrip, Presiovent : this.presioventa, presioprod :  this.presioprod, imagen: this.imagen}  );
     }
   }
 }
