@@ -145,7 +145,10 @@ export default {
       datosprodcount: [],
       datoselim: [],
       idparaact: [],
-      categoriacreada: false
+      categoriacreada: false,
+
+      datoscant: [],
+      datoscat: [],
     };
   },
   mounted() {
@@ -172,6 +175,8 @@ export default {
         const response = await axios.post('http://localhost:3000/categorias', formData);
         console.log('Respuesta del servidor:', response.data);
         alert('Categoría creada con éxito');
+        const responsecate = await axios.get('http://localhost:3000/categoriaproducto');
+        this.datoscat = responsecate.data.results;
         this.categoriaName = "";
         this.categoriacreada = true;
       } catch (error) {
@@ -187,6 +192,8 @@ export default {
         const response = await axios.post('http://localhost:3000/cantidadproduc', formData);
         console.log('Respuesta del servidor:', response.data);
         alert('Cantidad creada con éxito');
+        const responsecant = await axios.get('http://localhost:3000/cantidadproducDos');
+        this.datoscant = responsecant.data.results;
         this.CantidadProduc = "";
         this.Cantidades();
       } catch (error) {

@@ -18,7 +18,7 @@
                   <div class="mb-3">
                     <label for="categ" class="form-label">Cantidad de venta</label>
                     <select v-model="cantVent" id="categ" required class="form-select" aria-label="Default select example">
-                      <option v-for="cant in datoscant" :key="cant.IDCantidad">{{ cant.NombreCantidad }}</option>
+                      <option v-for="cant in datoscant" :key="cant.IDCantidad" :value="cant.IDCantidad">{{ cant.NombreCantidad }}</option>
                     </select>
                   </div>
                   <div class="mb-3">
@@ -38,7 +38,7 @@
                   <div class="mb-3">
                     <label for="categ" class="form-label">Categoría</label>
                     <select v-model="category" id="categ" required class="form-select" aria-label="Default select example">
-                      <option v-for="cat in datoscat" :key="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
+                      <option v-for="cat in datoscat" :key="cat.IDCatProd" :value="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
                     </select>
                   </div>
                   <div class="form-check">
