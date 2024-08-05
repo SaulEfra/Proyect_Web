@@ -24,12 +24,12 @@
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="CostUni" class="form-label">Costo por unidad</label>
+                  <label for="CostUni" class="form-label">Precio original</label>
                   <input v-model.number="props.idparactuproduc.presioprod" id="CostUni" type="number" min="0"
                     max="50000" step="any" class="form-control">
                 </div>
                 <div class="mb-3">
-                  <label for="preci" class="form-label">Precio original</label>
+                  <label for="preci" class="form-label">Precio por unidad</label>
                   <input v-model.number="props.idparactuproduc.Presiovent" id="preci" type="number" min="0" max="50000"
                     step="any" class="form-control">
                 </div>

@@ -43,12 +43,12 @@
 
                   </div>
                   <div class="mb-3">
-                    <label for="CostUni" class="form-label">Costo por unidad</label>
+                    <label for="CostUni" class="form-label">Precio original</label>
                     <input v-model.number="Costunit" id="CostUni" type="number" min="0" max="50000" step="any" required
                       class="form-control">
                   </div>
                   <div class="mb-3">
-                    <label for="preci" class="form-label">Precio original</label>
+                    <label for="preci" class="form-label">Precio por unidad</label>
                     <input v-model.number="price" id="preci" type="number" min="0" max="50000" step="any" required
                       class="form-control">
                   </div>

@@ -119,7 +119,7 @@
             </div>
             <div class="data-pro col-lg-6 col-sm-9 col-12 offset-lg-1 offset-sm-3 offset-2 "
               v-for="dtsprodprecio in datosprodPreciocount" :key="dtsprodprecio">
-              Costo del Inventario: {{ dtsprodprecio.totalprecio }}</div>
+              Costo del Inventario: ${{ dtsprodprecio.totalprecio }}</div>
           </div>
         </div>
       </div>
@@ -198,6 +198,8 @@ export default {
       try {
         const response = await axios.get('http://localhost:3000/Producto');
         this.datosprod = response.data.results;
+        this.Productoscount();
+        this.ProductosPreciocount();
         console.log(this.datosprod);
       } catch (error) {
         console.error('Error al obtener los productos:', error);
@@ -214,6 +216,7 @@ export default {
         alert('Categoría creada con éxito');
         this.categoriaName = "";
         this.categoriacreada = true;
+
       } catch (error) {
         console.error('Error al crear el producto:', error);
         //alert('Error al crear la categoría: ' + error.message);
@@ -231,7 +234,6 @@ export default {
         this.Cantidades();
       } catch (error) {
         console.error('Error al crear el producto:', error);
-        //alert('Error al crear la cantidad: ' + error.message);
       }
     },
     async Productoscount() {
@@ -259,6 +261,8 @@ export default {
           .then(response => {
             console.log(response.data);
             this.Productos();
+            this.ProductosPreciocount();
+            this.Productoscount();
           });
       } catch (error) {
         console.error('Error al obtener los productos:', error);
