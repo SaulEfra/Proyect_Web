@@ -122,6 +122,9 @@
 <script>
 import axios from 'axios';
 
+import Swal from 'sweetalert2'
+
+
 export default {
   name: 'AddProductForm',
 
@@ -159,7 +162,14 @@ export default {
       try {
         const response = await axios.post('http://localhost:3000/categorias', formData);
         console.log('Respuesta del servidor:', response.data);
-        alert('Categoría creada con éxito');
+        //alert('Categoría creada con éxito');
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Categoria creada con exito",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.categoriaName = "";
         this.categoriacreada = true;
         this.Categorias()
@@ -175,7 +185,14 @@ export default {
       try {
         const response = await axios.post('http://localhost:3000/cantidadproduc', formData);
         console.log('Respuesta del servidor:', response.data);
-        alert('Cantidad creada con éxito');
+        //alert('Cantidad creada con éxito');
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Cantidad creada con exito",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.CantidadProduc = "";
         this.Cantidades();
       } catch (error) {
@@ -227,7 +244,14 @@ export default {
           }
         });
         console.log('Respuesta del servidor:', response.data);
-        alert('Producto creado con éxito');
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Producto creado con exito",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        //alert('Producto creado con éxito');
 
         this.productName = "";
         this.cantVent = "";
@@ -264,17 +288,20 @@ export default {
   margin-bottom: 50px;
   font-size: 30px;
 }
-input{
-  border: 1px solid rgba(0, 0, 0, 0.378);
-}
-select{
-  border: 1px solid rgba(0, 0, 0, 0.378);
-}
-option{
-  border: 1px solid rgba(0, 0, 0, 0.378);
-}
-textarea{
+
+input {
   border: 1px solid rgba(0, 0, 0, 0.378);
 }
 
+select {
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
+
+option {
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
+
+textarea {
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
 </style>

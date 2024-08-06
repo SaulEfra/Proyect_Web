@@ -83,6 +83,8 @@
 <script>
 import axios from 'axios';
 
+import Swal from 'sweetalert2'
+
 export default {
   name: 'ActProd',
   data() {
@@ -148,8 +150,15 @@ export default {
           }
         });
         console.log('Respuesta del servidor:', response.data);
-        alert('Producto actualizado con éxito');
-        this.$emit("mostrarprod")
+        //alert('Producto actualizado con éxito');
+        this.$emit("mostrarprod");
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Producto actualizado con exito",
+          showConfirmButton: false,
+          timer: 1500
+        });
       } catch (error) {
         console.error('Error al actualizar el producto:', error);
         alert('Error al actualizar el producto: ' + error.message);

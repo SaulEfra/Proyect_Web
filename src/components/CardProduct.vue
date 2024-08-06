@@ -6,9 +6,11 @@
       
       <p class="card-text d-none">{{ idprod }}</p>
       <h5 class="card-title">{{ title }}</h5>
-      <p class="card-text">Precio: {{ presioventa }} $</p>
+      <p class="card-text">Precio: ${{ presioventa }}</p>
       <p class="card-text">Cantidad: {{ Cantidadprod }}</p>
       <p class="card-text">Descripcion: {{ descrip }}</p>
+      <p class="card-text">Categoria: {{ categoriatipo }}</p>
+      <p class="card-text">Cantidad: {{ cantidtipo }} </p>
       
       <div>
           <button class="btn-card-elim" @click="usarprop">Eliminar</button>

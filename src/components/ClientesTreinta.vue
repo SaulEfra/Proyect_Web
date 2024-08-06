@@ -34,7 +34,7 @@
                 <td class="d-none">{{ cliente.IDCli }}</td>
                 <td>{{ cliente.NombreCli }}</td>
                 <td>{{ cliente.Telefono }}</td>
-                <td>{{ cliente.Adeudo }}</td>
+                <td>${{ cliente.Adeudo }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">

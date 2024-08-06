@@ -1,5 +1,9 @@
 <template>
-    <div>
+  <div class="row">
+    <div class="col-lg-2">
+      <ParteLateral></ParteLateral>
+    </div>
+    <div class="col-lg-10">
       <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
           <span class="navbar-brand">
@@ -24,7 +28,7 @@
               <p>{{ negocio.direccion }}</p>
             </div>
           </div>
-  
+
           <form v-if="modificar" @submit.prevent="guardarCambios">
             <div class="row">
               <div class="col-lg-12">
@@ -45,7 +49,8 @@
                   </div>
                   <div class="col-md-4 mb-3">
                     <label for="direccionNegocio" class="form-label">Dirección del negocio</label>
-                    <input v-model="negocioEditado.direccion" type="text" class="form-control" id="direccionNegocio" required>
+                    <input v-model="negocioEditado.direccion" type="text" class="form-control" id="direccionNegocio"
+                      required>
                   </div>
                 </div>
                 <div class="d-grid col-md-4 mx-auto mt-3">
@@ -58,61 +63,69 @@
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import Swal from 'sweetalert2'
-  
-  export default {
-    name: 'InfoNeg',
-    data() {
-      return {
-        modificar: false,
-        negocio: {
-          tipoNegocio: 'Restaurante',
-          nombre: 'Mi Negocio',
-          direccion: 'Calle Principal 123'
-        },
-        negocioEditado: {},
-        tiposNegocio: ['Restaurante', 'Tienda', 'Servicios', 'Otro']
-      }
-    },
-    methods: {
-      guardarCambios() {
-        Swal.fire({
-          title: "¿Estás seguro?",
-          text: "¿Quieres guardar estos cambios?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Sí, guardar cambios",
-          cancelButtonText: "Cancelar"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.negocio = { ...this.negocioEditado };
-            this.modificar = false;
-            Swal.fire({
-              title: "¡Guardado!",
-              text: "Los cambios han sido guardados.",
-              icon: "success"
-            });
-          }
-        });
+  </div>
+</template>
+
+
+
+<script>
+import Swal from 'sweetalert2'
+
+import ParteLateral from './ParteLateral.vue';
+
+export default {
+  name: 'InfoNeg',
+  components: {
+    ParteLateral
+  },
+  data() {
+    return {
+      modificar: false,
+      negocio: {
+        tipoNegocio: 'Restaurante',
+        nombre: 'Mi Negocio',
+        direccion: 'Calle Principal 123'
       },
-      cancelarEdicion() {
-        this.negocioEditado = { ...this.negocio };
-        this.modificar = false;
-      }
-    },
-    created() {
-      this.negocioEditado = { ...this.negocio };
+      negocioEditado: {},
+      tiposNegocio: ['Restaurante', 'Tienda', 'Servicios', 'Otro']
     }
+  },
+  methods: {
+    guardarCambios() {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Quieres guardar estos cambios?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, guardar cambios",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.negocio = { ...this.negocioEditado };
+          this.modificar = false;
+          Swal.fire({
+            title: "¡Guardado!",
+            text: "Los cambios han sido guardados.",
+            icon: "success"
+          });
+        }
+      });
+    },
+    cancelarEdicion() {
+      this.negocioEditado = { ...this.negocio };
+      this.modificar = false;
+    }
+  },
+  created() {
+    this.negocioEditado = { ...this.negocio };
   }
-  </script>
-  
-  <style scoped>
-  body {
-    background-color: aquamarine;
-  }
-  </style>
+}
+</script>
+
+<style scoped>
+body {
+  background-color: aquamarine;
+}
+</style>

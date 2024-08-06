@@ -1,5 +1,9 @@
 <template>
-  <div class="">
+  <div class="row">
+    <div class="col-lg-2">
+      <ParteLateral></ParteLateral>
+    </div>
+    <div class="col-lg-10">
     <h1>Datos de tu negocio</h1>
     <form>
       <div class="mb-3">
@@ -24,14 +28,19 @@
       </div>
     </form>
   </div>
+  </div>
+  
 </template>
 
 <script>
-
+import ParteLateral from './ParteLateral.vue';
 import axios from 'axios';
 
 export default {
   name: 'DatosNegocios',
+  components:{
+    ParteLateral
+  },
   data(){
     return{
       direccc:'',

@@ -25,7 +25,7 @@
               <tr>
                 <th scope="col">Nombre del Proveedor</th>
                 <th scope="col">Teléfono</th>
-                <th scope="col">Adeudos</th>
+                <th scope="col">Deudas</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
@@ -34,7 +34,7 @@
                 <td class="d-none">{{ cliente.IDProveedor }}</td>
                 <td>{{ cliente.Nombre }}</td>
                 <td>{{ cliente.Telefono }}</td>
-                <td>{{ cliente.Adeudo }}</td>
+                <td>${{ cliente.Adeudo }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
@@ -62,7 +62,7 @@
                 <tr>
                   <th scope="col">Nombre del Proveedor</th>
                   <th scope="col">Teléfono</th>
-                  <th scope="col">Adeudos</th>
+                  <th scope="col">Deuda</th>
                 </tr>
               </thead>
               <tbody class="table-group-divider">
@@ -79,7 +79,7 @@
                 </tr>
               </tbody>
             </table>
-            <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Cliente</button>
+            <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Proveedore </button>
             <button @click="cancelarEdicion" type="button" class="btn btn-secondary ml-2">Cancelar</button>
           </form>
         </div>
@@ -162,8 +162,8 @@ export default {
 
       if (this.modoEdicion) {
         swalWithBootstrapButtons.fire({
-          title: "¿Actualizar cliente?",
-          text: "¿Está seguro de que desea actualizar este cliente?",
+          title: "¿Actualizar Proveedor?",
+          text: "¿Está seguro de que desea actualizar este Proveedor?",
           icon: "question",
           showCancelButton: true,
           confirmButtonText: "Sí, actualizar",
@@ -185,7 +185,7 @@ export default {
               this.datosempl[index] = { ...this.nuevoCliente };
               this.resetearFormulario()
               Swal.fire({
-                title: "Cliente actualizado",
+                title: "Proveedor actualizado",
                 icon: "success",
               });
             }
@@ -204,7 +204,7 @@ export default {
         this.resetearFormulario()
         this.obtenerClientes()
         Swal.fire({
-          title: "Cliente añadido",
+          title: "Proveedor añadido",
           icon: "success",
         });
       }

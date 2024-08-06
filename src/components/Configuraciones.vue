@@ -1,6 +1,8 @@
 <template>
     <div class="row">
-      
+      <div class="col-lg-2">
+        <ParteLateral></ParteLateral>
+      </div>
       <div class="col-lg-10">
         <nav class="navbar bg-body-tertiary">
           <div class="container-fluid mx-5">
@@ -58,8 +60,15 @@
   </template>
   
   <script>
+  
+import ParteLateral from './ParteLateral.vue';
 export default {
   name: 'ConfiguracionesApp',
+  components: {
+    
+    ParteLateral,
+
+  },
 }
 
   </script>

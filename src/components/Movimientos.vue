@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="">
     <div class="row">
       <!-- Columna para ParteLateral -->
       <div class="col-lg-2 col-md-3 col-sm-12">

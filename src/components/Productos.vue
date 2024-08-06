@@ -115,7 +115,7 @@
           <div class="row">
             <div class="data-pro col-lg-6 col-sm-9 col-12 offset-lg-1 offset-sm-3 offset-2 "
               v-for="dtsprodcoun in datosprodcount" :key="dtsprodcoun">
-              Total de Productos: {{ dtsprodcoun.cantidadproduct }}
+              Total de Referencias: {{ dtsprodcoun.cantidadproduct }}
             </div>
             <div class="data-pro col-lg-6 col-sm-9 col-12 offset-lg-1 offset-sm-3 offset-2 "
               v-for="dtsprodprecio in datosprodPreciocount" :key="dtsprodprecio">
@@ -153,6 +153,7 @@ import AddProductForm from './AddProductForm.vue';
 import axios from 'axios';
 import ActProd from './ActProducto.vue';
 import ParteLateral from '../components/ParteLateral.vue';
+
 export default {
   name: 'ProductInventory',
   components: {
@@ -263,6 +264,7 @@ export default {
             this.Productos();
             this.ProductosPreciocount();
             this.Productoscount();
+            
           });
       } catch (error) {
         console.error('Error al obtener los productos:', error);
@@ -273,7 +275,7 @@ export default {
       console.log(prop);
       let datosprod = prop;
       this.idparaact = datosprod;
-      alert(datosprod);
+      //alert(datosprod);
     },
 
   }
