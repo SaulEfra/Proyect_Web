@@ -11,12 +11,39 @@
         <div class="header">
           <h2>Movimientos</h2>
 
-          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal">Abrir Caja</button>
-          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#CerrarCajaModal">Cerrar Caja</button>
+          <button 
+            type="button" 
+            class="btn btn-primary me-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#AbrirCajaModal"
+            :disabled="cajaAbierta">
+            Abrir Caja
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary me-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#CerrarCajaModal"
+            :disabled="!cajaAbierta">
+            Cerrar Caja
+          </button>
 
           <div class="actions">
-            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta">Nueva Venta</button>
-            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#NuevoGastoOffcanvas" aria-controls="NuevoGastoOffcanvas">
+            <button 
+              type="button" 
+              class="btn btn-primary me-2" 
+              data-bs-toggle="modal" 
+              data-bs-target="#NuevaVenta"
+              :disabled="!cajaAbierta">
+              Nueva Venta
+            </button>
+            <button 
+              class="btn btn-primary" 
+              type="button" 
+              data-bs-toggle="offcanvas" 
+              data-bs-target="#NuevoGastoOffcanvas" 
+              aria-controls="NuevoGastoOffcanvas"
+              :disabled="!cajaAbierta">
               Nuevo Gasto
             </button>
 
@@ -26,7 +53,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body">
-                <NuevoGasto />
+                <NuevoGasto v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" />
               </div>
             </div>
           </div>
@@ -53,12 +80,12 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <CerrarCaja v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" />
+                  <CerrarCaja v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" @caja-cerrada="manejarCajaCerrada" />
                 </div>
               </div>
             </div>
           </div>
-
+          
           <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
@@ -67,7 +94,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <NuevaVenta />
+                  <NuevaVenta v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" />
                 </div>
               </div>
             </div>
@@ -90,22 +117,22 @@
                 </select>
                 <input type="date" />
                 <input type="text" placeholder="Buscar concepto..." />
-                <button>Buscar</button>
+                <button @click="buscar">Buscar</button>
               </div>
             </div>
 
             <div class="row">
               <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción del balance">
                 <h3>Balance</h3>
-                <p></p>
+                <p>{{ datosBalance }}</p>
               </button>
               <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de las ventas totales">
                 <h3>Ventas Totales</h3>
-                <p></p>
+                <p>{{ datosVentasTotales }}</p>
               </button>
               <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de los gastos totales">
                 <h3>Gastos Totales</h3>
-                <p></p>
+                <p>{{ datosGastosTotales }}</p>
               </button>
             </div>
 
@@ -142,7 +169,13 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- Contenido de ingresos -->
+                      <tr v-for="ingreso in ingresos" :key="ingreso.IDIngreso">
+                        <td>{{ ingreso.Concepto }}</td>
+                        <td>{{ ingreso.Valor }}</td>
+                        <td>{{ ingreso.MedioDePago }}</td>
+                        <td>{{ ingreso.FechaHora }}</td>
+                        <td>{{ ingreso.Estado }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -151,10 +184,22 @@
                 <div class="card card-body">
                   <table class="table">
                     <thead>
-                      <!-- Encabezados de egresos -->
+                      <tr>
+                        <th>Concepto</th>
+                        <th>Valor</th>
+                        <th>Medio de pago</th>
+                        <th>Fecha y hora</th>
+                        <th>Estado</th>
+                      </tr>
                     </thead>
                     <tbody>
-                      <!-- Contenido de egresos -->
+                      <tr v-for="egreso in egresos" :key="egreso.IDEgreso">
+                        <td>{{ egreso.Concepto }}</td>
+                        <td>{{ egreso.Valor }}</td>
+                        <td>{{ egreso.MedioDePago }}</td>
+                        <td>{{ egreso.FechaHora }}</td>
+                        <td>{{ egreso.Estado }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -163,10 +208,20 @@
                 <div class="card card-body">
                   <table class="table">
                     <thead>
-                      <!-- Encabezados de por cobrar -->
+                      <tr>
+                        <th>Concepto</th>
+                        <th>Valor</th>
+                        <th>Fecha y hora</th>
+                        <th>Estado</th>
+                      </tr>
                     </thead>
                     <tbody>
-                      <!-- Contenido de por cobrar -->
+                      <tr v-for="porCobrar in porCobrar" :key="porCobrar.IDPorCobrar">
+                        <td>{{ porCobrar.Concepto }}</td>
+                        <td>{{ porCobrar.Valor }}</td>
+                        <td>{{ porCobrar.FechaHora }}</td>
+                        <td>{{ porCobrar.Estado }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -175,10 +230,20 @@
                 <div class="card card-body">
                   <table class="table">
                     <thead>
-                      <!-- Encabezados de por pagar -->
+                      <tr>
+                        <th>Concepto</th>
+                        <th>Valor</th>
+                        <th>Fecha y hora</th>
+                        <th>Estado</th>
+                      </tr>
                     </thead>
                     <tbody>
-                      <!-- Contenido de por pagar -->
+                      <tr v-for="porPagar in porPagar" :key="porPagar.IDPorPagar">
+                        <td>{{ porPagar.Concepto }}</td>
+                        <td>{{ porPagar.Valor }}</td>
+                        <td>{{ porPagar.FechaHora }}</td>
+                        <td>{{ porPagar.Estado }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -187,35 +252,7 @@
           </div>
 
           <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
-            <div>
-              <div class="filters">
-                <select>
-                  <option>Diario</option>
-                  <option>Semanal</option>
-                  <option>Mensual</option>
-                </select>
-                <input type="date" />
-              </div>
-            </div>
-            <div class="cierres-caja-table">
-              <div>
-                <table class="cierres">
-                  <thead>
-                    <tr>
-                      <th>Fecha</th>
-                      <th>Hora de Apertura</th>
-                      <th>Hora de Cierre</th>
-                      <th>Ventas Totales</th>
-                      <th>Gastos Totales</th>
-                      <th>Balance Final</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Contenido de cierres de caja -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <!-- Contenido de cierres de caja -->
           </div>
         </div>
       </div>
@@ -223,44 +260,102 @@
   </div>
 </template>
 
-
 <script>
-import NuevaVenta from './NuevaVenta.vue';
+import ParteLateral from './ParteLateral.vue';
 import AbrirCaja from './AbrirCaja.vue';
 import CerrarCaja from './CerrarCaja.vue';
+import NuevaVenta from './NuevaVenta.vue';
 import NuevoGasto from './NuevoGasto.vue';
-import ParteLateral from './ParteLateral.vue';
+import axios from 'axios';
+
 export default {
   name: 'MovimientosApp',
   components: {
-    NuevaVenta,
+    ParteLateral,
     AbrirCaja,
     CerrarCaja,
+    NuevaVenta,
     NuevoGasto,
-    ParteLateral,
-
   },
   data() {
     return {
+      cajaAbierta: false,
+      datosCajaAbierta: null,
       currentSection: 'transacciones',
-      datosCajaAbierta: null
+      ingresos: [],
+      egresos: [],
+      porCobrar: [],
+      porPagar: [],
+      datosBalance: 0,
+      datosVentasTotales: 0,
+      datosGastosTotales: 0,
     };
-
   },
-
+  created() {
+    this.verificarEstadoCaja();
+    this.obtenerDatos();
+  },
   methods: {
-    showSection(section) {
-      this.currentSection = section;
+    async verificarEstadoCaja() {
+      try {
+        const response = await axios.get('http://localhost:3000/CajaAbierta');
+        if (response.data) {
+          this.datosCajaAbierta = response.data;
+          this.cajaAbierta = true;
+        } else {
+          this.datosCajaAbierta = null;
+          this.cajaAbierta = false;
+        }
+      } catch (error) {
+        console.error('Error al verificar el estado de la caja:', error);
+        this.cajaAbierta = false;
+        this.datosCajaAbierta = null;
+      }
+    },
+    async obtenerDatos() {
+      try {
+        const [ingresosResponse, egresosResponse, porCobrarResponse, porPagarResponse, balanceResponse, ventasResponse, gastosResponse] = await Promise.all([
+          axios.get('http://localhost:3000/ingresos'),
+          axios.get('http://localhost:3000/egresos'),
+          axios.get('http://localhost:3000/porCobrar'),
+          axios.get('http://localhost:3000/porPagar'),
+          axios.get('http://localhost:3000/balance'),
+          axios.get('http://localhost:3000/ventasTotales'),
+          axios.get('http://localhost:3000/gastosTotales'),
+        ]);
 
+        this.ingresos = ingresosResponse.data;
+        this.egresos = egresosResponse.data;
+        this.porCobrar = porCobrarResponse.data;
+        this.porPagar = porPagarResponse.data;
+        this.datosBalance = balanceResponse.data.total;
+        this.datosVentasTotales = ventasResponse.data.total;
+        this.datosGastosTotales = gastosResponse.data.total;
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
     },
     manejarCajaAbierta(datos) {
       this.datosCajaAbierta = datos;
-    }, 
-    
+      this.cajaAbierta = true;
+      // Aquí podrías también guardar el estado en localStorage si es necesario
+    },
+    manejarCajaCerrada() {
+      this.datosCajaAbierta = null;
+      this.cajaAbierta = false;
+      // Aquí podrías también eliminar el estado de localStorage si es necesario
+    },
+    showSection(section) {
+      this.currentSection = section;
+    },
+    buscar() {
+      // Lógica para buscar en los datos de la tabla según los filtros
+    }
   },
-
 };
 </script>
+
+
 
 <style scoped>
 .container-fluid {

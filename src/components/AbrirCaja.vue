@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="montoInicialCaja">
+    <form @submit.prevent="abrirCaja">
       <div class="form-group">
         <label for="montoInicial">Monto Inicial</label>
         <input
@@ -24,45 +24,48 @@ export default {
   name: 'AbrirCaja',
   data() {
     return {
-      montoInicial: '',
-      fechaHora: '',
+      montoInicial: '', // Monto inicial de la caja
+      fechaHora: '',    // Fecha y hora actual
     };
   },
   mounted() {
+    // Establece la fecha y hora actual al montarse el componente
     this.fechaHora = new Date().toISOString().slice(0, 16);
   },
   methods: {
-    async montoInicialCaja() {
+  async abrirCaja() {
+    try {
+      // Prepara los datos para enviar al servidor
       const formData = {
         fechaHora: this.fechaHora,
         montoInicial: this.montoInicial,
       };
 
-      try {
-        const response = await axios.post('http://localhost:3000/AbrirCaja', formData, { withCredentials: true });
-        console.log('Respuesta del servidor:', response.data);
-        alert('Se abrió caja correctamente');
+      // Envía la solicitud para abrir la caja
+      const openResponse = await axios.post('http://localhost:3000/AbrirCaja', formData, { withCredentials: true });
+      console.log('Respuesta del servidor:', openResponse.data);
+      alert('Se abrió caja correctamente');
 
-        const dataResponse = await axios.get('http://localhost:3000/AbrirCaja', { withCredentials: true });
-        const datos = dataResponse.data;
-        alert(`Última Caja Abierta:
-          Nombre del Encargado: ${datos.NombreUsuario}
-          ID Caja: ${datos.IDAbrirCaja}
-          Fecha: ${datos.Fecha}
-          Monto Inicial: ${datos.MontoInicial}`);
+      // Guardar los detalles de la caja abierta en localStorage
+      localStorage.setItem('cajaAbierta', JSON.stringify(openResponse.data));
 
-        this.limpiarDatos();
+      // Limpia los datos del formulario
+      this.limpiarDatos();
 
-        this.$emit('caja-abierta', datos);
-      } catch (error) {
-        console.error('Error al abrir caja:', error);
-        alert('Error al abrir caja: ' + error.message);
-      }
-    },
-    limpiarDatos() {
-      this.montoInicial = '';
-    },
+      // Emite el evento con los datos de la caja abierta
+      this.$emit('caja-abierta', openResponse.data);
+    } catch (error) {
+      // Maneja cualquier error que ocurra durante la solicitud
+      console.error('Error al abrir caja:', error);
+      alert('Error al abrir caja: ' + error.message);
+    }
   },
+  limpiarDatos() {
+    // Limpia el campo de monto inicial
+    this.montoInicial = '';
+  },
+},
+
 };
 </script>
 
