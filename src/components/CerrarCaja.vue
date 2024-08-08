@@ -1,16 +1,13 @@
 <template>
-    <div>
-      
-      <p v-if="datosCajaAbierta" id="IDAbrirCaja"
-      >ID Caja: {{ datosCajaAbierta.IDAbrirCaja }}</p>
-      <p v-if="datosCajaAbierta" id="Fecha">Fecha y Hora: {{ datosCajaAbierta.Fecha }}</p>
-      <p v-if="datosCajaAbierta" id="MontoInicial">Monto Inicial: {{ datosCajaAbierta.MontoInicial }}</p>
-      <p >Ventas totales: {{  }}</p>
-      <p>Gastos totales:{{  }}</p>
+  <div>
+    <p v-if="datosCajaAbierta">ID Caja: {{ datosCajaAbierta.IDAbrirCaja }}</p>
+    <p v-if="datosCajaAbierta">Fecha y Hora: {{ datosCajaAbierta.Fecha }}</p>
+    <p v-if="datosCajaAbierta">Monto Inicial: {{ datosCajaAbierta.MontoInicial }}</p>
+    <p v-if="datosCajaAbierta">Ventas totales: {{ datosCajaAbierta.totalVentas }}</p>
+    <p v-if="datosCajaAbierta">Gastos totales: {{ datosCajaAbierta.totalGastos }}</p>
+    <p v-if="datosCajaAbierta">Balance Total: {{ balanceTotal }}</p>
 
-      <p>Balance Total:{{  }}</p>
-
-      <form @submit.prevent="MontoFinalCaja">
+    <form @submit.prevent="MontoFinalCaja">
       <div class="form-group">
         <label for="montoFinal">Total de dinero en efectivo:</label>
         <input
@@ -18,37 +15,45 @@
           id="montoFinal"
           v-model="montoFinal"
           class="form-control"
-          placeholder="Ingrese el monto Final"
+          placeholder="Ingrese el monto final"
           required
         />
       </div>
-    
+
       <button type="submit" class="btn btn-primary mt-3">Cerrar Caja</button>
     </form>
+  </div>
+</template>
 
-    </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
+<script>
+import axios from 'axios';
 
-  export default {
-    name: 'CerrarCaja',
-    props: {
-      datosCajaAbierta: {
-        type: Object,
-        required: true
+export default {
+  name: 'CerrarCaja',
+  data() {
+    return {
+      datosCajaAbierta: null,
+      montoFinal: '',
+      fechaHoraCierre: '',
+    };
+  },
+  computed: {
+    balanceTotal() {
+      if (this.datosCajaAbierta) {
+        return (
+          this.datosCajaAbierta.totalVentas - this.datosCajaAbierta.totalGastos
+        );
       }
+      return 0;
     },
-    data(){
-      return{
-        montoFinal:'',
-        fechaHoraCierre:'',
-        
-
-      };
-    },
-    mounted() {
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:3000/CajaAbierta');
+      this.datosCajaAbierta = response.data;
+    } catch (error) {
+      console.error('Error al obtener datos de la caja:', error);
+    }
     this.fechaHoraCierre = new Date().toISOString().slice(0, 16);
   },
   methods: {
@@ -56,14 +61,18 @@
       const formData = {
         montoFinal: this.montoFinal,
         fechaHoraCierre: this.fechaHoraCierre,
+        IDAbrirCaja: this.datosCajaAbierta.IDAbrirCaja,
       };
       try {
-        const response = await axios.post('http://localhost:3000/cierrecaja', formData);
-        console.log('Respuesta del servidor:', response.data); 
+        const response = await axios.post(
+          'http://localhost:3000/cierrecaja',
+          formData
+        );
+        console.log('Respuesta del servidor:', response.data);
         alert('Se cerró caja correctamente');
 
         this.limpiarDatos(); // Limpiar datos
-
+        this.$emit('caja-cerrada');
       } catch (error) {
         console.error('Error al cerrar caja:', error);
         alert('Error al cerrar caja: ' + error.message);
@@ -74,9 +83,8 @@
     },
   },
 };
-  </script>
-  
- 
+</script>
+
   
   <style scoped>
   .form-group {
