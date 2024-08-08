@@ -1,12 +1,12 @@
 <template>
-  <div class="row">
+  <div class="row partLat">
     <!-- Botón para mostrar/ocultar la barra lateral en pantallas pequeñas -->
     <button @click="toggleSidebar" class="btn btn-primary sidebar-toggle d-md-none">
       <i :class="['bi', isOpen ? 'bi-x' : 'bi-list']"></i>
     </button>
 
     <!-- Barra lateral -->
-    <nav :class="['col-md-3 col-lg-2 partlt', 'sidebar', isOpen || isMdAndUp ? 'sidebar-open' : '', 'd-md-block']">
+    <nav :class="['sidebar', isOpen ? 'sidebar-open' : 'sidebar-closed']">
       <div class="container-fluid">
         <!-- Botón de cerrar la barra lateral en pantallas pequeñas -->
         <button @click="closeSidebar" class="btn btn-close d-md-none" aria-label="Close">
@@ -23,8 +23,8 @@
           </select>
         </div>
 
-        <!-- Configuración y gestión de productos -->
-        <div class="config">
+        <!-- Configuración y agregar negocio -->
+        <div class="col-12 config">
           <div class="config-item">
             <i class="bi bi-gear-fill"></i>
             <RouterLink to="/InfoNeg" @click="closeSidebar">Configuraciones</RouterLink>
@@ -34,7 +34,9 @@
             <RouterLink to="/AgregarNegocio" @click="closeSidebar">Agregar negocio</RouterLink>
           </div>
         </div>
-        <div class="produc">
+
+        <!-- Productos y movimientos -->
+        <div class="col-12 produc">
           <div class="produc-item">
             <i class="bi bi-file-earmark-minus-fill"></i>
             <RouterLink to="/Movimientos" @click="closeSidebar">Movimientos</RouterLink>
@@ -50,14 +52,21 @@
         </div>
 
         <!-- Gestión de contactos -->
-        <div class="gest">
-          <h5>Gestiona tus contactos</h5>
-          <RouterLink to="/ClientesTreinta" @click="closeSidebar">Clientes</RouterLink>
-          <br>
-          <RouterLink to="/Proveedores" @click="closeSidebar">Proveedores</RouterLink>
+        <div class="col-12 gest">
+          <div class="gest-item">
+            <h5>Gestiona tus contactos</h5>
+          </div>
+          <div class="gest-item">
+            <RouterLink to="/ClientesTreinta" @click="closeSidebar">Clientes</RouterLink>
+          </div>
+          <div class="gest-item">
+            <RouterLink to="/Proveedores" @click="closeSidebar">Proveedores</RouterLink>
+          </div>
         </div>
       </div>
     </nav>
+
+    <!-- Contenido principal -->
     <div class="Contenid col-md-9 col-lg-10">
       <RouterView @negocio-creado="actualizarNegocios"></RouterView>
     </div>
@@ -80,7 +89,7 @@ export default {
       isMdAndUp: window.innerWidth >= 768,
       negocios: [],
       selectedNegocio: null,
-      defaultNegocio: null,
+      defaultNegocioId: null,
     };
   },
   mounted() {
@@ -92,19 +101,18 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    // Mostrar/ocultar la barra lateral
     toggleSidebar() {
       this.isOpen = !this.isOpen;
     },
-    // Cerrar la barra lateral
     closeSidebar() {
       this.isOpen = false;
     },
-    // Ajustar el estado de la barra lateral según el tamaño de la ventana
     handleResize() {
       this.isMdAndUp = window.innerWidth >= 768;
+      if (this.isMdAndUp) {
+        this.isOpen = false; // Asegurar que la barra lateral esté cerrada en pantallas grandes
+      }
     },
-    // Cargar la lista de negocios desde el servidor
     async cargarNegocios() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/getnegocios');
@@ -121,21 +129,11 @@ export default {
         alert('Error al cargar los negocios. Por favor, intenta de nuevo.');
       }
     },
-    agregarNuevoNegocio(nuevoNegocio) {
-      this.negocios.push(nuevoNegocio);
-      if (!this.defaultNegocioId) {
-        this.defaultNegocioId = nuevoNegocio.id;
-        this.selectedNegocio = nuevoNegocio.id;
-        this.cambiarNegocio();
-      }
-    },
-    // Cambiar el negocio seleccionado
     async cambiarNegocio() {
       if (!this.selectedNegocio) return;
 
       try {
         const response = await axios.get(`http://localhost:3000/Neg/getNegocio/${this.selectedNegocio}`);
-        // Emitir el evento de cambio de negocio y redirigir al dashboard del negocio
         this.$emit('negocio-cambiado', response.data);
       } catch (error) {
         console.error('Error al cargar los datos del negocio:', error.response ? error.response.data : error.message);
@@ -150,26 +148,12 @@ export default {
 </script>
 
 <style scoped>
-.row {
+.partLat {
   display: flex;
-  flex-wrap: wrap;
-}
-
-.Contenid {
-  flex: 1;
-  padding: 20px;
-}
-
-.partlt {
-  border-right: 2px solid #f2f2f2;
 }
 
 .sidebar-toggle {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
+  display: none;
 }
 
 .sidebar {
@@ -194,14 +178,24 @@ export default {
   opacity: 1;
 }
 
+.sidebar-closed {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
 .container-fluid {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.config-item,
-.produc-item {
+.perfiles, .config, .produc, .gest {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.config-item, .produc-item, .gest-item {
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -210,8 +204,7 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.config-item:hover,
-.produc-item:hover {
+.config-item:hover, .produc-item:hover {
   background-color: #e9ecef;
 }
 
@@ -221,24 +214,42 @@ export default {
   color: #495057;
 }
 
-.gest a {
-  display: block;
-  margin-bottom: 5px;
+a {
   text-decoration: none;
-  color: #007bff;
+  color: black;
 }
 
-.gest a:hover {
-  text-decoration: underline;
+a:hover {
+  color: #333;
 }
 
 @media (max-width: 768px) {
   .sidebar {
-    transform: none;
-    opacity: 1;
-    position: static;
-    border-right: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .Contenid {
+    margin-left: 0; /* Ajuste para cuando la barra lateral está activa */
     width: 100%;
   }
+
+  .sidebar-open + .Contenid {
+    margin-left: 250px; /* Ancho de la barra lateral */
+  }
+}
+
+.Contenid {
+  flex: 1;
+  padding: 20px;
 }
 </style>

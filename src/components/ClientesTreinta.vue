@@ -5,12 +5,10 @@
         <h1>Clientes</h1>
       </span>
       <form class="d-flex" @submit.prevent="buscarCliente">
-        <input class="form-control me-2" type="search" v-model="busqueda" placeholder="Buscar cliente"
-          aria-label="Search">
+        <input class="form-control me-2" type="search" v-model="busqueda" placeholder="Buscar cliente" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>
-      <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir
-        Cliente</button>
+      <button v-if="!mostrarFormulario" @click="mostrarFormulario = true" class="btn btn-primary">Añadir Cliente</button>
     </div>
   </nav>
   <div class="row mt-4">
@@ -26,15 +24,16 @@
         </thead>
         <tbody class="table-group-divider">
           <tr v-for="(cliente, indice) in clientesFiltrados" :key="indice">
-            <td>{{ cliente.Nombre }}</td>
+            <td class="d-none">{{ cliente.IDCli }}</td>
+            <td>{{ cliente.NombreCli }}</td>
             <td>{{ cliente.Telefono }}</td>
-            <td>{{ cliente.Adeudos }}</td>
+            <td>{{ cliente.Adeudo }}</td>
             <td>
               <div class="btn-group" role="group">
                 <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
                   <i class="bi bi-pencil-square"></i> Editar
                 </button>
-                <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.id)">
+                <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.IDCli)">
                   <i class="bi bi-trash"></i> Eliminar
                 </button>
                 <button class="btn btn-info" title="Añadir Adeudo" @click="mostrarModalAdeudo(cliente)">
@@ -59,13 +58,12 @@
           </thead>
           <tbody class="table-group-divider">
             <tr>
-              <td><input v-model="nuevoCliente.Nombre" type="text" required class="form-control"></td>
+              <td><input v-model="nuevoCliente.NombreCli" type="text" required class="form-control"></td>
               <td>
-                <input v-model="nuevoCliente.Telefono" type="text" required class="form-control"
-                  @input="validarTelefono" pattern="[0-9]*">
+                <input v-model="nuevoCliente.Telefono" type="text" required class="form-control" @input="validarTelefono" pattern="\d{10}">
               </td>
               <td>
-                <input v-model.number="nuevoCliente.Adeudos" type="number" required class="form-control" step="0.01">
+                <input v-model.number="nuevoCliente.Adeudo" min="1" type="number" required class="form-control" step="0.01">
               </td>
             </tr>
           </tbody>
@@ -89,8 +87,7 @@
           <form @submit.prevent="procesarAdeudoAbono">
             <div class="mb-3">
               <label for="cantidad" class="form-label">Cantidad</label>
-              <input type="number" class="form-control" id="cantidad" v-model.number="cantidadAdeudoAbono" step="0.01"
-                required>
+              <input type="number" class="form-control" id="cantidad" v-model.number="cantidadAdeudoAbono" step="0.01" required>
             </div>
             <button type="submit" class="btn btn-primary">Confirmar</button>
           </form>
@@ -102,17 +99,21 @@
 
 <script>
 import Swal from 'sweetalert2'
+import axios from 'axios'
 
 export default {
   name: 'ClientesApp',
   data() {
     return {
+      datosempl: [],
       mostrarFormulario: false,
       clientes: [],
       nuevoCliente: {
-        Nombre: '',
+        IDCli: null,
+        NombreCli: '',
         Telefono: '',
-        Adeudos: 0
+        Adeudo: 0,
+        activo: true // Asegúrate de tener esta propiedad inicializada si la usas
       },
       modoEdicion: false,
       busqueda: '',
@@ -120,28 +121,29 @@ export default {
       modalTitulo: '',
       cantidadAdeudoAbono: 0,
       esAdeudo: true,
-      mostrarModal: false,
-      swalWithBootstrapButtons: Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success",
-          cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-      })
+      mostrarModal: false
     }
   },
   computed: {
     clientesFiltrados() {
       if (this.busqueda) {
-        return this.clientes.filter(cliente => cliente.Nombre.toLowerCase().includes(this.busqueda.toLowerCase()))
+        return this.clientes.filter(cliente => cliente.NombreCli.toLowerCase().includes(this.busqueda.toLowerCase()))
       }
       return this.clientes
     }
   },
   methods: {
-    agregarCliente() {
+    async agregarCliente() {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+
       if (this.modoEdicion) {
-        this.swalWithBootstrapButtons.fire({
+        swalWithBootstrapButtons.fire({
           title: "¿Actualizar cliente?",
           text: "¿Está seguro de que desea actualizar este cliente?",
           icon: "question",
@@ -149,23 +151,40 @@ export default {
           confirmButtonText: "Sí, actualizar",
           cancelButtonText: "Cancelar",
           reverseButtons: true
-        }).then((result) => {
+        }).then(async (result) => { 
           if (result.isConfirmed) {
-            const index = this.clientes.findIndex(cli => cli.id === this.nuevoCliente.id)
-            if (index !== -1) {
-              this.clientes[index] = { ...this.nuevoCliente }
-            }
+            const index = this.clientes.findIndex(cli => cli.id === this.nuevoCliente.IDCli)
+            await axios.put('http://localhost:3000/Neg/ClientesAct', {
+                IDCli: this.nuevoCliente.IDCli, 
+                Nombrecli: this.nuevoCliente.NombreCli,
+                NumeroDeTelefonocli: this.nuevoCliente.Telefono,
+                Adeudo: this.nuevoCliente.Adeudo,
+                activocli: this.nuevoCliente.activo
+              })
             this.resetearFormulario()
-            Swal.fire({
-              title: "Cliente actualizado",
-              icon: "success",
-            });
+            this.obtenerClientes()
+            if (index !== -1) {
+              this.datosempl[index] = { ...this.nuevoCliente };
+              this.resetearFormulario()
+              Swal.fire({
+                title: "Cliente actualizado",
+                icon: "success",
+              });
+            }
           }
         });
       } else {
         const nuevoId = Date.now().toString()
         this.clientes.push({ ...this.nuevoCliente, id: nuevoId })
+        await axios.post('http://localhost:3000/Neg/clientes', {
+                IDcliente: this.nuevoCliente.IDEmpleado, 
+                Nombrecli: this.nuevoCliente.NombreCli,
+                NumeroDeTelefonocli: this.nuevoCliente.Telefono,
+                Adeudo: this.nuevoCliente.Adeudo,
+                activocli: this.nuevoCliente.activo
+              })
         this.resetearFormulario()
+        this.obtenerClientes()
         Swal.fire({
           title: "Cliente añadido",
           icon: "success",
@@ -177,8 +196,16 @@ export default {
       this.modoEdicion = true
       this.mostrarFormulario = true
     },
-    borrarCliente(id) {
-      this.swalWithBootstrapButtons.fire({
+    async borrarCliente(IDCli) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+
+      swalWithBootstrapButtons.fire({
         title: "¿Está seguro?",
         text: "No podrá revertir esta acción!",
         icon: "warning",
@@ -186,10 +213,17 @@ export default {
         confirmButtonText: "Sí, eliminar!",
         cancelButtonText: "No, cancelar!",
         reverseButtons: true
-      }).then((result) => {
+      }).then(async(result) => {
         if (result.isConfirmed) {
-          this.clientes = this.clientes.filter(cli => cli.id !== id)
-          this.swalWithBootstrapButtons.fire({
+          //this.clientes = this.clientes.filter(cli => cli.IDCli !== IDCli)
+          try {
+            this.datosempl = this.datosempl.filter(emp => emp.IDCli !== IDCli);
+            await axios.delete(`http://localhost:3000/Neg/Clientes/${IDCli}`);
+          } catch (error) {
+            console.error("Error al eliminar el empleado:", error);
+          }
+          this.obtenerClientes()
+          swalWithBootstrapButtons.fire({
             title: "Eliminado!",
             text: "El cliente ha sido eliminado.",
             icon: "success"
@@ -199,9 +233,11 @@ export default {
     },
     resetearFormulario() {
       this.nuevoCliente = {
-        Nombre: '',
+        IDCli: null, // Inicializar IDCli aquí también
+        NombreCli: '',
         Telefono: '',
-        Adeudos: 0
+        Adeudo: 0,
+        activo: true // Asegúrate de inicializar todas las propiedades necesarias
       }
       this.mostrarFormulario = false
       this.modoEdicion = false
@@ -213,7 +249,7 @@ export default {
       this.nuevoCliente.Telefono = event.target.value.replace(/[^0-9]/g, '')
     },
     buscarCliente() {
-      // La búsqueda se realiza automáticamente gracias a la propiedad computada
+      // La búsqueda se realiza automáticamente gracias al computed property
     },
     mostrarModalAdeudo(cliente) {
       this.clienteSeleccionado = cliente
@@ -232,9 +268,9 @@ export default {
     procesarAdeudoAbono() {
       if (this.clienteSeleccionado) {
         if (this.esAdeudo) {
-          this.clienteSeleccionado.Adeudos += this.cantidadAdeudoAbono
+          this.clienteSeleccionado.Adeudo += this.cantidadAdeudoAbono
         } else {
-          if (this.cantidadAdeudoAbono > this.clienteSeleccionado.Adeudos) {
+          if (this.cantidadAdeudoAbono > this.clienteSeleccionado.Adeudo) {
             Swal.fire({
               title: "Error",
               text: "El abono no puede ser mayor que el adeudo actual.",
@@ -242,7 +278,7 @@ export default {
             });
             return
           }
-          this.clienteSeleccionado.Adeudos -= this.cantidadAdeudoAbono
+          this.clienteSeleccionado.Adeudo -= this.cantidadAdeudoAbono
         }
         this.actualizarCliente(this.clienteSeleccionado)
         this.cerrarModal()
@@ -255,12 +291,25 @@ export default {
     actualizarCliente(cliente) {
       const index = this.clientes.findIndex(c => c.id === cliente.id)
       if (index !== -1) {
-        this.clientes[index] = { ...cliente }
+        this.$set(this.clientes, index, { ...cliente })
       }
     },
     cerrarModal() {
       this.mostrarModal = false
+    },
+    async obtenerClientes() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/clientesget');
+        this.datosempl = response.data.results;
+        this.clientes = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener los clientes:', error);
+        alert('Error al obtener los clientes');
+      }
     }
+  },
+  mounted() {
+    this.obtenerClientes()
   }
 }
 </script>
