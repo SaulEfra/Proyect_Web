@@ -40,7 +40,7 @@
         <RouterLink to="/ClientesTreinta">Clientes</RouterLink>
       </div>
       <div class="gest-item">
-        <RouterLink to="/Proveedores">Proveedores</RouterLink>
+        <RouterLink to="/ProvedoreProd">Proveedores</RouterLink>
       </div>
       
       
@@ -52,13 +52,14 @@
 <script scoped>
 export default {
   name: 'ParteLateral',
+  
 }
 </script>
 
 <style scoped>
 
 .partLat{
-  margin: 15px;
+  margin: 1px;
   
 }
 .partLat a{
