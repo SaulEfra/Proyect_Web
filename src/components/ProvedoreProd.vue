@@ -26,31 +26,25 @@
                 <th scope="col">Nombre del Proveedor</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Deudas</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody class="table-group-divider">
               <tr v-for="(cliente, indice) in clientesFiltrados" :key="indice">
                 <td class="d-none">{{ cliente.IDProveedor }}</td>
-                <td>{{ cliente.Nombre }}</td>
+                <td>{{ cliente.ProveedorNombre }}</td>
                 <td>{{ cliente.Telefono }}</td>
-                <td>${{ cliente.Adeudo }}</td>
+                <td>${{ cliente.ValorGasto }}</td>
+                <td>{{ cliente.Estado }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
                       <i class="bi bi-pencil-square"></i> Editar
                     </button>
-                    <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.IDProveedor)">
-                      <i class="bi bi-trash"></i> Eliminar
+                    <button class="btn btn-info" title="DeudaPagada" @click="saldarDeuda(cliente.IDProveedor)">
+                      <i class="bi bi-check-circle"></i> DeudaPagada
                     </button>
-                    <!--<button class="btn btn-info" title="Añadir Adeudo" @click="mostrarModalAdeudo(cliente)">
-                    <i class="bi bi-plus-circle"></i> Adeudo
-                  </button>
-                  <button class="btn btn-success" title="Añadir Abono" @click="mostrarModalAbono(cliente)">
-                    <i class="bi bi-dash-circle"></i> Abono
-                  </button>
-                  -->
-
                   </div>
                 </td>
               </tr>
@@ -67,19 +61,20 @@
               </thead>
               <tbody class="table-group-divider">
                 <tr>
-                  <td><input v-model="nuevoCliente.Nombre" type="text" required class="form-control" @input="validarNombre"></td>
+                  <td><input v-model="nuevoCliente.ProveedorNombre" type="text" required class="form-control"
+                      @input="validarNombre"></td>
                   <td>
                     <input v-model="nuevoCliente.Telefono" type="text" required class="form-control"
                       @input="validarTelefono" pattern="\d{10}">
                   </td>
                   <td>
-                    <input v-model.number="nuevoCliente.Adeudo" min="1" type="number" required class="form-control"
+                    <input v-model.number="nuevoCliente.ValorGasto" min="1" type="number" required class="form-control"
                       step="0.01">
                   </td>
                 </tr>
               </tbody>
             </table>
-            <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Proveedore </button>
+            <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Actualizar' : 'Añadir' }} Proveedor</button>
             <button @click="cancelarEdicion" type="button" class="btn btn-secondary ml-2">Cancelar</button>
           </form>
         </div>
@@ -128,7 +123,7 @@ export default {
       clientes: [],
       nuevoCliente: {
         IDProveedor: null,
-        Nombre: '',
+        ProveedorNombre: '',
         Telefono: '',
         Adeudo: 0,
         activo: true
@@ -139,13 +134,14 @@ export default {
       modalTitulo: '',
       cantidadAdeudoAbono: 0,
       esAdeudo: true,
-      mostrarModal: false
+      mostrarModal: false,
+      Estadodeuda: 'Pagada'
     }
   },
   computed: {
     clientesFiltrados() {
       if (this.busqueda) {
-        return this.clientes.filter(cliente => cliente.Nombre.toLowerCase().includes(this.busqueda.toLowerCase()))
+        return this.clientes.filter(cliente => cliente.ProveedorNombre.toLowerCase().includes(this.busqueda.toLowerCase()))
       }
       return this.clientes
     }
@@ -171,12 +167,12 @@ export default {
           reverseButtons: true
         }).then(async (result) => {
           if (result.isConfirmed) {
-            const index = this.clientes.findIndex(cli => cli.id === this.nuevoCliente.IDProveedor)
+            const index = this.clientes.findIndex(cli => cli.IDProveedor === this.nuevoCliente.IDProveedor)
             await axios.put('http://localhost:3000/Neg/provedoresAct', {
               IDProveedor: this.nuevoCliente.IDProveedor,
-              Nombrecli: this.nuevoCliente.Nombre,
+              Nombrecli: this.nuevoCliente.ProveedorNombre,
               NumeroDeTelefonocli: this.nuevoCliente.Telefono,
-              Adeudo: this.nuevoCliente.Adeudo,
+              Adeudo: this.nuevoCliente.ValorGasto,
               activocli: this.nuevoCliente.activo
             })
             this.resetearFormulario()
@@ -196,9 +192,9 @@ export default {
         this.clientes.push({ ...this.nuevoCliente, id: nuevoId })
         await axios.post('http://localhost:3000/Neg/provedores', {
           IDcliente: this.nuevoCliente.IDEmpleado,
-          Nombreprov: this.nuevoCliente.Nombre,
+          Nombreprov: this.nuevoCliente.ProveedorNombre,
           NumeroDeTelefono: this.nuevoCliente.Telefono,
-          Adeudo: this.nuevoCliente.Adeudo,
+          Adeudo: this.nuevoCliente.ValorGasto,
           activocli: this.nuevoCliente.activo
         })
         this.resetearFormulario()
@@ -211,11 +207,14 @@ export default {
     },
     editarCliente(cliente) {
       this.nuevoCliente = { ...cliente }
-      this.validarNombre();  
+      if (typeof this.nuevoCliente.ProveedorNombre === 'string') {
+        this.validarNombre();
+      }
       this.modoEdicion = true
       this.mostrarFormulario = true
     },
-    async borrarCliente(IDProveedor) {
+
+    async saldarDeuda(IDProveedor) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: "btn btn-success",
@@ -226,37 +225,41 @@ export default {
 
       swalWithBootstrapButtons.fire({
         title: "¿Está seguro?",
-        text: "No podrá revertir esta acción!",
+        text: "¿Desea saldar la deuda de este proveedor?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar!",
+        confirmButtonText: "Sí, saldar deuda!",
         cancelButtonText: "No, cancelar!",
         reverseButtons: true
       }).then(async (result) => {
         if (result.isConfirmed) {
-          //this.clientes = this.clientes.filter(cli => cli.IDCli !== IDCli)
           try {
-            this.datosempl = this.datosempl.filter(emp => emp.IDProveedor !== IDProveedor);
-            await axios.delete(`http://localhost:3000/Neg/provedore/${IDProveedor}`);
+            // Enviar datos al nuevo endpoint para actualizar
+            await axios.put('http://localhost:3000/Neg/gastoAct', {
+              IDProveedor,
+              Estado: 'Pagada'
+            });
+            this.obtenerClientes()
           } catch (error) {
-            console.error("Error al eliminar el provedor:", error);
+            console.error("Error al saldar la deuda del proveedor:", error);
           }
-          this.obtenerClientes()
-          swalWithBootstrapButtons.fire({
-            title: "Eliminado!",
-            text: "El provedor ha sido eliminado.",
+          Swal.fire({
+            title: "Pagada",
+            text: "El proveedor ha saldado la deuda.",
             icon: "success"
           });
         }
       });
     },
+
+
     resetearFormulario() {
       this.nuevoCliente = {
-        IDCli: null, // Inicializar IDCli aquí también
-        NombreCli: '',
+        IDProveedor: null,
+        ProveedorNombre: '',
         Telefono: '',
-        Adeudo: 0,
-        activo: true // Asegúrate de inicializar todas las propiedades necesarias
+        ValorGasto: 0,
+        activo: true
       }
       this.mostrarFormulario = false
       this.modoEdicion = false
@@ -268,8 +271,13 @@ export default {
       this.nuevoCliente.Telefono = event.target.value.replace(/[^0-9]/g, '')
     },
     validarNombre() {
-      this.nuevoCliente.Nombre = this.nuevoCliente.Nombre.trimStart();
+      if (typeof this.nuevoCliente.ProveedorNombre === 'string') {
+        this.nuevoCliente.ProveedorNombre = this.nuevoCliente.ProveedorNombre.trimStart();
+      } else {
+        console.error('El nombre del proveedor no es una cadena');
+      }
     },
+
     buscarCliente() {
       // La búsqueda se realiza automáticamente gracias al computed property
     },
@@ -323,12 +331,17 @@ export default {
       try {
         const response = await axios.get('http://localhost:3000/Neg/provedoresget');
         this.datosempl = response.data.results;
-        this.clientes = response.data.results;
+        this.clientes = response.data.results.map(cliente => ({
+          ...cliente,
+          ProveedorNombre: cliente.ProveedorNombre || '' // Asegúrate de que ProveedorNombre esté definido
+        }));
       } catch (error) {
-        console.error('Error al obtener los provedores:', error);
-        alert('Error al obtener los provedores');
+        console.error('Error al obtener los proveedores:', error);
+        alert('Error al obtener los proveedores');
       }
     },
+
+
   },
   mounted() {
     this.obtenerClientes()

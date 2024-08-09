@@ -34,7 +34,7 @@
                 <td class="d-none">{{ cliente.IDCli }}</td>
                 <td>{{ cliente.NombreCli }}</td>
                 <td>{{ cliente.Telefono }}</td>
-                <td>${{ cliente.Adeudo }}</td>
+                <td>${{ cliente.Monto }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
@@ -76,7 +76,7 @@
                       @input="validarTelefono" pattern="\d{10}">
                   </td>
                   <td>
-                    <input v-model.number="nuevoCliente.Adeudo" min="1" type="number" required class="form-control"
+                    <input v-model.number="nuevoCliente.Monto" min="1" type="number" required class="form-control"
                       step="0.01">
                   </td>
                 </tr>
@@ -135,7 +135,8 @@ export default {
         NombreCli: '',
         Telefono: '',
         Adeudo: 0,
-        activo: true
+        activo: true,
+        Monto: ''
       },
       modoEdicion: false,
       busqueda: '',
@@ -143,7 +144,8 @@ export default {
       modalTitulo: '',
       cantidadAdeudoAbono: 0,
       esAdeudo: true,
-      mostrarModal: false
+      mostrarModal: false,
+      Estado: 'Pendiente'
     }
   },
   computed: {
@@ -180,8 +182,9 @@ export default {
               IDCli: this.nuevoCliente.IDCli,
               Nombrecli: this.nuevoCliente.NombreCli,
               NumeroDeTelefonocli: this.nuevoCliente.Telefono,
-              Adeudo: this.nuevoCliente.Adeudo,
-              activocli: this.nuevoCliente.activo
+              Adeudo: this.nuevoCliente.Monto,
+              activocli: this.nuevoCliente.activo,
+              Estado:this.Estado
             })
             this.resetearFormulario()
             this.obtenerClientes()
@@ -202,8 +205,9 @@ export default {
           IDcliente: this.nuevoCliente.IDEmpleado,
           Nombrecli: this.nuevoCliente.NombreCli,
           NumeroDeTelefonocli: this.nuevoCliente.Telefono,
-          Adeudo: this.nuevoCliente.Adeudo,
-          activocli: this.nuevoCliente.activo
+          Adeudo: this.nuevoCliente.Monto,
+          activocli: this.nuevoCliente.activo,
+          Estado:this.Estado
         })
         this.resetearFormulario()
         this.obtenerClientes()
