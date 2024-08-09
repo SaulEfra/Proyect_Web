@@ -23,7 +23,10 @@
         <label for="NombreProveedor" class="form-label">Nombre del Proveedor</label>
         <input type="text" class="form-control" id="NombreProveedor" v-model="NombreProveedor" required>
       </div>
-
+      <div class="mb-3" v-if="estadoGasto === 'En Deuda'">
+        <label for="telefonoProveedor" class="form-label">Telefono del Proveedor</label>
+        <input type="number" class="form-control" id="telefonoProveedor" v-model="TelefonoProveedor" required>
+      </div>
       <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
   </div>
@@ -45,7 +48,8 @@ export default {
       ValorGasto: '',
       NombreGasto: '',
       estadoGasto: 'Pagada',
-      NombreProveedor: '', // Solo se usará si el estado es "En Deuda"
+      NombreProveedor: '', 
+      TelefonoProveedor: ''// Solo se usará si el estado es "En Deuda"
     };
   },
 
@@ -58,6 +62,7 @@ export default {
         IDAbrirCaja: IDAbrirCaja,
         estadoGasto: this.estadoGasto,
         NombreProveedor: this.estadoGasto === 'En Deuda' ? this.NombreProveedor : null,
+        TelefonoProveedorProveedor: this.estadoGasto === 'En Deuda' ? this.TelefonoProveedor : null,
       };
       try {
         // Registrar el gasto y, si es necesario, la deuda

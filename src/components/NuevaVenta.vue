@@ -89,7 +89,7 @@
           <button @click="showSection('pagada')" :class="{ active: currentSection === 'pagada' }"
             class="btn btn-outline-secondary flex-fill me-2">Efectivo<i class="bi bi-cash"></i></button>
           <button @click="showSection('credito')" :class="{ active: currentSection === 'credito' }"
-            class="btn btn-outline-secondary flex-fill">Tarjeta<i class="bi bi-credit-card"></i></button>
+            class="btn btn-outline-secondary flex-fill">Credito<i class="bi bi-credit-card"></i></button>
         </div>
         <div v-if="currentSection === 'credito'" class="mb-3">
           <label for="clienteNombre">Nombre del Cliente</label>
@@ -116,14 +116,18 @@ export default {
   name: 'NuevaVenta',
   data() {
     return {
-      products: [], // Array para almacenar los productos
-      searchQuery: '', // Variable para almacenar la consulta de búsqueda
-      cart: [], // Array para almacenar los productos en el carrito
-      currentSection: 'transacciones', // Define la sección inicial
-      selectedPaymentMethod: '', // Variable para almacenar el método de pago seleccionado
-      ventaNombre: '', // Variable para almacenar el nombre de la venta
-      ventaFecha: '', // Variable para almacenar la fecha de la venta
-      clienteNombre: '' // Variable para almacenar el nombre del cliente
+      products: [],
+      searchQuery: '',
+      cart: [],
+      currentSection: 'pagada',
+      selectedPaymentMethod: '',
+      IDNeg: 1,
+
+
+      clientName: '',
+      clientPhone: '',
+      clientEmail: ''
+
     };
   },
   computed: {
@@ -154,14 +158,7 @@ export default {
     searchProduct() {
       // La búsqueda ya se maneja a través de la propiedad computada
     },
-    /*addProductToCart(product) {
-      const cartItem = this.cart.find(item => item.IDProducto === product.IDProducto);
-      if (cartItem) {
-        cartItem.Cantidad++;
-      } else {
-        this.cart.push({ ...product, Cantidad: 1 });
-      }
-    },*/
+
     removeFromCart(product) {
       this.cart = this.cart.filter(item => item.IDProducto !== product.IDProducto);
     },
@@ -171,37 +168,16 @@ export default {
     prepareConfirmation() {
       // Esta función es para cualquier preparación necesaria antes de mostrar el offcanvas
     },
-    /*
-    async confirmProduct() {
-      try {
-        // Aquí se llama al endpoint para confirmar la venta
-        const response = await axios.post('http://localhost:3000/confirmarVenta', {
-          cart: this.cart,
-          total: this.totalPrice,
-          paymentMethod: this.selectedPaymentMethod,
-          ventaNombre: this.ventaNombre,
-          ventaFecha: this.ventaFecha,
-          clienteNombre: this.clienteNombre
-        });
-        console.log('Venta confirmada:', response.data);
-        this.clearCart(); // Vaciar la canasta después de confirmar la venta
-      } catch (error) {
-        console.error('Error al confirmar venta:', error);
-      }
-    },
-    /*
-    updateQuantity(product, amount) {
-      const cartItem = this.cart.find(item => item.IDProducto === product.IDProducto);
-      if (cartItem) {
-        cartItem.Cantidad += amount;
-        if (cartItem.Cantidad <= 0) {
-          this.removeFromCart(cartItem);
-        }
-      }
-    },*/
+
     showSection(section) {
       this.currentSection = section;
+      if (section === 'credito') {
+        this.selectPaymentMethod('Credito');
+      } else{
+        this.selectPaymentMethod('Efectivo');
+      } 
     },
+
     selectPaymentMethod(method) {
       this.selectedPaymentMethod = method;
     },
@@ -236,6 +212,7 @@ export default {
     },
     async confirmProduct() {
       try {
+
         const saleData = {
           total: this.totalPrice,
           cart: this.cart,
@@ -246,20 +223,23 @@ export default {
         };
         const response = await axios.post('http://localhost:3000/confirmventa', saleData);
 
-        console.log('Venta confirmada:', response.data);
+        console.log('Venta confirmada jsjsjsjsjs:', response.data);
 
+
+
+        // Obtener los datos del último registro
         const dataResponse = await axios.get('http://localhost:3000/ventaexit');
         const datosventaex = dataResponse.data;
         alert(`Venta Exitosa:
-        ID Venta: ${datosventaex.IDVenta}
-        Total: ${datosventaex.CostoTotal}
-        ID Negocio: ${datosventaex.IDNegocio}`);
+            ID Venta: ${datosventaex.IDVenta}
+            Total: ${datosventaex.CostoTotal}
+            ID Negocio: ${datosventaex.IDNegocio}`);
         this.clearCart();
 
       } catch (error) {
-        console.error('Error al confirmar venta:', error);
+        console.error('Error al confirmar venta ou no:', error);
       }
-    }
+    },
   },
   mounted() {
     this.fetchProducts(); // Obtener los productos cuando se monta el componente
