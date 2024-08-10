@@ -6,9 +6,11 @@
       
       <p class="card-text d-none">{{ idprod }}</p>
       <h5 class="card-title">{{ title }}</h5>
-      <p class="card-text">Precio: {{ presioventa }} $</p>
+      <p class="card-text">Precio: ${{ presioventa }}</p>
       <p class="card-text">Cantidad: {{ Cantidadprod }}</p>
       <p class="card-text">Descripcion: {{ descrip }}</p>
+      <p class="card-text">Categoria: {{ categoriatipo }}</p>
+      <p class="card-text">Cantidad: {{ cantidtipo }} </p>
       
       <div>
           <button class="btn-card-elim" @click="usarprop">Eliminar</button>
@@ -28,7 +30,10 @@ export default {
       presioventa: Number,
       presioprod: Number,
       idprod: Number,
-      imagen: String 
+      imagen: String,
+      factu: String,
+      cantidtipo: String,
+      categoriatipo:String
   },
   emits: ["elimin", "actu"],
   computed: {
@@ -42,7 +47,7 @@ export default {
       this.$emit("elimin", this.idprod);
     },
     async usarpropdos() {
-      this.$emit("actu",{id: this.idprod, nombre: this.title, cantid : this.Cantidadprod, Desc : this.descrip, Presiovent : this.presioventa, presioprod :  this.presioprod, imagen: this.imagen}  );
+      this.$emit("actu",{id: this.idprod, Categoria:this.categoriatipo, CantidadVenta: this.cantidtipo, Facturas : this.factu , nombre: this.title, cantid : this.Cantidadprod, Desc : this.descrip, Presiovent : this.presioventa, presioprod :  this.presioprod, imagen: this.imagen}  );
     }
   }
 }

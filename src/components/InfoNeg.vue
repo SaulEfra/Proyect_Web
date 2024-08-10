@@ -60,64 +60,66 @@
   </div>
 </template>
 
+
+
 <script>
-// ... (el script se mantiene igual)
+import Swal from 'sweetalert2'
+
+import ParteLateral from './ParteLateral.vue';
+
+export default {
+  name: 'InfoNeg',
+  components: {
+    ParteLateral
+  },
+  data() {
+    return {
+      modificar: false,
+      negocio: {
+        tipoNegocio: 'Restaurante',
+        nombre: 'Mi Negocio',
+        direccion: 'Calle Principal 123'
+      },
+      negocioEditado: {},
+      tiposNegocio: ['Restaurante', 'Tienda', 'Servicios', 'Otro']
+    }
+  },
+  methods: {
+    guardarCambios() {
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Quieres guardar estos cambios?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, guardar cambios",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.negocio = { ...this.negocioEditado };
+          this.modificar = false;
+          Swal.fire({
+            title: "¡Guardado!",
+            text: "Los cambios han sido guardados.",
+            icon: "success"
+          });
+        }
+      });
+    },
+    cancelarEdicion() {
+      this.negocioEditado = { ...this.negocio };
+      this.modificar = false;
+    }
+  },
+  created() {
+    this.negocioEditado = { ...this.negocio };
+  }
+}
 </script>
 
 <style scoped>
-.business-app {
-  background-color: #F8F9FA;
-  color: #333333;
-}
-
-.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-accent {
-  background-color: #F39C12;
-  color: #FFFFFF;
-  border: none;
-}
-
-.btn-accent:hover {
-  background-color: #E67E22;
-}
-
-.label {
-  color: #1A365D;
-  font-weight: bold;
-}
-
-.edit-form {
-  background-color: #FFFFFF;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.form-label {
-  color: #2ECC71;
-}
-
-.btn-success {
-  background-color: #2ECC71;
-  border-color: #2ECC71;
-}
-
-.btn-success:hover {
-  background-color: #27AE60;
-  border-color: #27AE60;
-}
-
-.btn-secondary {
-  background-color: #95A5A6;
-  border-color: #95A5A6;
-}
-
-.btn-secondary:hover {
-  background-color: #7F8C8D;
-  border-color: #7F8C8D;
+body {
+  background-color: aquamarine;
 }
 </style>
-

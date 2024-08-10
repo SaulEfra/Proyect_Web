@@ -3,20 +3,23 @@
     <div class="row">
         <div class="col-lg-2 partlt shadow">
             <ParteLateral></ParteLateral>
-        </div>
-        <div class="Contenid col-lg-9">
-            <RouterView></RouterView>
+        <div class="row">
+            
+            <div class="Contenid col-lg-10">
+                <RouterView></RouterView>
+            </div>
         </div>
     </div>
+     </div>
+
 
 </template>
 <script>
-import ParteLateral from '../components/ParteLateral.vue';
+
 
 export default {
 name: 'MainView',
 components: {
-    ParteLateral
 }
 }
 

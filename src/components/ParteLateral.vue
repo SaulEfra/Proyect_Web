@@ -64,92 +64,29 @@
           </div>
         </div>
       </div>
-    </nav>
-
-    <!-- Contenido principal -->
-    <div class="Contenid col-md-9 col-lg-10">
-      <RouterView @negocio-creado="actualizarNegocios"></RouterView>
+      <div class="gest-item">
+        <RouterLink to="/ProvedoreProd">Proveedores</RouterLink>
+      </div>
+      
+      
+      </nav> 
     </div>
-  </div>
+    
 </template>
 
 <script>
-import axios from 'axios';
-import { RouterLink, RouterView } from 'vue-router';
 
 export default {
   name: 'ParteLateral',
-  components: {
-    RouterLink,
-    RouterView,
-  },
-  data() {
-    return {
-      isOpen: false,
-      isMdAndUp: window.innerWidth >= 768,
-      negocios: [],
-      selectedNegocio: null,
-      defaultNegocioId: null,
-    };
-  },
-  mounted() {
-    window.addEventListener('resize', this.handleResize);
-    this.handleResize(); // Ajustar el estado de la barra lateral al cargar
-    this.cargarNegocios(); // Cargar la lista de negocios al montar el componente
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  },
-  methods: {
-    toggleSidebar() {
-      this.isOpen = !this.isOpen;
-    },
-    closeSidebar() {
-      this.isOpen = false;
-    },
-    handleResize() {
-      this.isMdAndUp = window.innerWidth >= 768;
-      if (this.isMdAndUp) {
-        this.isOpen = false; // Asegurar que la barra lateral esté cerrada en pantallas grandes
-      }
-    },
-    async cargarNegocios() {
-      try {
-        const response = await axios.get('http://localhost:3000/Neg/getnegocios');
-        this.negocios = response.data;
-        if (this.negocios.length > 0) {
-          if (!this.defaultNegocioId) {
-            this.defaultNegocioId = this.negocios[0].id;
-          }
-          this.selectedNegocio = this.defaultNegocioId;
-          this.cambiarNegocio();
-        }
-      } catch (error) {
-        console.error('Error al cargar negocios:', error.response ? error.response.data : error.message);
-        alert('Error al cargar los negocios. Por favor, intenta de nuevo.');
-      }
-    },
-    async cambiarNegocio() {
-      if (!this.selectedNegocio) return;
-
-      try {
-        const response = await axios.get(`http://localhost:3000/Neg/getNegocio/${this.selectedNegocio}`);
-        this.$emit('negocio-cambiado', response.data);
-      } catch (error) {
-        console.error('Error al cargar los datos del negocio:', error.response ? error.response.data : error.message);
-        alert('Error al cargar los datos del negocio. Por favor, intenta de nuevo.');
-      }
-    },
-    actualizarNegocios() {
-      this.cargarNegocios();
-    }
-  }
-};
+  
+}
 </script>
 
 <style scoped>
-.partLat {
-  display: flex;
+
+.partLat{
+  margin: 1px;
+  
 }
 
 .sidebar-toggle {
