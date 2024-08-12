@@ -27,6 +27,20 @@
         <label for="telefonoProveedor" class="form-label">Telefono del Proveedor</label>
         <input type="number" class="form-control" id="telefonoProveedor" v-model="TelefonoProveedor" required>
       </div>
+      <div class="mb-3">
+        <p class="">Método de pago</p>
+        <div class="btn-group" role="group" aria-label="Método de pago">
+          <input type="radio" class="btn-check" name="btnradioPago" id="btnradioPagoEfectivo" autocomplete="off"
+            value="Efectivo" v-model="metodoPago" checked>
+          <label class="btn btn-outline-primary" for="btnradioPagoEfectivo">Efectivo</label>
+
+          <input type="radio" class="btn-check" name="btnradioPago" id="btnradioPagoTarjeta" autocomplete="off"
+            value="Tarjeta" v-model="metodoPago">
+          <label class="btn btn-outline-primary" for="btnradioPagoTarjeta">Tarjeta</label>
+        </div>
+      </div>
+
+
       <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
   </div>
@@ -48,8 +62,9 @@ export default {
       ValorGasto: '',
       NombreGasto: '',
       estadoGasto: 'Pagada',
-      NombreProveedor: '', 
-      TelefonoProveedor: ''// Solo se usará si el estado es "En Deuda"
+      NombreProveedor: '',
+      TelefonoProveedor: '',// Solo se usará si el estado es "En Deuda"
+      metodoPago: 'Efectivo',
     };
   },
 
@@ -63,6 +78,7 @@ export default {
         estadoGasto: this.estadoGasto,
         NombreProveedor: this.estadoGasto === 'En Deuda' ? this.NombreProveedor : null,
         TelefonoProveedorProveedor: this.estadoGasto === 'En Deuda' ? this.TelefonoProveedor : null,
+        metodoPago: this.metodoPago,
       };
       try {
         // Registrar el gasto y, si es necesario, la deuda
@@ -82,6 +98,7 @@ export default {
       this.NombreGasto = '';
       this.estadoGasto = 'Pagada';
       this.NombreProveedor = '';
+      this.metodoPago = '';
     }
   }
 };
