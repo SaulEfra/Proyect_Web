@@ -1,9 +1,11 @@
 <template>
   <div class="business-app">
-    <nav class="navbar" style="background-color: #1A365D;">
+    <div>
+    <ParteLateral></ParteLateral>
+    <nav class="navbar">
       <div class="container-fluid">
         <span class="navbar-brand">
-          <h1 style="color: #F8F9FA;">Datos del negocio</h1>
+          <h1>Datos del negocio</h1>
         </span>
         <button v-if="!modificar" @click="modificar = true" class="btn btn-accent">Modificar</button>
       </div>
@@ -58,6 +60,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 

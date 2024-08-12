@@ -337,29 +337,4 @@ button.active {
   color: white;
   border-color: #007bff;
 }
-
-/* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-    .icon {
-        font-size: 18px;
-    }
-
-    .icon2 {
-        font-size: 18px;
-    }
-
-    .btn-circle {
-        width: 60px;
-        height: 35px;
-    }
-
-    .btn-circle i {
-        font-size: 14px;
-    }
-
-    .card1 {
-        width: 180px;
-        height: 130px;
-    }
-}
 </style>
