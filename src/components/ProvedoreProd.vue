@@ -139,13 +139,16 @@ export default {
     }
   },
   computed: {
-    clientesFiltrados() {
-      if (this.busqueda) {
-        return this.clientes.filter(cliente => cliente.ProveedorNombre.toLowerCase().includes(this.busqueda.toLowerCase()))
-      }
-      return this.clientes
-    }
-  },
+  clientesFiltrados() {
+    return this.clientes.filter(cliente => {
+      // Filtrar clientes por el estado y búsqueda
+      const coincideConBusqueda = this.busqueda ? cliente.ProveedorNombre.toLowerCase().includes(this.busqueda.toLowerCase()) : true;
+      const noEsPagada = cliente.Estado !== 'Pagada';
+      return coincideConBusqueda && noEsPagada;
+    });
+  }
+},
+
   methods: {
     async agregarCliente() {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -237,7 +240,7 @@ export default {
             // Enviar datos al nuevo endpoint para actualizar
             await axios.put('http://localhost:3000/Neg/gastoAct', {
               IDProveedor,
-              Estado: 'Pagada'
+              Estado: this.Estadodeuda
             });
             this.obtenerClientes()
           } catch (error) {

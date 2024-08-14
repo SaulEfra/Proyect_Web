@@ -11,43 +11,27 @@
         <div class="header">
           <h2>Movimientos</h2>
 
-          <button 
-            type="button" 
-            class="btn btn-primary me-2" 
-            data-bs-toggle="modal" 
-            data-bs-target="#AbrirCajaModal"
+          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#AbrirCajaModal"
             :disabled="cajaAbierta">
             Abrir Caja
           </button>
-          <button 
-            type="button" 
-            class="btn btn-primary me-2" 
-            data-bs-toggle="modal" 
-            data-bs-target="#CerrarCajaModal"
+          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#CerrarCajaModal"
             :disabled="!cajaAbierta">
             Cerrar Caja
           </button>
 
           <div class="actions">
-            <button 
-              type="button" 
-              class="btn btn-primary me-2" 
-              data-bs-toggle="modal" 
-              data-bs-target="#NuevaVenta"
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#NuevaVenta"
               :disabled="!cajaAbierta">
               Nueva Venta
             </button>
-            <button 
-              class="btn btn-primary" 
-              type="button" 
-              data-bs-toggle="offcanvas" 
-              data-bs-target="#NuevoGastoOffcanvas" 
-              aria-controls="NuevoGastoOffcanvas"
-              :disabled="!cajaAbierta">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#NuevoGastoOffcanvas" aria-controls="NuevoGastoOffcanvas" :disabled="!cajaAbierta">
               Nuevo Gasto
             </button>
 
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="NuevoGastoOffcanvas" aria-labelledby="NuevoGastoLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="NuevoGastoOffcanvas"
+              aria-labelledby="NuevoGastoLabel">
               <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="NuevoGastoLabel">Nuevo Gasto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -72,7 +56,8 @@
             </div>
           </div>
 
-          <div class="modal fade" id="CerrarCajaModal" tabindex="-1" aria-labelledby="CerrarCajaLabel" aria-hidden="true">
+          <div class="modal fade" id="CerrarCajaModal" tabindex="-1" aria-labelledby="CerrarCajaLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -80,12 +65,13 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <CerrarCaja v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta" @caja-cerrada="manejarCajaCerrada" />
+                  <CerrarCaja v-if="datosCajaAbierta" :datosCajaAbierta="datosCajaAbierta"
+                    @caja-cerrada="manejarCajaCerrada" />
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div class="modal fade" id="NuevaVenta" tabindex="-1" aria-labelledby="NuevaVentaLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
@@ -110,13 +96,15 @@
           <div class="transaction-section" v-if="currentSection === 'transacciones'">
             <div>
               <div class="filters">
-                <select>
-                  <option>Diario</option>
-                  <option>Semanal</option>
-                  <option>Mensual</option>
+                <select v-model="selectedRange" @change="buscar">
+                  <option value="Diario">Diario</option>
+                  <option value="Semanal">Semanal</option>
+                  <option value="Mensual">Mensual</option>
                 </select>
-                <input type="date" />
-                <input type="text" placeholder="Buscar concepto..." />
+
+                <input type="text" v-model="searchTerm" placeholder="Buscar concepto..." @input="buscar" />
+                <input type="date" v-model="selectedDate" @change="buscar" />
+
                 <button @click="buscar">Buscar</button>
               </div>
             </div>
@@ -126,15 +114,17 @@
                 <h3>Balance</h3>
                 <p>{{ datosBalance }}</p>
               </button>
-             
-              <div class="btn-tooltip" data-bs-toggle="tooltip" title="Descripción de las ventas totales" v-for="datostotvent in datosTotalventas" :key="datostotvent">
+
+              <div class="btn-tooltip" data-bs-toggle="tooltip" title="Descripción de las ventas totales"
+                v-for="datostotvent in datosTotalventas" :key="datostotvent">
                 <h6>Total Ventas</h6>
                 <p>{{ datostotvent.sumatotal }}</p>
               </div>
-              
-              <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip" title="Descripción de los gastos totales">
+
+              <button class="btn-tooltip" tabindex="0" data-bs-toggle="tooltip"
+                title="Descripción de los gastos totales" v-for="datostotGas in datosGastosventas" :key="datostotGas">
                 <h3>Gastos Totales</h3>
-                <p>{{ datosGastosTotales }}</p>
+                <p>{{ datostotGas.sumatotalgasto }}</p>
               </button>
             </div>
 
@@ -142,16 +132,20 @@
               <div class="col-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                   <li class="nav-item col-3" role="presentation">
-                    <button class="nav-link active" id="section1-tab" data-bs-toggle="tab" data-bs-target="#section1" type="button" role="tab" aria-controls="section1" aria-selected="true">Ingresos</button>
+                    <button class="nav-link active" id="section1-tab" data-bs-toggle="tab" data-bs-target="#section1"
+                      type="button" role="tab" aria-controls="section1" aria-selected="true">Ingresos</button>
                   </li>
                   <li class="nav-item col-3" role="presentation">
-                    <button class="nav-link" id="section2-tab" data-bs-toggle="tab" data-bs-target="#section2" type="button" role="tab" aria-controls="section2" aria-selected="false">Egresos</button>
+                    <button class="nav-link" id="section2-tab" data-bs-toggle="tab" data-bs-target="#section2"
+                      type="button" role="tab" aria-controls="section2" aria-selected="false">Egresos</button>
                   </li>
                   <li class="nav-item col-3" role="presentation">
-                    <button class="nav-link" id="section3-tab" data-bs-toggle="tab" data-bs-target="#section3" type="button" role="tab" aria-controls="section3" aria-selected="false">Por Cobrar</button>
+                    <button class="nav-link" id="section3-tab" data-bs-toggle="tab" data-bs-target="#section3"
+                      type="button" role="tab" aria-controls="section3" aria-selected="false">Por Cobrar</button>
                   </li>
                   <li class="nav-item col-3" role="presentation">
-                    <button class="nav-link" id="section4-tab" data-bs-toggle="tab" data-bs-target="#section4" type="button" role="tab" aria-controls="section4" aria-selected="false">Por Pagar</button>
+                    <button class="nav-link" id="section4-tab" data-bs-toggle="tab" data-bs-target="#section4"
+                      type="button" role="tab" aria-controls="section4" aria-selected="false">Por Pagar</button>
                   </li>
                 </ul>
               </div>
@@ -171,12 +165,14 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="ingreso in ingresos" :key="ingreso.IDIngreso">
-                        <td>{{ ingreso.Concepto }}</td>
-                        <td>{{ ingreso.Valor }}</td>
-                        <td>{{ ingreso.MedioDePago }}</td>
-                        <td>{{ ingreso.FechaHora }}</td>
-                        <td>{{ ingreso.Estado }}</td>
+                      <tr v-for="ingreso in datosventasProd" :key="ingreso">
+                        <td>{{ ingreso.NombreProducto }}</td>
+                        <td>{{ ingreso.CostoTotal }}</td>
+                        <td>{{ ingreso.MetodoPago }}</td>
+                        <td>{{ ingreso.FechaVenta }}</td>
+                        <td>
+                          <p>pagada</p>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -195,11 +191,11 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="egreso in egresos" :key="egreso.IDEgreso">
-                        <td>{{ egreso.Concepto }}</td>
-                        <td>{{ egreso.Valor }}</td>
-                        <td>{{ egreso.MedioDePago }}</td>
-                        <td>{{ egreso.FechaHora }}</td>
+                      <tr v-for="egreso in datosEgresosProd" :key="egreso">
+                        <td>{{ egreso.NombreGasto }}</td>
+                        <td>{{ egreso.ValorGasto }}</td>
+                        <td>{{ egreso.MetodoPago }}</td>
+                        <td>{{ egreso.FechaGasto }}</td>
                         <td>{{ egreso.Estado }}</td>
                       </tr>
                     </tbody>
@@ -218,11 +214,11 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="porCobrar in porCobrar" :key="porCobrar.IDPorCobrar">
-                        <td>{{ porCobrar.Concepto }}</td>
-                        <td>{{ porCobrar.Valor }}</td>
-                        <td>{{ porCobrar.FechaHora }}</td>
-                        <td>{{ porCobrar.Estado }}</td>
+                      <tr v-for="porCobrar in datosPorCobrarProd" :key="porCobrar">
+                        <td>{{ porCobrar.NombreProducto }}</td>
+                        <td>{{ porCobrar.CostoTotal }}</td>
+                        <td>{{ porCobrar.FechaVenta }}</td>
+                        <td>{{ porCobrar.EstadoPorCobrar }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -240,10 +236,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="porPagar in porPagar" :key="porPagar.IDPorPagar">
-                        <td>{{ porPagar.Concepto }}</td>
-                        <td>{{ porPagar.Valor }}</td>
-                        <td>{{ porPagar.FechaHora }}</td>
+                      <tr v-for="porPagar in datosDeudasProd" :key="porPagar">
+                        <td>{{ porPagar.NombreGasto }}</td>
+                        <td>{{ porPagar.ValorGasto }}</td>
+                        <td>{{ porPagar.FechaDeuda }}</td>
                         <td>{{ porPagar.Estado }}</td>
                       </tr>
                     </tbody>
@@ -292,12 +288,30 @@ export default {
       datosVentasTotales: 0,
       datosGastosTotales: 0,
       datosTotalventas: 0,
+      datosGastosventas: 0,
+      datosventasProd: [],
+      datosPorCobrarProd: [],
+      datosDeudasProd: [],
+      datosEgresosProd: [],
+      searchTerm: '',
+      selectedDate: '',
+      selectedRange: 'Diario',
     };
   },
   created() {
     this.verificarEstadoCaja();
     this.obtenerDatos();
     this.VentasProductCount();
+    this.VentasGastosCount();
+    this.IngresosVentas();
+    this.DeudasPorPagar();
+    this.DeudasPorCobrar();
+    this.EgresosVentas()
+  },
+  watch: {
+    searchTerm: 'buscar',
+    selectedRange: 'buscar',
+    selectedDate: 'buscar'
   },
   methods: {
     async verificarEstadoCaja() {
@@ -352,10 +366,8 @@ export default {
     showSection(section) {
       this.currentSection = section;
     },
-    buscar() {
-      // Lógica para buscar en los datos de la tabla según los filtros
-    },
-    
+
+
 
     async VentasProductCount() {
       try {
@@ -365,6 +377,101 @@ export default {
         console.error('Error al obtener las ventas totales:', error);
         alert('Error al obtener las ventas totales');
       }
+    },
+    async VentasGastosCount() {
+      try {
+        const response = await axios.get('http://localhost:3000/gastosTotalesProd');
+        this.datosGastosventas = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener las ventas totales:', error);
+        alert('Error al obtener las ventas totales');
+      }
+    },
+    async IngresosVentas() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/ventaprodDatos');
+        this.datosventasProd = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener las ventas totales:', error);
+        alert('Error al obtener las ventas totales');
+      }
+    },
+
+    async EgresosVentas() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/EgresosprodDatos');
+        this.datosEgresosProd = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener las ventas totales:', error);
+        alert('Error al obtener las ventas totales');
+      }
+    },
+    async DeudasPorPagar() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/DeudasprodDatos');
+        this.datosDeudasProd = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener las ventas totales:', error);
+        alert('Error al obtener las ventas totales');
+      }
+    },
+
+    async DeudasPorCobrar() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/PorCobrarprodDatos');
+        this.datosPorCobrarProd = response.data.results;
+      } catch (error) {
+        console.error('Error al obtener las ventas totales:', error);
+        alert('Error al obtener las ventas totales');
+      }
+    },
+
+    async buscar() {
+      const today = new Date();
+      const startDate = new Date(today);
+      
+      switch (this.selectedRange) {
+        case 'Diario':
+          startDate.setDate(today.getDate() - 1);
+          break;
+        case 'Semanal':
+          startDate.setDate(today.getDate() - 7);
+          break;
+        case 'Mensual':
+          startDate.setMonth(today.getMonth() - 1);
+          break;
+        default:
+          break;
+      }
+
+      const startDateString = startDate.toISOString().split('T')[0];
+      const selectedDateString = this.selectedDate ? this.selectedDate : '';
+
+      const filterByDate = (dateString) => {
+        const datePart = dateString.split('T')[0];
+        return datePart >= startDateString;
+      };
+
+      this.datosventasProd = this.datosventasProd.filter(ingreso =>
+        ingreso.NombreProducto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
+        (!selectedDateString || ingreso.FechaVenta.startsWith(selectedDateString)) &&
+        filterByDate(ingreso.FechaVenta)
+      );
+      this.datosEgresosProd = this.datosEgresosProd.filter(egreso =>
+        egreso.NombreGasto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
+        (!selectedDateString || egreso.FechaGasto.startsWith(selectedDateString)) &&
+        filterByDate(egreso.FechaGasto)
+      );
+      this.datosPorCobrarProd = this.datosPorCobrarProd.filter(porCobrar =>
+        porCobrar.NombreProducto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
+        (!selectedDateString || porCobrar.FechaVenta.startsWith(selectedDateString)) &&
+        filterByDate(porCobrar.FechaVenta)
+      );
+      this.datosDeudasProd = this.datosDeudasProd.filter(porPagar =>
+        porPagar.NombreGasto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
+        (!selectedDateString || porPagar.FechaDeuda.startsWith(selectedDateString)) &&
+        filterByDate(porPagar.FechaDeuda)
+      );
     },
   },
 };
@@ -493,6 +600,7 @@ select:hover {
 }
 
 @media (max-width: 768px) {
+
   .tab-buttons,
   .filters {
     flex-direction: column;
@@ -544,6 +652,7 @@ select:hover {
 }
 
 @media (max-width: 768px) {
+
   .tab-buttons,
   .filters {
     flex-direction: column;
@@ -584,5 +693,4 @@ select:hover {
   cursor: pointer;
   width: 100%;
 }
-
 </style>
