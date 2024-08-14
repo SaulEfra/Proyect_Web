@@ -26,7 +26,9 @@
                 <th scope="col">Nombre del cliente</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Adeudos</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
+
               </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -35,13 +37,14 @@
                 <td>{{ cliente.NombreCli }}</td>
                 <td>{{ cliente.Telefono }}</td>
                 <td>${{ cliente.Monto }}</td>
+                <td>{{ cliente.Estado }}</td>
                 <td>
                   <div class="btn-group" role="group">
                     <button class="btn btn-secondary" title="Editar" @click="editarCliente(cliente)">
                       <i class="bi bi-pencil-square"></i> Editar
                     </button>
-                    <button class="btn btn-danger" title="Eliminar" @click="borrarCliente(cliente.IDCli)">
-                      <i class="bi bi-trash"></i> Eliminar
+                    <button class="btn btn-info" title="Eliminar" @click="saldarDeuda(cliente.IDCli)">
+                      <i class="bi bi-check-circle"></i> DeudaPagada
                     </button>
                     <!--
                 <button class="btn btn-info" title="Añadir Adeudo" @click="mostrarModalAdeudo(cliente)">
@@ -145,17 +148,24 @@ export default {
       cantidadAdeudoAbono: 0,
       esAdeudo: true,
       mostrarModal: false,
-      Estado: 'Pendiente'
+      Estado: 'Pendiente',
+      Estadodeuda: 'Pagada'
     }
   },
   computed: {
-    clientesFiltrados() {
-      if (this.busqueda) {
-        return this.clientes.filter(cliente => cliente.NombreCli.toLowerCase().includes(this.busqueda.toLowerCase()))
-      }
-      return this.clientes
+  clientesFiltrados() {
+    let clientes = this.clientes;
+    
+    // Filtrar clientes por búsqueda
+    if (this.busqueda) {
+      clientes = clientes.filter(cliente => cliente.NombreCli.toLowerCase().includes(this.busqueda.toLowerCase()));
     }
-  },
+    
+    // Filtrar clientes para mostrar solo aquellos cuyo estado no sea 'Pagada'
+    return clientes.filter(cliente => cliente.Estado !== 'Pagada');
+  }
+},
+
   methods: {
     async agregarCliente() {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -223,7 +233,7 @@ export default {
       this.modoEdicion = true
       this.mostrarFormulario = true
     },
-    async borrarCliente(IDCli) {
+    async saldarDeuda(IDCli) {
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton: "btn btn-success",
@@ -234,30 +244,34 @@ export default {
 
       swalWithBootstrapButtons.fire({
         title: "¿Está seguro?",
-        text: "No podrá revertir esta acción!",
+        text: "¿Desea saldar la deuda de este proveedor?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar!",
+        confirmButtonText: "Sí, saldar deuda!",
         cancelButtonText: "No, cancelar!",
         reverseButtons: true
       }).then(async (result) => {
         if (result.isConfirmed) {
-          //this.clientes = this.clientes.filter(cli => cli.IDCli !== IDCli)
           try {
-            this.datosempl = this.datosempl.filter(emp => emp.IDCli !== IDCli);
-            await axios.delete(`http://localhost:3000/Neg/Clientes/${IDCli}`);
+            // Enviar datos al nuevo endpoint para actualizar
+            await axios.put('http://localhost:3000/Neg/ClientesDeudaPag', {
+              IDCli,
+              Estado: this.Estadodeuda
+            });
+            this.obtenerClientes()
           } catch (error) {
-            console.error("Error al eliminar el empleado:", error);
+            console.error("Error al saldar la deuda del Cliente:", error);
           }
-          this.obtenerClientes()
-          swalWithBootstrapButtons.fire({
-            title: "Eliminado!",
-            text: "El cliente ha sido eliminado.",
+          Swal.fire({
+            title: "Pagada",
+            text: "El Cliente ha saldado la deuda.",
             icon: "success"
           });
         }
       });
     },
+
+
     resetearFormulario() {
       this.nuevoCliente = {
         IDCli: null,
