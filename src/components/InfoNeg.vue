@@ -1,7 +1,9 @@
 <template>
-  <div class="business-app">
-    <div>
+  <div class="row">
+  <div class="col-lg-2 col-md-2 col-sm-2 partlt shadow">
     <ParteLateral></ParteLateral>
+  </div>
+  <div class="business-app col-10" >
     <nav class="navbar">
       <div class="container-fluid">
         <span class="navbar-brand">

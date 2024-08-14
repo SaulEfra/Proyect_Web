@@ -693,4 +693,59 @@ select:hover {
   cursor: pointer;
   width: 100%;
 }
+/* Estilo para la animación del fondo degradado */
+body {
+  background: linear-gradient(270deg, #ff7e5f, #feb47b);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Definición de la animación del fondo */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Transiciones para botones e inputs */
+.btn, input[type="text"], input[type="date"], select {
+  transition: all 0.3s ease-in-out;
+}
+
+.btn:hover, input[type="text"]:focus, input[type="date"]:focus, select:focus {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo para la barra lateral */
+.col-lg-2.col-md-3.col-sm-12 {
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Ajustes específicos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .movements .tab-buttons button {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .btn-tooltip {
+    font-size: 0.8rem;
+  }
+
+  /* Ajustes de margen y padding */
+  .me-2 {
+    margin-right: 0.5rem;
+  }
+
+  .movements {
+    padding: 10px;
+  }
+}
+
 </style>

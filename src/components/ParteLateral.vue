@@ -10,7 +10,7 @@
     <div class="col-12 config">
       <div class="config-item">
         <i class="bi bi-gear-fill"></i>
-        <RouterLink to="/Configuracion">Configuraciones</RouterLink>
+        <RouterLink to="/InfoNeg">Configuraciones</RouterLink>
       </div>
       <div class="config-item">
         <i class="bi bi-plus-circle-fill"></i>
