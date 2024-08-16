@@ -250,7 +250,24 @@
           </div>
 
           <div class="cierres-caja-section" v-if="currentSection === 'cierresCaja'">
-            <!-- Contenido de cierres de caja -->
+            <div class="card card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Caja</th>
+                    <th>Fecha y hora</th>
+                    <th>Total Ventas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="cierrecaja in datosCierreCaja" :key="cierrecaja">
+                    <td>{{ cierrecaja.IDCierreCaja }}</td>
+                    <td>{{ cierrecaja.Fecha }}</td>
+                    <td>{{ cierrecaja.VentasTotal }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -300,6 +317,7 @@ export default {
       datosEgresosProdOriginal: [],
       datosPorCobrarProdOriginal: [],
       datosDeudasProdOriginal: [],
+      datosCierreCaja: []
     };
   },
   created() {
@@ -315,6 +333,7 @@ export default {
     this.EgresosVentas();
     this.DeudasPorPagar();
     this.DeudasPorCobrar();
+    this.CierresCaja();
   },
   watch: {
     searchTerm: 'buscar',
@@ -402,6 +421,14 @@ export default {
         this.datosventasProd = [...this.datosventasProdOriginal];
       } catch (error) {
         console.error('Error al obtener las ventas:', error);
+      }
+    },
+    async CierresCaja() {
+      try {
+        const response = await axios.get('http://localhost:3000/Neg/CierrasCajaView');
+        this.datosCierreCaja = response.data; 
+      } catch (error) {
+        console.error('Error al obtener las cajas cerradas', error);
       }
     },
 
