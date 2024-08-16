@@ -103,7 +103,7 @@ export default {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 250px;
+  width: 230px;
   background-color: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
