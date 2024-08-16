@@ -296,6 +296,10 @@ export default {
       searchTerm: '',
       selectedDate: '',
       selectedRange: 'Diario',
+      datosventasProdOriginal: [],
+      datosEgresosProdOriginal: [],
+      datosPorCobrarProdOriginal: [],
+      datosDeudasProdOriginal: [],
     };
   },
   created() {
@@ -306,7 +310,11 @@ export default {
     this.IngresosVentas();
     this.DeudasPorPagar();
     this.DeudasPorCobrar();
-    this.EgresosVentas()
+    this.EgresosVentas();
+    this.IngresosVentas();
+    this.EgresosVentas();
+    this.DeudasPorPagar();
+    this.DeudasPorCobrar();
   },
   watch: {
     searchTerm: 'buscar',
@@ -390,46 +398,47 @@ export default {
     async IngresosVentas() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/ventaprodDatos');
-        this.datosventasProd = response.data.results;
+        this.datosventasProdOriginal = response.data.results;
+        this.datosventasProd = [...this.datosventasProdOriginal];
       } catch (error) {
-        console.error('Error al obtener las ventas totales:', error);
-        alert('Error al obtener las ventas totales');
+        console.error('Error al obtener las ventas:', error);
       }
     },
 
     async EgresosVentas() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/EgresosprodDatos');
-        this.datosEgresosProd = response.data.results;
+        this.datosEgresosProdOriginal = response.data.results;
+        this.datosEgresosProd = [...this.datosEgresosProdOriginal];
       } catch (error) {
-        console.error('Error al obtener las ventas totales:', error);
-        alert('Error al obtener las ventas totales');
+        console.error('Error al obtener los egresos:', error);
       }
     },
+
     async DeudasPorPagar() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/DeudasprodDatos');
-        this.datosDeudasProd = response.data.results;
+        this.datosDeudasProdOriginal = response.data.results;
+        this.datosDeudasProd = [...this.datosDeudasProdOriginal];
       } catch (error) {
-        console.error('Error al obtener las ventas totales:', error);
-        alert('Error al obtener las ventas totales');
+        console.error('Error al obtener las deudas por pagar:', error);
       }
     },
 
     async DeudasPorCobrar() {
       try {
         const response = await axios.get('http://localhost:3000/Neg/PorCobrarprodDatos');
-        this.datosPorCobrarProd = response.data.results;
+        this.datosPorCobrarProdOriginal = response.data.results;
+        this.datosPorCobrarProd = [...this.datosPorCobrarProdOriginal];
       } catch (error) {
-        console.error('Error al obtener las ventas totales:', error);
-        alert('Error al obtener las ventas totales');
+        console.error('Error al obtener las deudas por cobrar:', error);
       }
     },
 
-    async buscar() {
+    buscar() {
       const today = new Date();
       const startDate = new Date(today);
-      
+
       switch (this.selectedRange) {
         case 'Diario':
           startDate.setDate(today.getDate() - 1);
@@ -449,29 +458,21 @@ export default {
 
       const filterByDate = (dateString) => {
         const datePart = dateString.split('T')[0];
-        return datePart >= startDateString;
+        return datePart >= startDateString &&
+          (!selectedDateString || datePart === selectedDateString);
       };
 
-      this.datosventasProd = this.datosventasProd.filter(ingreso =>
-        ingreso.NombreProducto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
-        (!selectedDateString || ingreso.FechaVenta.startsWith(selectedDateString)) &&
-        filterByDate(ingreso.FechaVenta)
-      );
-      this.datosEgresosProd = this.datosEgresosProd.filter(egreso =>
-        egreso.NombreGasto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
-        (!selectedDateString || egreso.FechaGasto.startsWith(selectedDateString)) &&
-        filterByDate(egreso.FechaGasto)
-      );
-      this.datosPorCobrarProd = this.datosPorCobrarProd.filter(porCobrar =>
-        porCobrar.NombreProducto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
-        (!selectedDateString || porCobrar.FechaVenta.startsWith(selectedDateString)) &&
-        filterByDate(porCobrar.FechaVenta)
-      );
-      this.datosDeudasProd = this.datosDeudasProd.filter(porPagar =>
-        porPagar.NombreGasto.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
-        (!selectedDateString || porPagar.FechaDeuda.startsWith(selectedDateString)) &&
-        filterByDate(porPagar.FechaDeuda)
-      );
+      const filterData = (data, nameField, dateField) => {
+        return data.filter(item =>
+          item[nameField].toLowerCase().includes(this.searchTerm.toLowerCase()) &&
+          filterByDate(item[dateField])
+        );
+      };
+
+      this.datosventasProd = filterData(this.datosventasProdOriginal, 'NombreProducto', 'FechaVenta');
+      this.datosEgresosProd = filterData(this.datosEgresosProdOriginal, 'NombreGasto', 'FechaGasto');
+      this.datosPorCobrarProd = filterData(this.datosPorCobrarProdOriginal, 'NombreProducto', 'FechaVenta');
+      this.datosDeudasProd = filterData(this.datosDeudasProdOriginal, 'NombreGasto', 'FechaDeuda');
     },
   },
 };

@@ -6,10 +6,13 @@
         <input
           type="number"
           id="montoInicial"
-          v-model="montoInicial"
+          v-model.number="montoInicial"
           class="form-control"
           placeholder="Ingrese el monto inicial"
           required
+          min="0"
+          max="900000"
+          @input="validarMonto"
         />
       </div>
       <button type="submit" class="btn btn-primary mt-3">Abrir Caja</button>
@@ -19,69 +22,62 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'AbrirCaja',
   data() {
     return {
-      montoInicial: '', // Monto inicial de la caja
-      fechaHora: '',    // Fecha y hora actual
+      montoInicial: '',
+      fechaHora: '',
     };
   },
   mounted() {
-    // Establece la fecha y hora actual al montarse el componente
     this.fechaHora = new Date().toISOString().slice(0, 16);
   },
   methods: {
-  async abrirCaja() {
-    try {
-      // Prepara los datos para enviar al servidor
-      const formData = {
-        fechaHora: this.fechaHora,
-        montoInicial: this.montoInicial,
-      };
+    validarMonto() {
+      if (this.montoInicial < 0) {
+        this.montoInicial = 0;
+      } else if (this.montoInicial > 900000) {
+        this.montoInicial = 900000;
+      }
+    },
+    async abrirCaja() {
+      try {
+        const formData = {
+          fechaHora: this.fechaHora,
+          montoInicial: this.montoInicial,
+        };
 
-      // Envía la solicitud para abrir la caja
-      const openResponse = await axios.post('http://localhost:3000/AbrirCaja', formData, { withCredentials: true });
-      console.log('Respuesta del servidor:', openResponse.data);
-      alert('Se abrió caja correctamente');
+        const openResponse = await axios.post('http://localhost:3000/AbrirCaja', formData, { withCredentials: true });
+        console.log('Respuesta del servidor:', openResponse.data);
+        
+        await Swal.fire({
+          icon: 'success',
+          title: 'Caja Abierta',
+          text: 'Se abrió caja correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        });
 
-      // Guardar los detalles de la caja abierta en localStorage
-      localStorage.setItem('cajaAbierta', JSON.stringify(openResponse.data));
+        localStorage.setItem('cajaAbierta', JSON.stringify(openResponse.data));
 
-      // Limpia los datos del formulario
-      this.limpiarDatos();
+        this.limpiarDatos();
 
-      // Emite el evento con los datos de la caja abierta
-      this.$emit('caja-abierta', openResponse.data);
-    } catch (error) {
-      // Maneja cualquier error que ocurra durante la solicitud
-      console.error('Error al abrir caja:', error);
-      alert('Error al abrir caja: ' + error.message);
-    }
+        this.$emit('caja-abierta', openResponse.data);
+      } catch (error) {
+        console.error('Error al abrir caja:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al abrir caja: ' + error.message,
+        });
+      }
+    },
+    limpiarDatos() {
+      this.montoInicial = '';
+    },
   },
-  limpiarDatos() {
-    // Limpia el campo de monto inicial
-    this.montoInicial = '';
-  },
-},
-
 };
 </script>
-
-<style scoped>
-.form-group {
-  margin-bottom: 15px;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  text-align: end;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-</style>

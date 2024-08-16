@@ -20,7 +20,8 @@
                 <div class="mb-3">
                   <label for="categ" class="form-label">Cantidad de venta</label>
                   <select v-model="cantVen" id="categ" class="form-select" aria-label="Default select example">
-                    <option v-for="cant in datoscant" :key="cant.IDCantidad" :value="cant.IDCantidad">{{ cant.NombreCantidad }}</option>
+                    <option v-for="cant in datoscant" :key="cant.IDCantidad" :value="cant.IDCantidad">{{
+                      cant.NombreCantidad }}</option>
                   </select>
                 </div>
                 <div class="mb-3">
@@ -43,29 +44,35 @@
                 <div class="mb-3">
                   <label for="categ" class="form-label">Categoría</label>
                   <select v-model="category" id="categ" class="form-select" aria-label="Default select example">
-                    <option v-for="cat in datoscat" :key="cat.IDCatProd" :value="cat.IDCatProd">{{ cat.NombreCategoria }}</option>
+                    <option v-for="cat in datoscat" :key="cat.IDCatProd" :value="cat.IDCatProd">{{ cat.NombreCategoria
+                      }}</option>
                   </select>
                 </div>
-                
+
                 <div class="form-check">
-                    <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio" name="exampleRadios"
-                      id="exampleRadios1" :value="true">
-                    <label class="form-check-label" for="exampleRadios1">
-                      Factura
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio" name="exampleRadios"
-                      id="exampleRadios2" :value="false">
-                    <label class="form-check-label" for="exampleRadios2">
-                      No Factura
-                    </label>
-                  </div>
-                
+                  <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio"
+                    name="exampleRadios" id="exampleRadios1" :value="true">
+                  <label class="form-check-label" for="exampleRadios1">
+                    Factura
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" v-model="props.idparactuproduc.Facturas" type="radio"
+                    name="exampleRadios" id="exampleRadios2" :value="false">
+                  <label class="form-check-label" for="exampleRadios2">
+                    No Factura
+                  </label>
+                </div>
+
                 <div class="mb-3">
                   <label for="Textarea1" class="form-label">Descripción</label>
                   <textarea v-model="props.idparactuproduc.Desc" class="form-control" id="Textarea1"
                     rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="codigobarras" class="form-label">Código de barras</label>
+                  <input v-model.number="props.idparactuproduc.codigobarr" type="number" id="codigobarras" name="codigobarras" min="1"
+                    max="1000000000000000" placeholder="0000000000000" step="1" required class="form-control">
                 </div>
               </div>
             </div>
@@ -141,7 +148,8 @@ export default {
       formData.append('Factura', this.props.idparactuproduc.Facturas);
       formData.append('description', this.props.idparactuproduc.Desc);
       formData.append('idneg', this.idNeg);
-      formData.append('idimg', this.props.idparactuproduc.id);  // Suponiendo que el id de la imagen es el id del producto
+      formData.append('idimg', this.props.idparactuproduc.id);
+      formData.append('codigobarras', this.props.idparactuproduc.codigobarr)  // Suponiendo que el id de la imagen es el id del producto
 
       try {
         const response = await axios.put(`http://localhost:3000/actualizarproducto/${this.props.idparactuproduc.id}`, formData, {
@@ -179,17 +187,19 @@ export default {
 
 
 <style scoped>
+input {
+  border: 1px solid rgba(0, 0, 0, 0.378);
+}
 
-input{
+select {
   border: 1px solid rgba(0, 0, 0, 0.378);
 }
-select{
+
+option {
   border: 1px solid rgba(0, 0, 0, 0.378);
 }
-option{
-  border: 1px solid rgba(0, 0, 0, 0.378);
-}
-textarea{
+
+textarea {
   border: 1px solid rgba(0, 0, 0, 0.378);
 }
 </style>

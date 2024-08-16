@@ -104,7 +104,12 @@
 
                   <div class="mb-3">
                     <label for="Textarea1" class="form-label">Descripción</label>
-                    <textarea v-model="description" required class="form-control" id="Textarea1" rows="3"></textarea>
+                    <textarea v-model="description" class="form-control" id="Textarea1" rows="3"></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label for="codigobarras" class="form-label">Código de barras</label>
+                    <input v-model.number="codigobarraa" type="number" id="codigobarras" name="codigobarras" min="1" max="1000000000000000" placeholder="0000000000000"
+                      step="1" required class="form-control">
                   </div>
                 </div>
               </div>
@@ -139,6 +144,7 @@ export default {
       description: '',
       selectfile: null,
       Facturas: false,
+      codigobarraa: 0,
 
       datoscant: [],
       datoscat: [],
@@ -236,6 +242,7 @@ export default {
       formData.append('Facturas', this.Facturas);
       formData.append('description', this.description);
       formData.append('idneg', this.idNeg);
+      formData.append('codigobarras', this.codigobarraa);
 
       try {
         const response = await axios.post('http://localhost:3000/upload', formData, {
@@ -262,6 +269,7 @@ export default {
         this.Facturas = false;
         this.description = "";
         this.selectfile = null;
+        this.codigobarraa = 0,
 
         this.$emit("actuprod")
         this.$emit("actuprecio")

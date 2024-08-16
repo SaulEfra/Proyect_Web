@@ -237,7 +237,6 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            // Enviar datos al nuevo endpoint para actualizar
             await axios.put('http://localhost:3000/Neg/gastoAct', {
               IDProveedor,
               Estado: this.Estadodeuda

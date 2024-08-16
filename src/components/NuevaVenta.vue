@@ -54,17 +54,20 @@
               <div class="card-body">
                 <div v-for="item in cart" :key="item.IDProducto" class="mb-3">
                   <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6>{{ item.Nombre }}</h6>
-                      <small>{{ item.Cantidad }} x {{ item.PrecioVenta }}</small>
-                      <div>
-                        <button class="btn btn-sm btn-secondary" @click="updateQuantity(item, -1)"
-                          :disabled="item.Cantidad <= 1">-</button>
-                        <button class="btn btn-sm btn-secondary" @click="updateQuantity(item, 1)">+</button>
-                      </div>
-                    </div>
-                    <button class="btn btn-danger btn-sm" @click="removeFromCart(item)">Eliminar</button>
-                  </div>
+  <div>
+    <h6>{{ item.Nombre }}</h6>
+    <small>{{ item.Cantidad }} x </small>
+    <!-- Campo de entrada editable para el precio -->
+    <input type="number" v-model.number="item.PrecioVenta" class="form-control d-inline-block" style="width: 80px;" />
+    <div>
+      <button class="btn btn-sm btn-secondary" @click="updateQuantity(item, -1)" :disabled="item.Cantidad <= 1">-</button>
+      <button class="btn btn-sm btn-secondary" @click="updateQuantity(item, 1)">+</button>
+    </div>
+  </div>
+  <button class="btn btn-danger btn-sm" @click="removeFromCart(item)">Eliminar</button>
+</div>
+
+
                 </div>
                 <div class="form-group">
                   <label for="total">Total</label>

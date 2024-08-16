@@ -19,6 +19,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'InicioSesion',
@@ -31,7 +32,11 @@ export default {
   methods: {
     async login() {
       if (!this.email || !this.password) {
-        alert('Por favor, ingresa tu usuario y contraseña.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Campos vacíos',
+          text: 'Por favor, ingresa tu usuario y contraseña.',
+        });
         return;
       }
 
@@ -42,17 +47,30 @@ export default {
         }, { withCredentials: true });
 
         if (response.status === 200) {
-          
-          this.$router.push('/Movimientos'); // Redirige al componente Movimientos
+          Swal.fire({
+            icon: 'success',
+            title: 'Inicio de sesión exitoso',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.$router.push('/Movimientos');
+          });
         }
       } catch (error) {
+        let errorMessage = 'Error desconocido';
         if (error.response) {
-          alert('Error al iniciar sesión: ' + error.response.data);
+          errorMessage = error.response.data;
         } else if (error.request) {
-          alert('Error al iniciar sesión: No hay respuesta del servidor');
+          errorMessage = 'No hay respuesta del servidor';
         } else {
-          alert('Error al iniciar sesión: ' + error.message);
+          errorMessage = error.message;
         }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al iniciar sesión',
+          text: errorMessage,
+        });
       }
     }
   },

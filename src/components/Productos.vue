@@ -3,8 +3,8 @@
     <div class="col-lg-2 col-md-2 col-sm-2 partlt shadow">
       <ParteLateral></ParteLateral>
     </div>
-    <div class="col-lg-10 col-md-10 col-sm-10 ">
-      <div class="header ">
+    <div class="col-lg-10 col-md-10 col-sm-10">
+      <div class="header">
         <h2 class="mb-4 text-center">Productos</h2>
       </div>
       <div class="shadow rounded contProduc col-lg-12 col-md-12 col-sm-12">
@@ -13,20 +13,14 @@
             <div class="col-xl-6 col-lg-9 col-md-12 col-sm-10 col-10 offset-lg-0 offset-md-0 offset-sm-1 offset-1">
               <input type="text" class="form-control inp-btn" placeholder="Buscar producto..." v-model="searchQuery">
             </div>
-            <div
-              class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-0 offset-md-1 offset-sm-1 offset-3">
-              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar
-                Producto</button>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-0 offset-md-1 offset-sm-1 offset-3">
+              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#agregarproducto">Agregar Producto</button>
             </div>
-            <div
-              class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-2 offset-md-1 offset-sm-1 offset-3">
-              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcantidad">Crear
-                cantidad</button>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-2 offset-md-1 offset-sm-1 offset-3">
+              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcantidad">Crear Cantidad</button>
             </div>
-            <div
-              class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-2 offset-md-1 offset-sm-1 offset-3">
-              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear
-                Categoría</button>
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-4 offset-xl-0 offset-lg-2 offset-md-1 offset-sm-1 offset-3">
+              <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#crearcategoria">Crear Categoría</button>
             </div>
           </div>
         </div>
@@ -136,6 +130,7 @@
         :factu="prod.Factura"
         :cantidtipo="prod.CantidadVenta"
         :categoriatipo="prod.Categoria"
+        :Codigobarra="prod.CodigoBarras"
         @elimin="eliminarProducto"
         :idprod="prod.IDProducto"
         @actu="actualiProductprueb"

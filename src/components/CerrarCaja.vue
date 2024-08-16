@@ -16,6 +16,8 @@
           v-model="montoFinal"
           class="form-control"
           placeholder="Ingrese el monto final"
+          min="0"
+          max="900000"
           required
         />
       </div>
@@ -27,6 +29,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'CerrarCaja',
@@ -53,6 +56,11 @@ export default {
       this.datosCajaAbierta = response.data;
     } catch (error) {
       console.error('Error al obtener datos de la caja:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron obtener los datos de la caja.',
+      });
     }
     this.fechaHoraCierre = new Date().toISOString().slice(0, 16);
   },
@@ -69,13 +77,24 @@ export default {
           formData
         );
         console.log('Respuesta del servidor:', response.data);
-        alert('Se cerró caja correctamente');
+        
+        await Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Se cerró caja correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        });
 
-        this.limpiarDatos(); // Limpiar datos
+        this.limpiarDatos();
         this.$emit('caja-cerrada');
       } catch (error) {
         console.error('Error al cerrar caja:', error);
-        alert('Error al cerrar caja: ' + error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al cerrar caja: ' + error.message,
+        });
       }
     },
     limpiarDatos() {
